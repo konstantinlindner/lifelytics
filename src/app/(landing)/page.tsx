@@ -1,8 +1,8 @@
-import Image from "next/image";
 import Link from "next/link";
 
 import NavBar from "@/components/navbar";
 import Footer from "@/components/footer";
+
 import { Button } from "@/components/ui/button";
 
 export default function Home() {
@@ -20,7 +20,7 @@ export default function Home() {
             Latest update
           </Link>
           <h1 className="font-heading text-3xl sm:text-5xl md:text-6xl lg:text-7xl">
-            Visualize your personal finanzes and take control of your life.
+            Visualize your personal finances and take back control of your life.
           </h1>
           <p className="max-w-[42rem] leading-normal text-muted-foreground sm:text-xl sm:leading-8">
             A base for your productivity and well-being. Track and visualize
