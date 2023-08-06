@@ -5,7 +5,7 @@ import Link from "next/link";
 
 function NavBar() {
   return (
-    <header className="mx-10 flex items-center justify-between py-6">
+    <header className="container flex flex-row items-center justify-between py-6 h-24`">
       <nav className="flex gap-10 items-center">
         <Logo />
 
@@ -26,7 +26,6 @@ function NavBar() {
           </Link>
         </div>
       </nav>
-
       <div className="flex gap-2 items-center">
         <ModeToggle />
 
