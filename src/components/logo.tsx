@@ -1,6 +1,4 @@
-"use client";
-
-import { Icon } from "@iconify/react";
+import { Activity } from "lucide-react";
 
 interface LogoProps {
   hideText?: boolean;
@@ -9,16 +7,13 @@ interface LogoProps {
 function Logo({ hideText }: LogoProps) {
   return (
     <div className="flex items-center">
-      <Icon
-        icon="streamline:health-medical-heart-rate-health-beauty-information-data-beat-pulse-monitor-heart-rate-info"
-        width="30"
-      />
+      <Activity className="h-6 w-6" />
 
       {!hideText && (
-        <>
+        <div className="cursor-pointer select-none">
           <span className="text-lg font-bold ml-2">Life</span>
           <span className="text-lg">lytics</span>
-        </>
+        </div>
       )}
     </div>
   );
