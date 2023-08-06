@@ -1,20 +1,25 @@
-import Link from "next/link";
+"use client";
+
 import { Icon } from "@iconify/react";
 
-function Logo() {
-  return (
-    <div className="">
-      <Flex as={Link} href={"/"} alignItems="center">
-        <Icon
-          icon="streamline:health-medical-heart-rate-health-beauty-information-data-beat-pulse-monitor-heart-rate-info"
-          width="50"
-        />
+interface LogoProps {
+  hideText?: boolean;
+}
 
-        <span className="text-lg" fontWeight="bold" ml="3">
-          Life
-        </span>
-        <span fontSize="20">lytics</span>
-      </Flex>
+function Logo({ hideText }: LogoProps) {
+  return (
+    <div className="flex items-center">
+      <Icon
+        icon="streamline:health-medical-heart-rate-health-beauty-information-data-beat-pulse-monitor-heart-rate-info"
+        width="30"
+      />
+
+      {!hideText && (
+        <>
+          <span className="text-lg font-bold ml-2">Life</span>
+          <span className="text-lg">lytics</span>
+        </>
+      )}
     </div>
   );
 }

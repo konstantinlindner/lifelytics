@@ -1,39 +1,48 @@
-import { Box, ButtonGroup, Button, Flex, Spacer } from "@chakra-ui/react";
-import ColorModeSwitcher from "./ColorModeSwitcher";
-import AppLogo from "./AppLogo";
-import NextLink from "next/link";
+import { ModeToggle } from "@/components/ui/mode-toggle";
+import { Button } from "./ui/button";
+import Logo from "@/components/logo";
+import Link from "next/link";
 
 function NavBar() {
   return (
-    <Box py="7">
-      <Flex alignItems="center">
-        <AppLogo />
+    <header className="mx-10 flex items-center justify-between py-6">
+      <nav className="flex gap-10 items-center">
+        <Logo />
 
-        <Spacer />
-
-        <ColorModeSwitcher size="sm" fontSize="xl" variant="outline" />
-
-        <ButtonGroup pl="4" spacing="2" size="sm">
-          <Button
-            variant="outline"
-            colorScheme="green"
-            as={NextLink}
-            href={"/sign-in"}
+        <div className="flex gap-6 items-center">
+          <Link
+            href="#"
+            className="text-sm font-medium transition-colors
+          text-foreground/60 hover:text-foreground/80"
           >
+            Features
+          </Link>
+          <Link
+            href="#"
+            className="text-sm font-medium transition-colors
+          text-foreground/60 hover:text-foreground/80  "
+          >
+            Pricing
+          </Link>
+        </div>
+      </nav>
+
+      <div className="flex gap-2 items-center">
+        <ModeToggle />
+
+        <Link href={"/sign-in"}>
+          <Button size="sm" variant="outline">
             Sign in
           </Button>
+        </Link>
 
-          <Button
-            variant="solid"
-            colorScheme="green"
-            as={NextLink}
-            href={"/sign-up"}
-          >
+        <Link href={"/sign-up"}>
+          <Button size="sm" variant="default">
             Sign up
           </Button>
-        </ButtonGroup>
-      </Flex>
-    </Box>
+        </Link>
+      </div>
+    </header>
   );
 }
 
