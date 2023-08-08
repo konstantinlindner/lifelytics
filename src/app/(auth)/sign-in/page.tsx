@@ -5,7 +5,20 @@ import { ChevronLeft } from "lucide-react";
 import SignInForm from "@/components/sign-in-form";
 import { Button } from "@/components/ui/button";
 
-export default function SignIn() {
+import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+
+export default async function SignIn() {
+  const supabase = createServerComponentClient({ cookies });
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  if (session) {
+    redirect("/dashboard");
+  }
+
   return (
     <div className="container flex h-screen w-screen flex-col items-center justify-center">
       <Link href="/" className="absolute left-4 top-4 md:left-8 md:top-8">
@@ -32,7 +45,7 @@ export default function SignIn() {
             href="/sign-up"
             className="hover:text-brand underline underline-offset-4"
           >
-            Don&apos;t have an account? Sign Up
+            Don&apos;t have an account? Sign up
           </Link>
         </p>
       </div>

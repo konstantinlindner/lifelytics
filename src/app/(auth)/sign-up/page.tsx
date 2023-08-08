@@ -1,44 +1,54 @@
-"use client";
+import Link from "next/link";
+import Logo from "@/components/logo";
+import { ChevronLeft } from "lucide-react";
 
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import SignUpForm from "@/components/sign-up-form";
+import { Button } from "@/components/ui/button";
 
-import type { Database } from "@/types/supabase.types";
+import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
-export default function SignUp() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const router = useRouter();
-  const supabase = createClientComponentClient<Database>();
+export default async function SignUp() {
+  const supabase = createServerComponentClient({ cookies });
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
 
-  const handleSignUp = async () => {
-    try {
-      const { error } = await supabase.auth.signUp({
-        email,
-        password,
-      });
-      if (error) throw error;
-      router.push("/dashboard");
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  if (session) {
+    redirect("/dashboard");
+  }
 
   return (
-    <>
-      <input
-        name="email"
-        onChange={(e) => setEmail(e.target.value)}
-        value={email}
-      />
-      <input
-        type="password"
-        name="password"
-        onChange={(e) => setPassword(e.target.value)}
-        value={password}
-      />
-      <button onClick={handleSignUp}>Sign up</button>
-    </>
+    <div className="container flex h-screen w-screen flex-col items-center justify-center">
+      <Link href="/" className="absolute left-4 top-4 md:left-8 md:top-8">
+        <Button variant="ghost">
+          <ChevronLeft className="mr-2 h-5 w-5" />
+          Back
+        </Button>
+      </Link>
+      <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
+        <div className="flex flex-col space-y-2 text-center">
+          <div className="mx-auto h-6 w-6">
+            <Logo hideText />
+          </div>
+          <h1 className="text-2xl font-semibold tracking-tight">
+            Welcome to Lifelytics
+          </h1>
+          <p className="text-sm text-muted-foreground">
+            Please fill in your details to continue
+          </p>
+        </div>
+        <SignUpForm />
+        <p className="px-8 text-center text-sm text-muted-foreground">
+          <Link
+            href="/sign-in"
+            className="hover:text-brand underline underline-offset-4"
+          >
+            Already have an account? Sign in
+          </Link>
+        </p>
+      </div>
+    </div>
   );
 }
