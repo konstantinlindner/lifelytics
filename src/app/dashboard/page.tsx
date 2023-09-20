@@ -16,8 +16,6 @@ export default async function Dashboard() {
     redirect("/");
   }
 
-  const { data: transactions } = await supabase.from("transactions").select();
-
   return (
     <main>
       <SignOutButton />
