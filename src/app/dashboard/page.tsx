@@ -3,6 +3,8 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 import SignOutButton from "@/app/dashboard/(components)/sign-out-button";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default async function Dashboard() {
   const supabase = createServerComponentClient({ cookies });
@@ -21,8 +23,11 @@ export default async function Dashboard() {
       <SignOutButton />
       <h1>Dashboard</h1>
       <p>Hello {session.user.email}</p>
-      <p>Your transactions</p>
-      <pre>{JSON.stringify(transactions, null, 2)}</pre>
+      <Link href={"/dashboard/transactions"}>
+        <Button size="sm" variant="default">
+          Transactions
+        </Button>
+      </Link>
     </main>
   );
 }
