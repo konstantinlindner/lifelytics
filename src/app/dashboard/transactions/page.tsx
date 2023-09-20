@@ -2,9 +2,9 @@ import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-import SignOutButton from "@/components/sign-out-button";
+import SignOutButton from "@/app/dashboard/(components)/sign-out-button";
 
-export default async function Dashboard() {
+export default async function Transactions() {
   const supabase = createServerComponentClient({ cookies });
   const {
     data: { session },
@@ -14,14 +14,13 @@ export default async function Dashboard() {
     redirect("/");
   }
 
-  const { data: currencies } = await supabase.from("currencies").select();
+  const { data: transactions } = await supabase.from("transactions").select();
 
   return (
     <main>
       <SignOutButton />
-      <h1>Dashboard</h1>
-      <p>Hello {session.user.email}</p>
-      <pre>{JSON.stringify(currencies, null, 2)}</pre>
+      <h1>Your transactions</h1>
+      <pre>{JSON.stringify(transactions, null, 2)}</pre>
     </main>
   );
 }

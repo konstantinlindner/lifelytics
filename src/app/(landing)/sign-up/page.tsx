@@ -1,15 +1,15 @@
 import Link from "next/link";
-import Logo from "@/components/logo";
+import Logo from "@/app/(landing)/(components)/logo";
 import { ChevronLeft } from "lucide-react";
 
-import SignInForm from "@/components/sign-in-form";
+import SignUpForm from "@/app/(landing)/sign-up/(components)/sign-up-form";
 import { Button } from "@/components/ui/button";
 
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-export default async function SignIn() {
+export default async function SignUp() {
   const supabase = createServerComponentClient({ cookies });
   const {
     data: { session },
@@ -33,19 +33,19 @@ export default async function SignIn() {
             <Logo hideText />
           </div>
           <h1 className="text-2xl font-semibold tracking-tight">
-            Welcome back
+            Welcome to Lifelytics
           </h1>
           <p className="text-sm text-muted-foreground">
-            Enter your email to sign in to your account
+            Please fill in your details to continue
           </p>
         </div>
-        <SignInForm />
+        <SignUpForm />
         <p className="px-8 text-center text-sm text-muted-foreground">
           <Link
-            href="/sign-up"
+            href="/sign-in"
             className="hover:text-brand underline underline-offset-4"
           >
-            Don&apos;t have an account? Sign up
+            Already have an account? Sign in
           </Link>
         </p>
       </div>

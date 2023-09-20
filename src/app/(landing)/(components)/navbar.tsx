@@ -1,6 +1,6 @@
 import { ModeToggle } from "@/components/ui/mode-toggle";
-import { Button } from "./ui/button";
-import Logo from "@/components/logo";
+import { Button } from "../../../components/ui/button";
+import Logo from "@/app/(landing)/(components)/logo";
 import Link from "next/link";
 
 function NavBar() {

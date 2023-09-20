@@ -1,4 +1,4 @@
-import NavBar from "@/components/navbar";
+import NavBar from "@/app/(landing)/(components)/navbar";
 
 import { ServerCrash } from "lucide-react";
 

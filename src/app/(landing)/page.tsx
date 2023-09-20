@@ -1,7 +1,7 @@
 import Link from "next/link";
 
-import NavBar from "@/components/navbar";
-import Footer from "@/components/footer";
+import NavBar from "@/app/(landing)/(components)/navbar";
+import Footer from "@/app/(landing)/(components)/footer";
 
 import { Button } from "@/components/ui/button";
 
