@@ -39,7 +39,7 @@ export default async function Topbar() {
   return (
     <header className="flex justify-between gap-2 items-center py-6 px-10 h-24">
       <PageHeader />
-      <div className="flex gap-4">
+      <div className="flex gap-4 items-center">
         <ModeToggle />
 
         <DropdownMenu>
