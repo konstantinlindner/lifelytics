@@ -36,7 +36,7 @@ export default async function SignUp() {
             Welcome to Lifelytics
           </h1>
           <p className="text-sm text-muted-foreground">
-            Please fill in your details to continue
+            Enter your email and choose a password to sign up
           </p>
         </div>
         <SignUpForm />
