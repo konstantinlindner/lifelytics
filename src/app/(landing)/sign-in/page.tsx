@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Logo from "@/app/(landing)/components/logo";
+import Logo from "@/components/logo";
 import { ChevronLeft } from "lucide-react";
 
 import SignInForm from "@/app/(landing)/sign-in/components/sign-in-form";

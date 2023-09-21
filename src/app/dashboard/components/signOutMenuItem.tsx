@@ -4,9 +4,12 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/navigation";
 import type { Database } from "@/types/supabase.types";
 
-import { Button } from "@/components/ui/button";
+import {
+  DropdownMenuItem,
+  DropdownMenuShortcut,
+} from "@/components/ui/dropdown-menu";
 
-function SignOutButton() {
+function SignOutMenuItem() {
   const router = useRouter();
   const supabase = createClientComponentClient<Database>();
 
@@ -21,7 +24,12 @@ function SignOutButton() {
     }
   };
 
-  return <Button onClick={handleSignOut}>Sign Out</Button>;
+  return (
+    <DropdownMenuItem onClick={handleSignOut}>
+      Sign out
+      <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
+    </DropdownMenuItem>
+  );
 }
 
-export default SignOutButton;
+export default SignOutMenuItem;

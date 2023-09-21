@@ -35,7 +35,10 @@ export default async function Transactions() {
 
   return (
     <main>
-      <h1>Your transactions</h1>
+      <h2 className="text-2xl font-bold tracking-tight">Transactions</h2>
+      <p className="text-muted-foreground">
+        Here&apos;s a list of all transactions.
+      </p>
 
       <div className="container mx-auto py-10">
         {transactionsFormatted ? (

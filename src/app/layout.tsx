@@ -8,7 +8,7 @@ import localFont from "next/font/local";
 
 import { cn } from "@/lib/utils";
 
-import { ThemeProvider } from "@/components/theme-provider";
+import { ThemeProvider } from "@/components/themeProvider";
 
 const fontSans = FontSans({
   subsets: ["latin"],

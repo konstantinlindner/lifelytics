@@ -1,9 +1,9 @@
-import { ModeToggle } from "@/components/mode-toggle";
-import { Button } from "../../../components/ui/button";
-import Logo from "@/app/(landing)/components/logo";
+import { ModeToggle } from "@/components/modeToggle";
+import { Button } from "@/components/ui/button";
+import Logo from "@/components/logo";
 import Link from "next/link";
 
-function NavBar() {
+export default function Navbar() {
   return (
     <header className="container flex flex-row items-center justify-between py-6 h-24`">
       <nav className="flex gap-10 items-center">
@@ -44,5 +44,3 @@ function NavBar() {
     </header>
   );
 }
-
-export default NavBar;

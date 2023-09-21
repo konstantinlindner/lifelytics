@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import NavBar from "@/app/(landing)/components/navbar";
+import Navbar from "@/app/(landing)/components/navbar";
 import Footer from "@/app/(landing)/components/footer";
 
 import { Button } from "@/components/ui/button";
@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 export default function Home() {
   return (
     <main>
-      <NavBar />
+      <Navbar />
 
       <section className="space-y-6 pb-8 pt-6 md:pb-12 md:pt-10 lg:py-32">
         <div className="container flex max-w-[64rem] flex-col items-center gap-4 text-center">

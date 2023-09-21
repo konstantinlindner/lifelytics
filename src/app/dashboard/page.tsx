@@ -2,9 +2,12 @@ import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-import SignOutButton from "@/app/dashboard/components/sign-out-button";
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
+
+import { Button } from "@/components/ui/button";
+
+import Topbar from "@/app/dashboard/components/topbar";
+import Sidebar from "@/app/dashboard/components/sidebar";
 
 export default async function Dashboard() {
   const supabase = createServerComponentClient({ cookies });
@@ -18,7 +21,8 @@ export default async function Dashboard() {
 
   return (
     <main>
-      <SignOutButton />
+      <Topbar />
+      <Sidebar />
       <h1>Dashboard</h1>
       <p>Hello {session.user.email}</p>
       <Link href={"/dashboard/transactions"}>
