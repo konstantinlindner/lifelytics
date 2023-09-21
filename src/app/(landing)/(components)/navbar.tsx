@@ -1,4 +1,4 @@
-import { ModeToggle } from "@/components/ui/mode-toggle";
+import { ModeToggle } from "@/components/mode-toggle";
 import { Button } from "../../../components/ui/button";
 import Logo from "@/app/(landing)/(components)/logo";
 import Link from "next/link";

@@ -1,35 +1,10 @@
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { ColumnDef } from "@tanstack/react-table";
 
+import { Transaction, columns } from "@/app/dashboard/transactions/columns";
+import { DataTable } from "@/app/dashboard/transactions/dataTable";
 import SignOutButton from "@/app/dashboard/(components)/sign-out-button";
-
-type Transaction = {
-  amount: number | null;
-  country: number | null;
-  created_at: string | null;
-  currency: string | null;
-  id: string;
-  name: string | null;
-  updated_at: string | null;
-  user: string | null;
-};
-
-const columns: ColumnDef<Transaction>[] = [
-  {
-    accessorKey: "name",
-    header: "Name",
-  },
-  {
-    accessorKey: "email",
-    header: "Email",
-  },
-  {
-    accessorKey: "amount",
-    header: "Amount",
-  },
-];
 
 export default async function Transactions() {
   const supabase = createServerComponentClient({ cookies });
@@ -47,7 +22,16 @@ export default async function Transactions() {
     <main>
       <SignOutButton />
       <h1>Your transactions</h1>
-      <pre>{JSON.stringify(transactions, null, 2)}</pre>
+
+      <div className="container mx-auto py-10">
+        {transactions ? (
+          <DataTable columns={columns} data={transactions} />
+        ) : (
+          <p>
+            Error, could not load transactions. Please try reloading the page.
+          </p>
+        )}
+      </div>
     </main>
   );
 }
