@@ -1,8 +1,8 @@
 import Link from "next/link";
-import Logo from "@/app/(landing)/(components)/logo";
+import Logo from "@/app/(landing)/components/logo";
 import { ChevronLeft } from "lucide-react";
 
-import SignUpForm from "@/app/(landing)/sign-up/(components)/sign-up-form";
+import SignUpForm from "@/app/(landing)/sign-up/components/sign-up-form";
 import { Button } from "@/components/ui/button";
 
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";

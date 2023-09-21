@@ -2,7 +2,7 @@ import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-import SignOutButton from "@/app/dashboard/(components)/sign-out-button";
+import SignOutButton from "@/app/dashboard/components/sign-out-button";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 

@@ -1,4 +1,4 @@
-import Logo from "@/app/(landing)/(components)/logo";
+import Logo from "@/app/(landing)/components/logo";
 
 function Footer() {
   return (
