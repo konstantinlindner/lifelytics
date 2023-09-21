@@ -1,8 +1,35 @@
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { ColumnDef } from "@tanstack/react-table";
 
 import SignOutButton from "@/app/dashboard/(components)/sign-out-button";
+
+type Transaction = {
+  amount: number | null;
+  country: number | null;
+  created_at: string | null;
+  currency: string | null;
+  id: string;
+  name: string | null;
+  updated_at: string | null;
+  user: string | null;
+};
+
+const columns: ColumnDef<Transaction>[] = [
+  {
+    accessorKey: "name",
+    header: "Name",
+  },
+  {
+    accessorKey: "email",
+    header: "Email",
+  },
+  {
+    accessorKey: "amount",
+    header: "Amount",
+  },
+];
 
 export default async function Transactions() {
   const supabase = createServerComponentClient({ cookies });
