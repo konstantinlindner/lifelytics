@@ -40,7 +40,7 @@ export default async function Transactions() {
         Here&apos;s a list of all transactions.
       </p>
 
-      <div className="container mx-auto py-10">
+      <div className="mx-auto py-10">
         {transactionsFormatted ? (
           <TransactionTable
             columns={transactionColumns}
