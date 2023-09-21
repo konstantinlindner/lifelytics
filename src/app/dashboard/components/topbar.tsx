@@ -16,7 +16,7 @@ import {
 
 import SignOutMenuItem from "./signOutMenuItem";
 import { ModeToggle } from "@/components/modeToggle";
-import Logo from "@/components/logo";
+import PageHeader from "./pageHeader";
 
 export default async function Topbar() {
   const supabase = createServerComponentClient({ cookies });
@@ -37,42 +37,45 @@ export default async function Topbar() {
   )}${profiles?.[0].last_name?.charAt(0)}`;
 
   return (
-    <header className="flex justify-end gap-2 items-center py-6 mr-10 h-24">
-      <ModeToggle />
+    <header className="flex justify-between gap-2 items-center py-6 px-10 h-24">
+      <PageHeader />
+      <div className="flex gap-4">
+        <ModeToggle />
 
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-            <Avatar className="h-9 w-9">
-              <AvatarImage src={avatarUrl} alt={fullName} />
-              <AvatarFallback>{initials}</AvatarFallback>
-            </Avatar>
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-56" align="end" forceMount>
-          <DropdownMenuLabel className="font-normal">
-            <div className="flex flex-col space-y-1">
-              <p className="text-sm font-medium leading-none">{fullName}</p>
-              <p className="text-xs leading-none text-muted-foreground">
-                {session?.user.email}
-              </p>
-            </div>
-          </DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuGroup>
-            <DropdownMenuItem>
-              Profile
-              <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              Settings
-              <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
-            </DropdownMenuItem>
-          </DropdownMenuGroup>
-          <DropdownMenuSeparator />
-          <SignOutMenuItem />
-        </DropdownMenuContent>
-      </DropdownMenu>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+              <Avatar className="h-9 w-9">
+                <AvatarImage src={avatarUrl} alt={fullName} />
+                <AvatarFallback>{initials}</AvatarFallback>
+              </Avatar>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="w-56" align="end" forceMount>
+            <DropdownMenuLabel className="font-normal">
+              <div className="flex flex-col space-y-1">
+                <p className="text-sm font-medium leading-none">{fullName}</p>
+                <p className="text-xs leading-none text-muted-foreground">
+                  {session?.user.email}
+                </p>
+              </div>
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuGroup>
+              <DropdownMenuItem>
+                Profile
+                <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                Settings
+                <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+            <DropdownMenuSeparator />
+            <SignOutMenuItem />
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
     </header>
   );
 }

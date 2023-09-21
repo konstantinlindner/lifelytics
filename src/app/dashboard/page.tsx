@@ -12,10 +12,5 @@ export default async function Dashboard() {
     redirect("/");
   }
 
-  return (
-    <main>
-      <h2 className="text-2xl font-bold tracking-tight">Dashboard</h2>
-      <p className="text-muted-foreground">Here&apos;s some stuff.</p>
-    </main>
-  );
+  return <main></main>;
 }

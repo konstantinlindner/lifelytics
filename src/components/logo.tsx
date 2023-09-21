@@ -13,12 +13,12 @@ function Logo({ hideText, isDashboard }: LogoProps) {
       className="flex items-center"
       href={!isDashboard ? "/" : "/dashboard"}
     >
-      <Activity className="h-6 w-6" />
+      <Activity className="h-7 w-7" />
 
       {!hideText && (
         <div className="select-none">
-          <span className="text-lg font-bold ml-2">Life</span>
-          <span className="text-lg">lytics</span>
+          <span className="text-xl font-bold ml-2">Life</span>
+          <span className="text-xl">lytics</span>
         </div>
       )}
     </Link>

@@ -11,7 +11,7 @@ export default function DashboardLayout({
       <Sidebar />
       <div className="flex flex-col w-screen">
         <Topbar />
-        <main className="px-10">{children}</main>
+        <main className="p-10">{children}</main>
       </div>
     </div>
   );

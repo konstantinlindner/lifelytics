@@ -35,12 +35,7 @@ export default async function Transactions() {
 
   return (
     <main>
-      <h2 className="text-2xl font-bold tracking-tight">Transactions</h2>
-      <p className="text-muted-foreground">
-        Here&apos;s a list of all transactions.
-      </p>
-
-      <div className="mx-auto py-10">
+      <div className="mx-auto">
         {transactionsFormatted ? (
           <TransactionTable
             columns={transactionColumns}
