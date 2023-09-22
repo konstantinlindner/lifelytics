@@ -21,18 +21,13 @@ const fontHeading = localFont({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://life.konstantin.app"),
   title: {
     default: "Lifelytics",
     template: `%s | Lifelytics`,
   },
   description: "A base for productivity and financial well being.",
-  keywords: [
-    "Next.js",
-    "React",
-    "Tailwind CSS",
-    "Server Components",
-    "Radix UI",
-  ],
+  keywords: ["Financial", "Budget", "Tool", "Expense", "Tracker"],
   authors: [
     {
       name: "Konstantin Lindner",
@@ -56,12 +51,12 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Lifelytics",
     description: "A base for productivity and financial well being.",
-    images: "https://life.konstantin.app/og.jpg",
+    images: "/og.png",
     creator: "@konstantinlindner",
   },
   icons: {
     icon: "/favicon.ico",
-    shortcut: "/favicon-16x16.png",
+    shortcut: "/favicon-16.png",
     apple: "/apple-touch-icon.png",
   },
 };
