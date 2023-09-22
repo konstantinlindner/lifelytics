@@ -26,19 +26,19 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <nav className="flex flex-col w-60 h-screen border-r">
+    <nav className="flex flex-col w-60 h-screen border-r px-4">
       <div className="h-24 flex items-center justify-center">
         <Logo isDashboard />
       </div>
 
       {SidebarItems.map((item) => (
-        <Link key={item.href} href={item.href}>
+        <Link className="w-44 justify-start" key={item.href} href={item.href}>
           <Button
             variant="ghost"
             className={
               pathname === item.href
-                ? "bg-muted hover:bg-muted w-full justify-start"
-                : "hover:bg-transparent hover:underline w-full justify-start"
+                ? "bg-muted hover:bg-muted w-44 justify-start"
+                : "hover:bg-transparent hover:underline w-44 justify-start"
             }
           >
             {item.title}

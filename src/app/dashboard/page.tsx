@@ -1,6 +1,7 @@
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { DateRangePicker } from "./components/dateRangePicker";
 
 export default async function Dashboard() {
   const supabase = createServerComponentClient({ cookies });
@@ -12,5 +13,9 @@ export default async function Dashboard() {
     redirect("/");
   }
 
-  return <main></main>;
+  return (
+    <main>
+      <DateRangePicker />
+    </main>
+  );
 }
