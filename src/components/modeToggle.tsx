@@ -7,14 +7,18 @@ import { Moon, SunMedium } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
-export function ModeToggle() {
+interface ModeToggleProps {
+  isRound?: boolean;
+}
+
+export default function ModeToggle({ isRound }: ModeToggleProps) {
   const { setTheme, resolvedTheme } = useTheme();
 
   const isDarkTheme = resolvedTheme === "dark";
 
   return (
     <Button
-      className="h-9 w-9"
+      className={isRound ? "h-9 w-9 rounded-full" : "h-9 w-9"}
       onClick={() => setTheme(isDarkTheme ? "light" : "dark")}
       variant="ghost"
       size="sm"

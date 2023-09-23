@@ -2,7 +2,7 @@ import Link from "next/link";
 import Logo from "@/components/logo";
 import { ChevronLeft } from "lucide-react";
 
-import SignInForm from "@/app/(landing)/sign-in/components/sign-in-form";
+import SignInForm from "@/app/(landing)/sign-in/components/signInForm";
 import { Button } from "@/components/ui/button";
 
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";

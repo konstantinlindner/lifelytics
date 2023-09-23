@@ -7,7 +7,7 @@ interface LogoProps {
   isDashboard?: boolean;
 }
 
-function Logo({ hideText, isDashboard }: LogoProps) {
+export default function Logo({ hideText, isDashboard }: LogoProps) {
   return (
     <Link
       className="flex items-center"
@@ -25,4 +25,4 @@ function Logo({ hideText, isDashboard }: LogoProps) {
   );
 }
 
-export default Logo;
+

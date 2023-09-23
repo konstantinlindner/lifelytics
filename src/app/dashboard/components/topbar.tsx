@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import SignOutMenuItem from "./signOutMenuItem";
-import { ModeToggle } from "@/components/modeToggle";
+import ModeToggle from "@/components/modeToggle";
 import PageHeader from "./pageHeader";
 
 export default async function Topbar() {
@@ -40,7 +40,7 @@ export default async function Topbar() {
     <header className="flex justify-between gap-2 items-center py-6 px-10 h-24">
       <PageHeader />
       <div className="flex gap-4 items-center">
-        <ModeToggle />
+        <ModeToggle isRound />
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

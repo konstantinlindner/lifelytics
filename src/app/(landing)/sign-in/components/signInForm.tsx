@@ -47,7 +47,7 @@ function SignInForm() {
   };
 
   return (
-    <div mx-auto w-full>
+    <div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSignIn)} className=" space-y-6">
           <FormField
