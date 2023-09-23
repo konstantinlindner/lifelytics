@@ -13,13 +13,13 @@ export const SidebarItems = [
     href: "/dashboard/transactions",
     header: "Transactions",
   },
-  { title: "Flights", href: "/dashboard/flights" },
-  { title: "Accommodation", href: "/dashboard/accommodation" },
-  { title: "Transportation", href: "/dashboard/transportations" },
-  { title: "Food", href: "/dashboard/food" },
-  { title: "Other", href: "/dashboard/other" },
-  { title: "Subscriptions", href: "/dashboard/subscriptions" },
-  { title: "Income", href: "/dashboard/income" },
+  // { title: "Flights", href: "/dashboard/flights" },
+  // { title: "Accommodation", href: "/dashboard/accommodation" },
+  // { title: "Transportation", href: "/dashboard/transportations" },
+  // { title: "Food", href: "/dashboard/food" },
+  // { title: "Other", href: "/dashboard/other" },
+  // { title: "Subscriptions", href: "/dashboard/subscriptions" },
+  // { title: "Income", href: "/dashboard/income" },
 ];
 
 export default function Sidebar() {
