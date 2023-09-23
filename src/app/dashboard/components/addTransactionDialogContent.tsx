@@ -6,7 +6,7 @@ import {
 } from "@/components/ui/dialog";
 
 import AddTransactionDialogContentButton from "./addTransactionDialogContentButton";
-import { allScreens, ScreenType } from "./addTransactionDialog";
+import { allScreens, ScreenType } from "./addTransactionConstants";
 
 interface AddTransactionDialogContentProps {
   screen: ScreenType;

@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 
-import { ScreenType } from "./addTransactionDialog";
+import { ScreenType } from "./addTransactionConstants";
 
 interface AddTransactionDialogContentButtonProps {
   icon: ReactNode;
