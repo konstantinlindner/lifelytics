@@ -33,7 +33,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { Settings2, PlusSquare } from "lucide-react";
+import { Settings2 } from "lucide-react";
+
+import AddTransactionDialog from "../../components/addTransactionDialog";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -110,9 +112,7 @@ export function TransactionTable<TData, TValue>({
             }
           />
         </div>
-        <Button variant="outline">
-          <PlusSquare className="mr-2 h-5 w-5" /> New
-        </Button>
+        <AddTransactionDialog />
       </div>
       <div className="rounded-md border">
         <Table>
