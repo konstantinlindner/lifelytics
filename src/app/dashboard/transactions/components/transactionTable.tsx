@@ -35,7 +35,7 @@ import {
 
 import { Settings2 } from "lucide-react";
 
-import AddTransactionDialog from "../../components/addTransactionDialog";
+import AddTransactionDialog from "../../components/addTransaction/addTransactionDialog";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
