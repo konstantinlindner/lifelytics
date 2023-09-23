@@ -32,15 +32,15 @@ export default function AddTransactionDialogContent({
         <DialogDescription>{description}</DialogDescription>
       </DialogHeader>
       <main className="mx-auto py-7">
-        <div
-          className={
-            currentScreen.children.length < 3
-              ? "grid gap-4 grid-cols-2"
-              : "grid gap-4 grid-cols-3"
-          }
-        >
-          {currentScreen.children &&
-            currentScreen.children.map((child, index) => (
+        {currentScreen.buttonChildren && (
+          <div
+            className={
+              currentScreen.buttonChildren.length < 3
+                ? "grid gap-4 grid-cols-2"
+                : "grid gap-4 grid-cols-3"
+            }
+          >
+            {currentScreen.buttonChildren.map((child, index) => (
               <AddTransactionDialogContentButton
                 key={index}
                 icon={child.icon}
@@ -50,7 +50,8 @@ export default function AddTransactionDialogContent({
                 toScreen={child.screen}
               />
             ))}
-        </div>
+          </div>
+        )}
       </main>
     </DialogContent>
   );
