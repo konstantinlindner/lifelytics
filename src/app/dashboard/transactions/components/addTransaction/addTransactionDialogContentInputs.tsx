@@ -90,7 +90,7 @@ export default function AddTransactionDialogContentInputs({}: AddTransactionDial
     }
 
     fetchData();
-  }, []);
+  });
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
