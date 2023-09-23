@@ -25,7 +25,7 @@ const expenseChildren = [
   },
   {
     screen: "food-and-drink",
-    title: "Food and Drink",
+    title: "Food and drink",
     description: "Enter the details below.",
     icon: <UtensilsCrossed />,
     buttonChildren: [],

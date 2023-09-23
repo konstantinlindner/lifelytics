@@ -6,6 +6,7 @@ import {
 } from "@/components/ui/dialog";
 
 import AddTransactionDialogContentButton from "./addTransactionDialogContentButton";
+import AddTransactionDialogContentInputs from "./addTransactionDialogContentInputs";
 import { allScreens, ScreenType } from "./addTransactionConstants";
 
 interface AddTransactionDialogContentProps {
@@ -32,6 +33,8 @@ export default function AddTransactionDialogContent({
         <DialogDescription>{description}</DialogDescription>
       </DialogHeader>
       <main className="mx-auto py-7">
+        <AddTransactionDialogContentInputs />
+
         {currentScreen.buttonChildren && (
           <div
             className={

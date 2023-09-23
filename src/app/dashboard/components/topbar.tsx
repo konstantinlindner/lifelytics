@@ -17,6 +17,7 @@ import {
 import SignOutMenuItem from "./signOutMenuItem";
 import ModeToggle from "@/components/modeToggle";
 import PageHeader from "./pageHeader";
+import CommandModal from "./commandModal";
 
 export default async function Topbar() {
   const supabase = createServerComponentClient({ cookies });
@@ -40,6 +41,7 @@ export default async function Topbar() {
     <header className="flex justify-between gap-2 items-center py-6 px-10 h-24">
       <PageHeader />
       <div className="flex gap-4 items-center">
+        <CommandModal />
         <ModeToggle isRound />
 
         <DropdownMenu>

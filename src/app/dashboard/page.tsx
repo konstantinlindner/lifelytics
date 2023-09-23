@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { DateRangePicker } from "./components/dateRangePicker";
 
+
 export default async function Dashboard() {
   const supabase = createServerComponentClient({ cookies });
   const {
