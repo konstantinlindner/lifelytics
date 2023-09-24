@@ -14,6 +14,8 @@ import {
   CommandShortcut,
 } from "@/components/ui/command";
 
+import AddTransactionDialog from "../transactions/components/addTransaction/addTransactionDialog";
+
 export default function CommandModal() {
   const [open, setOpen] = useState(false);
 
@@ -43,10 +45,11 @@ export default function CommandModal() {
         <CommandList>
           <CommandEmpty>No results found.</CommandEmpty>
           <CommandGroup heading="Suggestions">
-            <CommandItem>
+            <AddTransactionDialog showCommandItem />
+            {/* <CommandItem>
               <Coins className="mr-2 h-4 w-4" />
               <span>Add transaction</span>
-            </CommandItem>
+            </CommandItem> */}
             <CommandItem>
               <Calendar className="mr-2 h-4 w-4" />
               <span>Calendar</span>

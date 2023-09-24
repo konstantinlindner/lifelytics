@@ -2,8 +2,8 @@ import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-import { transactionColumns } from "@/app/dashboard/transactions/components/transactionColumns";
-import { TransactionTable } from "@/app/dashboard/transactions/components/transactionTable";
+import { transactionColumns } from "./components/transactionColumns";
+import { TransactionTable } from "./components/transactionTable";
 
 export default async function Transactions() {
   const supabase = createServerComponentClient({ cookies });
