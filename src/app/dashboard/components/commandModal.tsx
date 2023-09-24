@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { Calculator, Calendar, Settings, User, Coins } from "lucide-react";
 
+import Link from "next/link";
+
 import {
   CommandDialog,
   CommandEmpty,

@@ -25,7 +25,7 @@ function SignOutMenuItem() {
   };
 
   return (
-    <DropdownMenuItem onClick={handleSignOut}>
+    <DropdownMenuItem className="cursor-pointer" onClick={handleSignOut}>
       Sign out
       <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
     </DropdownMenuItem>

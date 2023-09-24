@@ -1,6 +1,8 @@
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 
+import Link from "next/link";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -64,12 +66,16 @@ export default async function Topbar() {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                Profile
-                <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+              <DropdownMenuItem className="cursor-pointer">
+                <Link href="/dashboard/profile" className="flex w-full">
+                  Profile
+                  <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+                </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                Settings
+              <DropdownMenuItem className="cursor-pointer">
+                <Link href="/dashboard/account" className="flex w-full">
+                  Settings
+                </Link>
                 <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
               </DropdownMenuItem>
             </DropdownMenuGroup>

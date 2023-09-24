@@ -28,11 +28,11 @@ export function SettingsTopbar() {
               variant="ghost"
               size="sm"
               className={cn(
-                pathname === item.href && "bg-white hover:bg-white",
+                pathname === item.href &&
+                  "bg-white text-black hover:bg-white hover:text-black",
                 "w-48"
               )}
             >
-              {" "}
               {item.title}
             </Button>
           </Link>
