@@ -68,29 +68,24 @@ type Country = {
 export default function AddTransactionDialogContentInputs({}: AddTransactionDialogContentInputsProps) {
   const [countries, setCountries] = useState<Country[]>([]);
 
-  const supabase = createClientComponentClient<Database>();
-
-  const getCountriesFromDB = async () => {
-    try {
-      let { data: countries, error } = await supabase
-        .from("countries")
-        .select("name, iso2");
-      if (error) throw error;
-      return countries as Country[];
-    } catch (error) {
-      console.log(error);
-      return [];
-    }
-  };
-
   useEffect(() => {
-    async function fetchData() {
-      const countriesData = await getCountriesFromDB();
-      setCountries(countriesData);
-    }
+    const supabase = createClientComponentClient<Database>();
+
+    const fetchData = async () => {
+      try {
+        const { data: countries, error } = await supabase
+          .from("countries")
+          .select("name, iso2");
+        if (error) throw error;
+        const countriesData = countries as Country[];
+        setCountries(countriesData);
+      } catch (error) {
+        console.log(error);
+      }
+    };
 
     fetchData();
-  });
+  }, []);
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
