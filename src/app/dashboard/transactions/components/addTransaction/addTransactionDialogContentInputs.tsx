@@ -89,10 +89,6 @@ export default function AddTransactionDialogContentInputs({}: AddTransactionDial
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
-    defaultValues: {
-      what: "",
-      where: "",
-    },
   });
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
@@ -108,6 +104,7 @@ export default function AddTransactionDialogContentInputs({}: AddTransactionDial
             name="transaction_date"
             render={({ field }) => (
               <FormItem className="flex flex-col">
+                <FormLabel>Date</FormLabel>
                 <Popover>
                   <PopoverTrigger asChild>
                     <FormControl>
@@ -150,7 +147,11 @@ export default function AddTransactionDialogContentInputs({}: AddTransactionDial
               <FormItem>
                 <FormLabel>What</FormLabel>
                 <FormControl>
-                  <Input placeholder="iPhone case" {...field} />
+                  <Input
+                    placeholder="iPhone case"
+                    {...field}
+                    value={field.value ?? ""}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -163,7 +164,11 @@ export default function AddTransactionDialogContentInputs({}: AddTransactionDial
               <FormItem>
                 <FormLabel>Where</FormLabel>
                 <FormControl>
-                  <Input placeholder="The Apple Store" {...field} />
+                  <Input
+                    placeholder="The Apple Store"
+                    {...field}
+                    value={field.value ?? ""}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
