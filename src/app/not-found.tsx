@@ -1,9 +1,9 @@
-import Navbar from "@/app/(landing)/components/navbar";
+import Navbar from '@/app/(landing)/components/navbar';
 
-import { ServerCrash } from "lucide-react";
+import { ServerCrash } from 'lucide-react';
 
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 export default function NotFound() {
   return (
@@ -19,7 +19,7 @@ export default function NotFound() {
           <p className="max-w-[42rem] leading-normal text-muted-foreground sm:text-xl sm:leading-8">
             Sorry, this page does not exist.
           </p>
-          <Link href={"/"}>
+          <Link href={'/'}>
             <Button size="lg" className="mt-6">
               Go back home
             </Button>

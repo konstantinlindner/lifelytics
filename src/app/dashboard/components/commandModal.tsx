@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { Calculator, Calendar, Settings, User, Coins } from "lucide-react";
+import { useEffect, useState } from 'react';
+import { Calculator, Calendar, Settings, User, Coins } from 'lucide-react';
 
-import Link from "next/link";
+import Link from 'next/link';
 
 import {
   CommandDialog,
@@ -14,32 +14,32 @@ import {
   CommandList,
   CommandSeparator,
   CommandShortcut,
-} from "@/components/ui/command";
+} from '@/components/ui/command';
 
-import AddTransactionDialog from "../transactions/components/addTransaction/addTransactionDialog";
+import AddTransactionDialog from '../transactions/components/addTransaction/addTransactionDialog';
 
 export default function CommandModal() {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
-      if (e.key === "j" && (e.metaKey || e.ctrlKey)) {
+      if (e.key === 'j' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
         setOpen((open) => !open);
       }
     };
 
-    document.addEventListener("keydown", down);
-    return () => document.removeEventListener("keydown", down);
+    document.addEventListener('keydown', down);
+    return () => document.removeEventListener('keydown', down);
   }, []);
 
   return (
     <>
       <p className="text-sm text-muted-foreground">
-        Press{" "}
-        <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
+        Press{' '}
+        <kbd className="inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100 pointer-events-none">
           <span className="text-xs">⌘</span>J
-        </kbd>{" "}
+        </kbd>{' '}
         to open command bar
       </p>
       <CommandDialog open={open} onOpenChange={setOpen}>

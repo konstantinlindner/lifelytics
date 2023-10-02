@@ -3,11 +3,11 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from '@/components/ui/dialog';
 
-import AddTransactionDialogContentButton from "./addTransactionDialogContentButton";
-import AddTransactionDialogContentInputs from "./addTransactionDialogContentInputs";
-import { allScreens, ScreenType } from "./addTransactionConstants";
+import AddTransactionDialogContentButton from './addTransactionDialogContentButton';
+import AddTransactionDialogContentInputs from './addTransactionDialogContentInputs';
+import { allScreens, ScreenType } from './addTransactionConstants';
 
 interface AddTransactionDialogContentProps {
   screen: ScreenType;
@@ -39,8 +39,8 @@ export default function AddTransactionDialogContent({
           <div
             className={
               currentScreen.buttonChildren.length < 3
-                ? "grid gap-4 grid-cols-2"
-                : "grid gap-4 grid-cols-3"
+                ? 'grid gap-4 grid-cols-2'
+                : 'grid gap-4 grid-cols-3'
             }
           >
             {currentScreen.buttonChildren.map((child, index) => (

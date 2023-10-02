@@ -1,19 +1,19 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import type { Database } from "@/types/supabase.types";
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import type { Database } from '@/types/supabase.types';
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
+import { zodResolver } from '@hookform/resolvers/zod';
+import { format } from 'date-fns';
+import { CalendarIcon } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import * as z from 'zod';
 
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
+import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
 
 import {
   Command,
@@ -21,7 +21,7 @@ import {
   CommandGroup,
   CommandInput,
   CommandItem,
-} from "@/components/ui/command";
+} from '@/components/ui/command';
 import {
   Form,
   FormControl,
@@ -29,31 +29,31 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
+} from '@/components/ui/form';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+} from '@/components/ui/popover';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 
-import { ChevronsUpDown, Check } from "lucide-react";
+import { ChevronsUpDown, Check } from 'lucide-react';
 
 const FormSchema = z.object({
   transaction_date: z.date({
-    required_error: "A transaction date is required.",
+    required_error: 'A transaction date is required.',
   }),
   checkbox: z.boolean().default(false).optional(),
   country: z.string({
-    required_error: "Please select a country.",
+    required_error: 'Please select a country.',
   }),
   what: z.string({
-    required_error: "Please specify what you purchased.",
+    required_error: 'Please specify what you purchased.',
   }),
   where: z.string({
-    required_error: "Please specify where you made the transaction.",
+    required_error: 'Please specify where you made the transaction.',
   }),
   notes: z.string().optional(),
 });
@@ -74,8 +74,8 @@ export default function AddTransactionDialogContentInputs({}: AddTransactionDial
     const fetchData = async () => {
       try {
         const { data: countries, error } = await supabase
-          .from("countries")
-          .select("name, iso2");
+          .from('countries')
+          .select('name, iso2');
         if (error) throw error;
         const countriesData = countries as Country[];
         setCountries(countriesData);
@@ -92,7 +92,7 @@ export default function AddTransactionDialogContentInputs({}: AddTransactionDial
   });
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    console.log("You submitted: ", JSON.stringify(data, null, 2));
+    console.log('You submitted: ', JSON.stringify(data, null, 2));
   }
 
   return (
@@ -109,14 +109,14 @@ export default function AddTransactionDialogContentInputs({}: AddTransactionDial
                   <PopoverTrigger asChild>
                     <FormControl>
                       <Button
-                        variant={"outline"}
+                        variant={'outline'}
                         className={cn(
-                          "w-[240px] pl-3 text-left font-normal",
-                          !field.value && "text-muted-foreground"
+                          'w-[240px] pl-3 text-left font-normal',
+                          !field.value && 'text-muted-foreground',
                         )}
                       >
                         {field.value ? (
-                          format(field.value, "PPP")
+                          format(field.value, 'PPP')
                         ) : (
                           <span>Transaction date</span>
                         )}
@@ -130,7 +130,7 @@ export default function AddTransactionDialogContentInputs({}: AddTransactionDial
                       selected={field.value}
                       onSelect={field.onChange}
                       disabled={(date) =>
-                        date > new Date() || date < new Date("1900-01-01")
+                        date > new Date() || date < new Date('1900-01-01')
                       }
                       initialFocus
                     />
@@ -150,7 +150,7 @@ export default function AddTransactionDialogContentInputs({}: AddTransactionDial
                   <Input
                     placeholder="iPhone case"
                     {...field}
-                    value={field.value ?? ""}
+                    value={field.value ?? ''}
                   />
                 </FormControl>
                 <FormMessage />
@@ -167,7 +167,7 @@ export default function AddTransactionDialogContentInputs({}: AddTransactionDial
                   <Input
                     placeholder="The Apple Store"
                     {...field}
-                    value={field.value ?? ""}
+                    value={field.value ?? ''}
                   />
                 </FormControl>
                 <FormMessage />
@@ -204,15 +204,15 @@ export default function AddTransactionDialogContentInputs({}: AddTransactionDial
                         variant="outline"
                         role="combobox"
                         className={cn(
-                          "w-[200px] justify-between",
-                          !field.value && "text-muted-foreground"
+                          'w-[200px] justify-between',
+                          !field.value && 'text-muted-foreground',
                         )}
                       >
                         {field.value
                           ? countries.find(
-                              (country) => country.iso2 === field.value
+                              (country) => country.iso2 === field.value,
                             )?.name
-                          : "Select country"}
+                          : 'Select country'}
                         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                       </Button>
                     </FormControl>
@@ -227,15 +227,15 @@ export default function AddTransactionDialogContentInputs({}: AddTransactionDial
                             value={country.name}
                             key={country.iso2}
                             onSelect={() => {
-                              form.setValue("country", country.iso2);
+                              form.setValue('country', country.iso2);
                             }}
                           >
                             <Check
                               className={cn(
-                                "mr-2 h-4 w-4",
+                                'mr-2 h-4 w-4',
                                 country.iso2 === field.value
-                                  ? "opacity-100"
-                                  : "opacity-0"
+                                  ? 'opacity-100'
+                                  : 'opacity-0',
                               )}
                             />
                             {country.name}

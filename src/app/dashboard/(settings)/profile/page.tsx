@@ -1,10 +1,10 @@
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import {
   Dialog,
   DialogContent,
@@ -13,10 +13,10 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
+} from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
 
-import { Pencil } from "lucide-react";
+import { Pencil } from 'lucide-react';
 
 export default async function Dashboard() {
   const supabase = createServerComponentClient({ cookies });
@@ -25,10 +25,10 @@ export default async function Dashboard() {
   } = await supabase.auth.getSession();
 
   if (!session) {
-    redirect("/");
+    redirect('/');
   }
 
-  const { data: profiles } = await supabase.from("profiles").select(`
+  const { data: profiles } = await supabase.from('profiles').select(`
   avatar_url,
   first_name,
   last_name
@@ -39,7 +39,7 @@ export default async function Dashboard() {
   const lastName = profiles?.[0].last_name;
   const fullName = `${profiles?.[0].first_name} ${profiles?.[0].last_name}`;
   const initials = `${profiles?.[0].first_name?.charAt(
-    0
+    0,
   )}${profiles?.[0].last_name?.charAt(0)}`;
   const email = session?.user.email;
 

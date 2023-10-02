@@ -1,4 +1,4 @@
-import { SettingsTopbar } from "./components/settingsTopbar";
+import { SettingsTopbar } from './components/settingsTopbar';
 
 export default function SettingsLayout({
   children,

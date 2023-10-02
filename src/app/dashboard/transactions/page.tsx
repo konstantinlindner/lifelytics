@@ -1,9 +1,9 @@
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 
-import { transactionColumns } from "./components/transactionColumns";
-import { TransactionTable } from "./components/transactionTable";
+import { transactionColumns } from './components/transactionColumns';
+import { TransactionTable } from './components/transactionTable';
 
 export default async function Transactions() {
   const supabase = createServerComponentClient({ cookies });
@@ -12,10 +12,10 @@ export default async function Transactions() {
   } = await supabase.auth.getSession();
 
   if (!session) {
-    redirect("/");
+    redirect('/');
   }
 
-  const { data: transactions } = await supabase.from("transactions").select(`
+  const { data: transactions } = await supabase.from('transactions').select(`
   date,
   name,
   amount,

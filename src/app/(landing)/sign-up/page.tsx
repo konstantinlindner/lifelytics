@@ -1,13 +1,13 @@
-import Link from "next/link";
-import Logo from "@/components/logo";
-import { ChevronLeft } from "lucide-react";
+import Link from 'next/link';
+import Logo from '@/components/logo';
+import { ChevronLeft } from 'lucide-react';
 
-import SignUpForm from "@/app/(landing)/sign-up/components/signUpForm";
-import { Button } from "@/components/ui/button";
+import SignUpForm from '@/app/(landing)/sign-up/components/signUpForm';
+import { Button } from '@/components/ui/button';
 
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 
 export default async function SignUp() {
   const supabase = createServerComponentClient({ cookies });
@@ -16,7 +16,7 @@ export default async function SignUp() {
   } = await supabase.auth.getSession();
 
   if (session) {
-    redirect("/dashboard");
+    redirect('/dashboard');
   }
 
   return (

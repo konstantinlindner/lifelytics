@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import { useTheme } from "next-themes";
+import * as React from 'react';
+import { useTheme } from 'next-themes';
 
-import { Moon, SunMedium } from "lucide-react";
+import { Moon, SunMedium } from 'lucide-react';
 
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 
 interface ModeToggleProps {
   isRound?: boolean;
@@ -14,12 +14,12 @@ interface ModeToggleProps {
 export default function ModeToggle({ isRound }: ModeToggleProps) {
   const { setTheme, resolvedTheme } = useTheme();
 
-  const isDarkTheme = resolvedTheme === "dark";
+  const isDarkTheme = resolvedTheme === 'dark';
 
   return (
     <Button
-      className={isRound ? "h-9 w-9 rounded-full" : "h-9 w-9"}
-      onClick={() => setTheme(isDarkTheme ? "light" : "dark")}
+      className={isRound ? 'h-9 w-9 rounded-full' : 'h-9 w-9'}
+      onClick={() => setTheme(isDarkTheme ? 'light' : 'dark')}
       variant="ghost"
       size="sm"
     >

@@ -1,10 +1,10 @@
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
-import { cookies } from "next/headers";
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+import { cookies } from 'next/headers';
 
-import Link from "next/link";
+import Link from 'next/link';
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,17 +14,17 @@ import {
   DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from '@/components/ui/dropdown-menu';
 
-import SignOutMenuItem from "./signOutMenuItem";
-import ModeToggle from "@/components/modeToggle";
-import PageHeader from "./pageHeader";
-import CommandModal from "./commandModal";
+import SignOutMenuItem from './signOutMenuItem';
+import ModeToggle from '@/components/modeToggle';
+import PageHeader from './pageHeader';
+import CommandModal from './commandModal';
 
 export default async function Topbar() {
   const supabase = createServerComponentClient({ cookies });
 
-  const { data: profiles } = await supabase.from("profiles").select(`
+  const { data: profiles } = await supabase.from('profiles').select(`
     avatar_url,
     first_name,
     last_name
@@ -36,7 +36,7 @@ export default async function Topbar() {
   const avatarUrl = profiles?.[0].avatar_url;
   const fullName = `${profiles?.[0].first_name} ${profiles?.[0].last_name}`;
   const initials = `${profiles?.[0].first_name?.charAt(
-    0
+    0,
   )}${profiles?.[0].last_name?.charAt(0)}`;
 
   return (
@@ -66,17 +66,21 @@ export default async function Topbar() {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem className="cursor-pointer">
-                <Link href="/dashboard/profile" className="flex w-full">
+              <DropdownMenuItem asChild className="cursor-pointer">
+                <Link
+                  href="/dashboard/profile"
+                  passHref
+                  className="flex w-full"
+                >
                   Profile
                   <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem className="cursor-pointer">
+              <DropdownMenuItem asChild className="cursor-pointer">
                 <Link href="/dashboard/account" className="flex w-full">
                   Settings
+                  <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
                 </Link>
-                <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />

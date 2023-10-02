@@ -1,13 +1,13 @@
-import { useState } from "react";
+import { useState } from 'react';
 
-import { Dialog, DialogTrigger } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { CommandItem } from "@/components/ui/command";
+import { Dialog, DialogTrigger } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { CommandItem } from '@/components/ui/command';
 
-import { Plus, Coins } from "lucide-react";
+import { Plus, Coins } from 'lucide-react';
 
-import AddTransactionDialogContent from "./addTransactionDialogContent";
-import { ScreenType } from "./addTransactionConstants";
+import AddTransactionDialogContent from './addTransactionDialogContent';
+import { ScreenType } from './addTransactionConstants';
 
 interface addTransactionDialogProps {
   showButton?: boolean;
@@ -18,7 +18,7 @@ export default function AddTransactionDialog({
   showButton,
   showCommandItem,
 }: addTransactionDialogProps) {
-  const [screen, setScreen] = useState<ScreenType>("new-record");
+  const [screen, setScreen] = useState<ScreenType>('new-record');
 
   const changeScreen = (newScreen: ScreenType) => {
     setScreen(newScreen);

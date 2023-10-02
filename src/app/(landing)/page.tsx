@@ -1,9 +1,9 @@
-import Link from "next/link";
+import Link from 'next/link';
 
-import Navbar from "@/app/(landing)/components/navbar";
-import Footer from "@/app/(landing)/components/footer";
+import Navbar from '@/app/(landing)/components/navbar';
+import Footer from '@/app/(landing)/components/footer';
 
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 
 export default function Home() {
   return (
@@ -20,14 +20,14 @@ export default function Home() {
             your personal finances, health and life stats in one tool.
           </p>
           <div className="space-x-4">
-            <Link href={"/sign-up"}>
+            <Link href={'/sign-up'}>
               <Button size="lg" variant="default">
                 Get Started
               </Button>
             </Link>
 
             <Link
-              href={"https://github.com/konstantinlindner"}
+              href={'https://github.com/konstantinlindner'}
               target="_blank"
               rel="noreferrer"
             >
@@ -154,20 +154,20 @@ export default function Home() {
             Proudly Open Source
           </h2>
           <p className="max-w-[85%] leading-normal text-muted-foreground sm:text-lg sm:leading-7">
-            Taxonomy is open source and powered by open source software. <br />{" "}
-            The code is available on{" "}
+            Taxonomy is open source and powered by open source software. <br />{' '}
+            The code is available on{' '}
             <Link
-              href={"/"}
+              href={'/'}
               target="_blank"
               rel="noreferrer"
               className="underline underline-offset-4"
             >
               GitHub
             </Link>
-            .{" "}
+            .{' '}
           </p>
 
-          <Link href={"/"} target="_blank" rel="noreferrer" className="flex">
+          <Link href={'/'} target="_blank" rel="noreferrer" className="flex">
             <div className="flex h-10 w-10 items-center justify-center space-x-2 rounded-md border border-muted bg-muted">
               <svg
                 xmlns="http://www.w3.org/2000/svg"

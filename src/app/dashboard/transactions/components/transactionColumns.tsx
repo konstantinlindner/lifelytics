@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal, ArrowUpDown } from "lucide-react";
+import { ColumnDef } from '@tanstack/react-table';
+import { MoreHorizontal, ArrowUpDown } from 'lucide-react';
 
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,8 +11,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
   DropdownMenuShortcut,
-} from "@/components/ui/dropdown-menu";
-import { Checkbox } from "@/components/ui/checkbox";
+} from '@/components/ui/dropdown-menu';
+import { Checkbox } from '@/components/ui/checkbox';
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -26,7 +26,7 @@ export type Transaction = {
 
 export const transactionColumns: ColumnDef<Transaction>[] = [
   {
-    id: "select",
+    id: 'select',
     header: ({ table }) => (
       <Checkbox
         checked={table.getIsAllPageRowsSelected()}
@@ -45,16 +45,16 @@ export const transactionColumns: ColumnDef<Transaction>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "date",
-    header: "Date",
+    accessorKey: 'date',
+    header: 'Date',
   },
   {
-    accessorKey: "name",
+    accessorKey: 'name',
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
           Name
           <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -63,14 +63,14 @@ export const transactionColumns: ColumnDef<Transaction>[] = [
     },
   },
   {
-    accessorKey: "amount",
-    header: () => "Amount",
+    accessorKey: 'amount',
+    header: () => 'Amount',
     cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("amount"));
-      const currency: string = row.getValue("currency");
+      const amount = parseFloat(row.getValue('amount'));
+      const currency: string = row.getValue('currency');
 
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
+      const formatted = new Intl.NumberFormat('en-US', {
+        style: 'currency',
         currency: currency,
       }).format(amount);
 
@@ -78,15 +78,15 @@ export const transactionColumns: ColumnDef<Transaction>[] = [
     },
   },
   {
-    accessorKey: "country",
-    header: "Country",
+    accessorKey: 'country',
+    header: 'Country',
   },
   {
-    accessorKey: "currency",
-    header: "Currency",
+    accessorKey: 'currency',
+    header: 'Currency',
   },
   {
-    id: "actions",
+    id: 'actions',
     cell: ({ row }) => {
       const transaction = row.original;
 

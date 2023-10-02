@@ -1,7 +1,7 @@
-import ModeToggle from "@/components/modeToggle";
-import { Button } from "@/components/ui/button";
-import Logo from "@/components/logo";
-import Link from "next/link";
+import ModeToggle from '@/components/modeToggle';
+import { Button } from '@/components/ui/button';
+import Logo from '@/components/logo';
+import Link from 'next/link';
 
 export default function Navbar() {
   return (
@@ -29,13 +29,13 @@ export default function Navbar() {
       <div className="flex gap-2 items-center">
         <ModeToggle />
 
-        <Link href={"/sign-in"}>
+        <Link href={'/sign-in'}>
           <Button size="sm" variant="outline">
             Sign in
           </Button>
         </Link>
 
-        <Link href={"/sign-up"}>
+        <Link href={'/sign-up'}>
           <Button size="sm" variant="default">
             Sign up
           </Button>

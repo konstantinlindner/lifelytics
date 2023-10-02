@@ -1,6 +1,6 @@
-import { Activity } from "lucide-react";
+import { Activity } from 'lucide-react';
 
-import Link from "next/link";
+import Link from 'next/link';
 
 interface LogoProps {
   hideText?: boolean;
@@ -11,7 +11,7 @@ export default function Logo({ hideText, isDashboard }: LogoProps) {
   return (
     <Link
       className="flex items-center"
-      href={!isDashboard ? "/" : "/dashboard"}
+      href={!isDashboard ? '/' : '/dashboard'}
     >
       <Activity className="h-7 w-7" />
 
@@ -24,5 +24,3 @@ export default function Logo({ hideText, isDashboard }: LogoProps) {
     </Link>
   );
 }
-
-

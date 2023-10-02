@@ -4,14 +4,14 @@ export type Json =
   | boolean
   | null
   | { [key: string]: Json | undefined }
-  | Json[]
+  | Json[];
 
 export interface Database {
   public: {
     Tables: {
       countries: {
         Row: {
-          continent: Database["public"]["Enums"]["continents"] | null;
+          continent: Database['public']['Enums']['continents'] | null;
           id: number;
           iso2: string;
           iso3: string | null;
@@ -19,7 +19,7 @@ export interface Database {
           name: string | null;
         };
         Insert: {
-          continent?: Database["public"]["Enums"]["continents"] | null;
+          continent?: Database['public']['Enums']['continents'] | null;
           id?: number;
           iso2: string;
           iso3?: string | null;
@@ -27,7 +27,7 @@ export interface Database {
           name?: string | null;
         };
         Update: {
-          continent?: Database["public"]["Enums"]["continents"] | null;
+          continent?: Database['public']['Enums']['continents'] | null;
           id?: number;
           iso2?: string;
           iso3?: string | null;
@@ -63,11 +63,11 @@ export interface Database {
         };
         Relationships: [
           {
-            foreignKeyName: "currencies_countries_fkey";
-            columns: ["countries"];
-            referencedRelation: "countries";
-            referencedColumns: ["id"];
-          }
+            foreignKeyName: 'currencies_countries_fkey';
+            columns: ['countries'];
+            referencedRelation: 'countries';
+            referencedColumns: ['id'];
+          },
         ];
       };
       profiles: {
@@ -109,17 +109,17 @@ export interface Database {
         };
         Relationships: [
           {
-            foreignKeyName: "profiles_id_fkey";
-            columns: ["id"];
-            referencedRelation: "users";
-            referencedColumns: ["id"];
+            foreignKeyName: 'profiles_id_fkey';
+            columns: ['id'];
+            referencedRelation: 'users';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "profiles_transactions_fkey";
-            columns: ["transactions"];
-            referencedRelation: "transactions";
-            referencedColumns: ["id"];
-          }
+            foreignKeyName: 'profiles_transactions_fkey';
+            columns: ['transactions'];
+            referencedRelation: 'transactions';
+            referencedColumns: ['id'];
+          },
         ];
       };
       transactions: {
@@ -158,23 +158,23 @@ export interface Database {
         };
         Relationships: [
           {
-            foreignKeyName: "transactions_country_fkey";
-            columns: ["country"];
-            referencedRelation: "countries";
-            referencedColumns: ["id"];
+            foreignKeyName: 'transactions_country_fkey';
+            columns: ['country'];
+            referencedRelation: 'countries';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "transactions_currency_fkey";
-            columns: ["currency"];
-            referencedRelation: "currencies";
-            referencedColumns: ["id"];
+            foreignKeyName: 'transactions_currency_fkey';
+            columns: ['currency'];
+            referencedRelation: 'currencies';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "transactions_user_id_fkey";
-            columns: ["user_id"];
-            referencedRelation: "profiles";
-            referencedColumns: ["id"];
-          }
+            foreignKeyName: 'transactions_user_id_fkey';
+            columns: ['user_id'];
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
         ];
       };
     };
@@ -186,13 +186,13 @@ export interface Database {
     };
     Enums: {
       continents:
-        | "Africa"
-        | "Antarctica"
-        | "Asia"
-        | "Europe"
-        | "Oceania"
-        | "North America"
-        | "South America";
+        | 'Africa'
+        | 'Antarctica'
+        | 'Asia'
+        | 'Europe'
+        | 'Oceania'
+        | 'North America'
+        | 'South America';
     };
     CompositeTypes: {
       [_ in never]: never;

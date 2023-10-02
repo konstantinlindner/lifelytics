@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { useRouter } from "next/navigation";
-import type { Database } from "@/types/supabase.types";
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { useRouter } from 'next/navigation';
+import type { Database } from '@/types/supabase.types';
 
 import {
   DropdownMenuItem,
   DropdownMenuShortcut,
-} from "@/components/ui/dropdown-menu";
+} from '@/components/ui/dropdown-menu';
 
 function SignOutMenuItem() {
   const router = useRouter();
@@ -18,7 +18,7 @@ function SignOutMenuItem() {
       const { error } = await supabase.auth.signOut({});
       if (error) throw error;
       // currently not possible to redirect
-      router.push("/");
+      router.push('/');
     } catch (error) {
       console.log(error);
     }

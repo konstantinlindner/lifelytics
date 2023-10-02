@@ -1,18 +1,18 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
-import { cn } from "@/lib/utils";
+import { cn } from '@/lib/utils';
 
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 
 export const SettingsTopbarItems = [
-  { title: "Profile", href: "/dashboard/profile", header: "Profile settings" },
+  { title: 'Profile', href: '/dashboard/profile', header: 'Profile settings' },
   {
-    title: "Account",
-    href: "/dashboard/account",
-    header: "Account settings",
+    title: 'Account',
+    href: '/dashboard/account',
+    header: 'Account settings',
   },
 ];
 
@@ -29,8 +29,8 @@ export function SettingsTopbar() {
               size="sm"
               className={cn(
                 pathname === item.href &&
-                  "bg-white text-black hover:bg-white hover:text-black",
-                "w-48"
+                  'bg-white text-black hover:bg-white hover:text-black',
+                'w-48',
               )}
             >
               {item.title}
