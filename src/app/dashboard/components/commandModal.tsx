@@ -48,10 +48,6 @@ export default function CommandModal() {
           <CommandEmpty>No results found.</CommandEmpty>
           <CommandGroup heading="Suggestions">
             <AddTransactionDialog showCommandItem />
-            {/* <CommandItem>
-              <Coins className="mr-2 h-4 w-4" />
-              <span>Add transaction</span>
-            </CommandItem> */}
             <CommandItem>
               <Calendar className="mr-2 h-4 w-4" />
               <span>Calendar</span>
@@ -70,8 +66,8 @@ export default function CommandModal() {
             </CommandItem>
             <CommandItem>
               <Settings className="mr-2 h-4 w-4" />
-              <span>Settings</span>
-              <CommandShortcut>⌘S</CommandShortcut>
+              <span>Account</span>
+              <CommandShortcut>⇧⌘A</CommandShortcut>
             </CommandItem>
           </CommandGroup>
         </CommandList>
