@@ -1,6 +1,6 @@
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+// import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createServerClient, type CookieOptions } from '@supabase/ssr';
 import { cookies } from 'next/headers';
-import { redirect } from 'next/navigation';
 
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -19,14 +19,22 @@ import { Label } from '@/components/ui/label';
 import { Pencil } from 'lucide-react';
 
 export default async function Dashboard() {
-  const supabase = createServerComponentClient({ cookies });
+  const cookieStore = cookies();
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        get(name: string) {
+          return cookieStore.get(name)?.value;
+        },
+      },
+    },
+  );
+
   const {
     data: { session },
   } = await supabase.auth.getSession();
-
-  if (!session) {
-    redirect('/');
-  }
 
   const { data: profiles } = await supabase.from('profiles').select(`
   avatar_url,

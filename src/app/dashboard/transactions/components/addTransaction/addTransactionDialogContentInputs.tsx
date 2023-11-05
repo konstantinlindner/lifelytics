@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createBrowserClient } from '@supabase/ssr';
 import type { Database } from '@/types/supabase.types';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -69,7 +69,10 @@ export default function AddTransactionDialogContentInputs({}: AddTransactionDial
   const [countries, setCountries] = useState<Country[]>([]);
 
   useEffect(() => {
-    const supabase = createClientComponentClient<Database>();
+    const supabase = createBrowserClient<Database>(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    );
 
     const fetchData = async () => {
       try {
