@@ -1,6 +1,5 @@
-import { createServerClient, type CookieOptions } from '@supabase/ssr';
+import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
-import { redirect } from 'next/navigation';
 
 import { transactionColumns } from './components/transactionColumns';
 import { TransactionTable } from './components/transactionTable';
@@ -18,14 +17,6 @@ export default async function Transactions() {
       },
     },
   );
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
-
-  if (!session) {
-    redirect('/');
-  }
-
   const { data: transactions } = await supabase.from('transactions').select(`
   date,
   name,

@@ -1,5 +1,5 @@
 // import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
-import { createServerClient, type CookieOptions } from '@supabase/ssr';
+import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 
 import { Input } from '@/components/ui/input';
