@@ -22,6 +22,7 @@ const expenseChildren = [
     description: 'Enter the details below.',
     icon: <Home />,
     buttonChildren: [],
+    inputFields: [],
   },
   {
     screen: 'food-and-drink',
@@ -29,6 +30,7 @@ const expenseChildren = [
     description: 'Enter the details below.',
     icon: <UtensilsCrossed />,
     buttonChildren: [],
+    inputFields: [],
   },
   {
     screen: 'transportation',
@@ -36,6 +38,7 @@ const expenseChildren = [
     description: 'Enter the details below.',
     icon: <Car />,
     buttonChildren: [],
+    inputFields: [],
   },
   {
     screen: 'entertainment',
@@ -43,6 +46,7 @@ const expenseChildren = [
     description: 'Enter the details below.',
     icon: <Drama />,
     buttonChildren: [],
+    inputFields: [],
   },
   {
     screen: 'health-and-wellness',
@@ -50,6 +54,7 @@ const expenseChildren = [
     description: 'Enter the details below.',
     icon: <Heart />,
     buttonChildren: [],
+    inputFields: [],
   },
   {
     screen: 'shopping',
@@ -57,6 +62,7 @@ const expenseChildren = [
     description: 'Enter the details below.',
     icon: <ShoppingBag />,
     buttonChildren: [],
+    inputFields: [],
   },
   {
     screen: 'savings-and-investments',
@@ -64,6 +70,7 @@ const expenseChildren = [
     description: 'Enter the details below.',
     icon: <Percent />,
     buttonChildren: [],
+    inputFields: [],
   },
   {
     screen: 'subscriptions',
@@ -71,13 +78,15 @@ const expenseChildren = [
     description: 'Enter the details below.',
     icon: <RotateCw />,
     buttonChildren: [],
+    inputFields: [],
   },
   {
-    screen: 'other-expense',
+    screen: 'other-expenses',
     title: 'Other expenses',
     description: 'Enter the details below.',
     icon: <CircleDollarSign />,
     buttonChildren: [],
+    inputFields: [],
   },
 ];
 
@@ -88,6 +97,7 @@ const incomeChildren = [
     description: 'Enter the details below.',
     icon: <Coins />,
     buttonChildren: [],
+    inputFields: [],
   },
   {
     screen: 'sale',
@@ -95,6 +105,7 @@ const incomeChildren = [
     description: 'Enter the details below.',
     icon: <Receipt />,
     buttonChildren: [],
+    inputFields: [],
   },
   {
     screen: 'gift',
@@ -102,6 +113,7 @@ const incomeChildren = [
     description: 'Enter the details below.',
     icon: <Gift />,
     buttonChildren: [],
+    inputFields: [],
   },
   {
     screen: 'tax-return',
@@ -109,6 +121,7 @@ const incomeChildren = [
     description: 'Enter the details below.',
     icon: <Undo2 />,
     buttonChildren: [],
+    inputFields: [],
   },
   {
     screen: 'realized-investments',
@@ -116,6 +129,7 @@ const incomeChildren = [
     description: 'Enter the details below.',
     icon: <Percent />,
     buttonChildren: [],
+    inputFields: [],
   },
   {
     screen: 'other-income',
@@ -123,6 +137,7 @@ const incomeChildren = [
     description: 'Enter the details below.',
     icon: <CircleDollarSign />,
     buttonChildren: [],
+    inputFields: [],
   },
 ];
 

@@ -108,7 +108,7 @@ export function TransactionTable<TData, TValue>({
             }
           />
         </div>
-        <AddTransactionDialog showButton />
+        <AddTransactionDialog openingScreen="new-record" showButton />
       </div>
       <div className="rounded-md border">
         <Table>

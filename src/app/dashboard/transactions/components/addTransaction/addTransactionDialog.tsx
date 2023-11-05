@@ -10,23 +10,27 @@ import AddTransactionDialogContent from './addTransactionDialogContent';
 import { ScreenType } from './addTransactionConstants';
 
 interface addTransactionDialogProps {
+  openingScreen: ScreenType;
   showButton?: boolean;
   showCommandItem?: boolean;
 }
 
 export default function AddTransactionDialog({
+  openingScreen,
   showButton,
   showCommandItem,
 }: addTransactionDialogProps) {
-  const [screen, setScreen] = useState<ScreenType>('new-record');
-
-  const changeScreen = (newScreen: ScreenType) => {
-    setScreen(newScreen);
-  };
+  const [screen, setScreen] = useState<ScreenType>(openingScreen);
 
   return (
     <main>
-      <Dialog>
+      <Dialog
+        onOpenChange={(isOpen) => {
+          if (isOpen) {
+            setScreen(openingScreen);
+          }
+        }}
+      >
         {showButton && (
           <DialogTrigger asChild>
             <Button variant="outline">
@@ -45,10 +49,7 @@ export default function AddTransactionDialog({
           </DialogTrigger>
         )}
 
-        <AddTransactionDialogContent
-          screen={screen}
-          changeScreen={changeScreen}
-        />
+        <AddTransactionDialogContent screen={screen} setScreen={setScreen} />
       </Dialog>
     </main>
   );

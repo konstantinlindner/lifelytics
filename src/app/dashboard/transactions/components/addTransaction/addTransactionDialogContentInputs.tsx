@@ -52,7 +52,7 @@ const FormSchema = z.object({
   what: z.string({
     required_error: 'Please specify what you purchased.',
   }),
-  where: z.string({
+  place: z.string({
     required_error: 'Please specify where you made the transaction.',
   }),
   notes: z.string().optional(),
@@ -132,9 +132,7 @@ export default function AddTransactionDialogContentInputs({}: AddTransactionDial
                       mode="single"
                       selected={field.value}
                       onSelect={field.onChange}
-                      disabled={(date) =>
-                        date > new Date() || date < new Date('1900-01-01')
-                      }
+                      disabled={(date) => date < new Date('1900-01-01')}
                       initialFocus
                     />
                   </PopoverContent>
@@ -162,10 +160,10 @@ export default function AddTransactionDialogContentInputs({}: AddTransactionDial
           />
           <FormField
             control={form.control}
-            name="where"
+            name="place"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Where</FormLabel>
+                <FormLabel>Place</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="The Apple Store"

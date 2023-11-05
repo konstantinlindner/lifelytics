@@ -11,12 +11,12 @@ import { allScreens, ScreenType } from './addTransactionConstants';
 
 interface AddTransactionDialogContentProps {
   screen: ScreenType;
-  changeScreen: (newScreen: ScreenType) => void;
+  setScreen: (newScreen: ScreenType) => void;
 }
 
 export default function AddTransactionDialogContent({
   screen,
-  changeScreen,
+  setScreen,
 }: AddTransactionDialogContentProps) {
   const currentScreen = allScreens.find((s) => s.screen === screen);
 
@@ -25,17 +25,16 @@ export default function AddTransactionDialogContent({
   }
 
   const { title, description } = currentScreen;
+  const isEndScreen = !currentScreen.buttonChildren.length;
 
   return (
-    <DialogContent>
+    <DialogContent className="max-w-xl overflow-y-scroll max-h-screen">
       <DialogHeader>
         <DialogTitle>{title}</DialogTitle>
         <DialogDescription>{description}</DialogDescription>
       </DialogHeader>
       <main className="mx-auto py-7">
-        <AddTransactionDialogContentInputs />
-
-        {currentScreen.buttonChildren && (
+        {!isEndScreen && (
           <div
             className={
               currentScreen.buttonChildren.length < 3
@@ -49,12 +48,13 @@ export default function AddTransactionDialogContent({
                 icon={child.icon}
                 text={child.title}
                 shortcut={String(index + 1)}
-                changeScreen={changeScreen}
+                setScreen={setScreen}
                 toScreen={child.screen}
               />
             ))}
           </div>
         )}
+        {isEndScreen && <AddTransactionDialogContentInputs />}
       </main>
     </DialogContent>
   );
