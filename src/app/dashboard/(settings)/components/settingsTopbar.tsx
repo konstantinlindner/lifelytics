@@ -8,11 +8,11 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 
 export const SettingsTopbarItems = [
-  { title: 'Profile', href: '/dashboard/profile', header: 'Profile settings' },
+  { title: 'Profile', href: '/dashboard/profile', header: 'Settings' },
   {
     title: 'Account',
     href: '/dashboard/account',
-    header: 'Account settings',
+    header: 'Settings',
   },
 ];
 
