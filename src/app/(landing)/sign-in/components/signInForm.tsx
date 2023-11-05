@@ -43,7 +43,7 @@ function SignInForm() {
         password: values.password,
       });
       if (error) throw error;
-      router.push('/dashboard');
+      router.refresh();
     } catch (error) {
       console.log(error);
     }

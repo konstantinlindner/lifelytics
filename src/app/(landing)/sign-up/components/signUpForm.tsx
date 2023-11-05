@@ -2,6 +2,7 @@
 
 import { createBrowserClient } from '@supabase/ssr';
 import type { Database } from '@/types/supabase.types';
+import { useRouter } from 'next/navigation';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -19,6 +20,7 @@ import {
 import { Input } from '@/components/ui/input';
 
 function SignUpForm() {
+  const router = useRouter();
   const supabase = createBrowserClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -38,9 +40,9 @@ function SignUpForm() {
       const { error } = await supabase.auth.signUp({
         email: values.email,
         password: values.password,
-        options: { emailRedirectTo: `${location.origin}/auth/callback` },
       });
       if (error) throw error;
+      router.refresh();
     } catch (error) {
       console.log(error);
     }

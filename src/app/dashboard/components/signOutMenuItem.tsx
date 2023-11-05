@@ -20,8 +20,7 @@ function SignOutMenuItem() {
     try {
       const { error } = await supabase.auth.signOut({});
       if (error) throw error;
-      // currently not possible to redirect
-      router.push('/');
+      router.refresh();
     } catch (error) {
       console.log(error);
     }
