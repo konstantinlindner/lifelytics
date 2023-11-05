@@ -89,8 +89,8 @@ export default async function Topbar() {
               </DropdownMenuItem>
               <DropdownMenuItem asChild className="cursor-pointer">
                 <Link href="/dashboard/account" className="flex w-full">
-                  Settings
-                  <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
+                  Account
+                  <DropdownMenuShortcut>⇧⌘A</DropdownMenuShortcut>
                 </Link>
               </DropdownMenuItem>
             </DropdownMenuGroup>
