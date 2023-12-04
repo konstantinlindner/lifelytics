@@ -5,6 +5,23 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 
+import {
+  Landmark,
+  CircleDollarSign,
+  Receipt,
+  Gift,
+  Percent,
+  Coins,
+  Undo2,
+  UtensilsCrossed,
+  Home,
+  Car,
+  Drama,
+  Heart,
+  ShoppingBag,
+  RotateCw,
+} from 'lucide-react';
+
 import AddTransactionDialogContentButton from './addTransactionDialogContentButton';
 import AddTransactionDialogContentInputs from './addTransactionDialogContentInputs';
 import { allScreens, ScreenType } from './addTransactionConstants';
