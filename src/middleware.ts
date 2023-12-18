@@ -64,7 +64,7 @@ export async function middleware(request: NextRequest) {
   onboardingCompletedDate
   `);
 
-  const isOnboardingCompleted = !!profiles?.[0].onboardingCompletedDate;
+  const isOnboardingCompleted = !!profiles?.[0]?.onboardingCompletedDate;
   const path = request.nextUrl.pathname;
   const isPublicPath = path === '/sign-in' || path === '/sign-up';
   const isDashboardPath = path.startsWith('/dashboard');
