@@ -60,11 +60,11 @@ export async function middleware(request: NextRequest) {
     data: { session },
   } = await supabase.auth.getSession();
 
-  const { data: profiles } = await supabase.from('profiles').select(`
-  onboardingCompletedDate
-  `);
+  // const { data: profiles } = await supabase.from('profiles').select(`
+  // onboardingCompletedDate
+  // `);
 
-  const isOnboardingCompleted = !!profiles?.[0].onboardingCompletedDate;
+  // const isOnboardingCompleted = !!profiles?.[0].onboardingCompletedDate;
   const path = request.nextUrl.pathname;
   const isPublicPath = path === '/sign-in' || path === '/sign-up';
   const isDashboardPath = path.startsWith('/dashboard');
@@ -80,9 +80,9 @@ export async function middleware(request: NextRequest) {
   }
 
   // if user is signed in and the current path is dashboard and the user has not completed onboarding, redirect the user to /sign-up/onboarding
-  if (session && isDashboardPath && !isOnboardingCompleted) {
-    return NextResponse.redirect(new URL('/sign-up/onboarding', request.url));
-  }
+  // if (session && isDashboardPath && !isOnboardingCompleted) {
+  //   return NextResponse.redirect(new URL('/sign-up/onboarding', request.url));
+  // }
 
   return response;
 }
