@@ -19,7 +19,7 @@ function SignOutMenuItem() {
   const handleSignOut = async () => {
     try {
       const { error } = await supabase.auth.signOut({});
-      if (error) throw error;
+      if (error) console.log(error);
       router.refresh();
     } catch (error) {
       console.log(error);

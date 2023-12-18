@@ -65,7 +65,7 @@ function SignUpForm() {
         email: values.email,
         password: values.password,
       });
-      if (error) throw error;
+      if (error) console.log(error);
 
       router.refresh();
 
