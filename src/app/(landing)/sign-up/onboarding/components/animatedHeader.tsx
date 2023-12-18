@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion';
 
 interface AnimatedHeaderProps {
-  firstName?: string;
+  firstName: string;
 }
 
 export default function AnimatedHeader({ firstName }: AnimatedHeaderProps) {
