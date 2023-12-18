@@ -2,7 +2,11 @@
 
 import { motion } from 'framer-motion';
 
-export default function AnimatedHeader() {
+interface AnimatedHeaderProps {
+  firstName: string;
+}
+
+export default function AnimatedHeader({ firstName }: AnimatedHeaderProps) {
   return (
     <div className="container flex flex-col space-y-10 items-center">
       <motion.div
@@ -10,8 +14,8 @@ export default function AnimatedHeader() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1 }}
       >
-        <h1 className="font-heading text-3xl sm:text-5xl md:text-6xl lg:text-7xl">
-          Welcome to Lifelytics
+        <h1 className="font-heading leading-10 text-center text-3xl sm:text-5xl md:text-6xl lg:text-7xl">
+          Welcome to Lifelytics, {firstName}!
         </h1>
       </motion.div>
 
