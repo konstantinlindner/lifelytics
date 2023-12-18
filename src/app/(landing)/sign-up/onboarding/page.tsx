@@ -33,7 +33,7 @@ export default async function SignUp() {
 
   return (
     <div className="container flex h-screen w-screen flex-col space-y-10 items-center max-w-[64rem] pb-8 pt-24">
-      <AnimatedHeader firstName={'hello'} />
+      <AnimatedHeader />
 
       <div className="p-20">
         <ProfilePictureUpload />
