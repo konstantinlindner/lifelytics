@@ -2,6 +2,7 @@ export const dynamic = 'force-dynamic';
 
 import '@/styles/globals.css';
 import type { Metadata } from 'next';
+import { Analytics } from '@vercel/analytics/react';
 
 import { Inter as FontSans } from 'next/font/google';
 import localFont from 'next/font/local';
@@ -52,7 +53,7 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: '/favicon.ico',
-    shortcut: '/favicon-16.png',
+    // shortcut: '/favicon-16.png',
     apple: '/apple-touch-icon.png',
   },
 };
@@ -73,6 +74,7 @@ export default function RootLayout({
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           {children}
+          <Analytics />
         </ThemeProvider>
       </body>
     </html>
