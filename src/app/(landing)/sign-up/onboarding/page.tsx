@@ -21,19 +21,19 @@ export default async function SignUp() {
     },
   );
 
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
+  // const {
+  //   data: { session },
+  // } = await supabase.auth.getSession();
 
-  const { data: profiles } = await supabase.from('profiles').select(`
-    first_name
-    `);
+  // const { data: profiles } = await supabase.from('profiles').select(`
+  //   first_name
+  //   `);
 
-  const firstName = profiles?.[0]?.first_name ?? '';
+  // const firstName = profiles?.[0]?.first_name ?? '';
 
   return (
     <section className="container flex h-screen w-screen flex-col space-y-10 items-center max-w-[64rem] pb-8 pt-24">
-      <AnimatedHeader firstName={firstName} />
+      <AnimatedHeader firstName={'hello'} />
 
       <div className="p-20">
         <ProfilePictureUpload />
