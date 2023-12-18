@@ -2,7 +2,9 @@ export const dynamic = 'force-dynamic';
 
 import '@/styles/globals.css';
 import type { Metadata } from 'next';
+
 import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 import { Inter as FontSans } from 'next/font/google';
 import localFont from 'next/font/local';
@@ -75,6 +77,7 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           {children}
           <Analytics />
+          <SpeedInsights />
         </ThemeProvider>
       </body>
     </html>
