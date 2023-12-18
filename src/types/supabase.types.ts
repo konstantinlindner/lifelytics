@@ -82,20 +82,9 @@ export interface Database {
           transactions: string | null;
           updated_at: string | null;
           website: string | null;
+          onboardingCompletedDate: string | null;
         };
         Insert: {
-          avatar_url?: string | null;
-          created_at?: string | null;
-          date_of_birth?: string | null;
-          first_name?: string | null;
-          full_name?: string | null;
-          id: string;
-          last_name?: string | null;
-          transactions?: string | null;
-          updated_at?: string | null;
-          website?: string | null;
-        };
-        Update: {
           avatar_url?: string | null;
           created_at?: string | null;
           date_of_birth?: string | null;
@@ -106,6 +95,20 @@ export interface Database {
           transactions?: string | null;
           updated_at?: string | null;
           website?: string | null;
+          onboardingCompletedDate?: string | null;
+        };
+        Update: {
+          avatar_url?: string | null;
+          created_at?: string | null;
+          date_of_birth?: string | null;
+          first_name?: string | null;
+          full_name?: string | null;
+          id?: string | null;
+          last_name?: string | null;
+          transactions?: string | null;
+          updated_at?: string | null;
+          website?: string | null;
+          onboardingCompletedDate?: string | null;
         };
         Relationships: [
           {
