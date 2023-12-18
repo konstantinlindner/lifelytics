@@ -6,6 +6,7 @@ interface AnimatedHeaderProps {
   firstName: string;
 }
 
+
 export default function AnimatedHeader({ firstName }: AnimatedHeaderProps) {
   return (
     <div className="container flex flex-col space-y-10 items-center">
