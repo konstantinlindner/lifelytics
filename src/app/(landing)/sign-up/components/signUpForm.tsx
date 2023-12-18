@@ -60,11 +60,6 @@ function SignUpForm() {
   };
 
   const handleSignUp = async (values: z.infer<typeof formSchema>) => {
-    const name = {
-      first_name: values.firstName,
-      last_name: values.lastName,
-    };
-
     try {
       const { error } = await supabase.auth.signUp({
         email: values.email,
