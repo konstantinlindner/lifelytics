@@ -72,7 +72,7 @@ export interface Database {
       };
       profiles: {
         Row: {
-          avatar_url: string | null;
+          avatarUrl: string | null;
           created_at: string | null;
           date_of_birth: string | null;
           first_name: string | null;
@@ -85,7 +85,7 @@ export interface Database {
           onboardingCompletedDate: string | null;
         };
         Insert: {
-          avatar_url?: string | null;
+          avatarUrl?: string | null;
           created_at?: string | null;
           date_of_birth?: string | null;
           first_name?: string | null;
@@ -98,7 +98,7 @@ export interface Database {
           onboardingCompletedDate?: string | null;
         };
         Update: {
-          avatar_url?: string | null;
+          avatarUrl?: string | null;
           created_at?: string | null;
           date_of_birth?: string | null;
           first_name?: string | null;
