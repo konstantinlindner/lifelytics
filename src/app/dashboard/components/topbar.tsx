@@ -36,7 +36,7 @@ export default async function Topbar() {
   );
 
   const { data: profiles } = await supabase.from('profiles').select(`
-    avatar_url,
+    avatarUrl,
     first_name,
     last_name
     `);
@@ -44,7 +44,7 @@ export default async function Topbar() {
     data: { session },
   } = await supabase.auth.getSession();
 
-  const avatarUrl = profiles?.[0].avatar_url;
+  const avatarUrl = profiles?.[0].avatarUrl;
   const fullName = `${profiles?.[0].first_name} ${profiles?.[0].last_name}`;
   const initials = `${profiles?.[0].first_name?.charAt(
     0,
