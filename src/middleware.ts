@@ -65,23 +65,30 @@ export async function middleware(request: NextRequest) {
   `);
 
   const isOnboardingCompleted = !!profiles?.[0]?.onboardingCompletedDate;
+
   const path = request.nextUrl.pathname;
-  const isPublicPath = path === '/sign-in' || path === '/sign-up';
+  const isPortalPath = path === '/sign-in' || path === '/sign-up';
   const isDashboardPath = path.startsWith('/dashboard');
+  const isOnboardingPath = path === '/onboarding';
 
   // if user is signed in and the current path is /sign-in or /sign-up, redirect the user to /dashboard
-  if (session && isPublicPath) {
+  if (session && isPortalPath) {
     return NextResponse.redirect(new URL('/dashboard', request.url));
   }
 
-  // if user is not signed in and the current path is /dashboard, redirect the user to /
-  if (!session && isDashboardPath) {
+  // if user is not signed in and the current path is /dashboard or /onboarding, redirect the user to /
+  if ((!session && isDashboardPath) || (!session && isOnboardingPath)) {
     return NextResponse.redirect(new URL('/', request.url));
   }
 
-  // if user is signed in and the current path is dashboard and the user has not completed onboarding, redirect the user to /sign-up/onboarding
+  // if user is signed in and the current path is /dashboard and the user has not completed onboarding, redirect the user to /onboarding
   if (session && isDashboardPath && !isOnboardingCompleted) {
-    return NextResponse.redirect(new URL('/sign-up/onboarding', request.url));
+    return NextResponse.redirect(new URL('/onboarding', request.url));
+  }
+
+  // if user is signed in and the current path is /onboarding and the user has completed onboarding, redirect the user to /dashboard
+  if (session && isOnboardingPath && isOnboardingCompleted) {
+    return NextResponse.redirect(new URL('/dashboard', request.url));
   }
 
   return response;
