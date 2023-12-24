@@ -73,40 +73,37 @@ export interface Database {
       profiles: {
         Row: {
           avatarUrl: string | null;
-          created_at: string | null;
-          date_of_birth: string | null;
-          first_name: string | null;
-          full_name: string | null;
+          createdAt: string | null;
+          dateOfBirth: string | null;
+          firstName: string | null;
           id: string;
-          last_name: string | null;
+          lastName: string | null;
           transactions: string | null;
-          updated_at: string | null;
+          updatedAt: string | null;
           website: string | null;
           onboardingCompletedDate: string | null;
         };
         Insert: {
           avatarUrl?: string | null;
-          created_at?: string | null;
-          date_of_birth?: string | null;
-          first_name?: string | null;
-          full_name?: string | null;
+          createdAt?: string | null;
+          dateOfBirth?: string | null;
+          firstName?: string | null;
           id?: string;
-          last_name?: string | null;
+          lastName?: string | null;
           transactions?: string | null;
-          updated_at?: string | null;
+          updatedAt?: string | null;
           website?: string | null;
           onboardingCompletedDate?: string | null;
         };
         Update: {
           avatarUrl?: string | null;
-          created_at?: string | null;
-          date_of_birth?: string | null;
-          first_name?: string | null;
-          full_name?: string | null;
+          createdAt?: string | null;
+          dateOfBirth?: string | null;
+          firstName?: string | null;
           id?: string | null;
-          last_name?: string | null;
+          lastName?: string | null;
           transactions?: string | null;
-          updated_at?: string | null;
+          updatedAt?: string | null;
           website?: string | null;
           onboardingCompletedDate?: string | null;
         };
