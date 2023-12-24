@@ -50,7 +50,7 @@ function SignUpForm() {
     try {
       const { error } = await supabase
         .from('profiles')
-        .update({ first_name: firstName, last_name: lastName })
+        .update({ firstName: firstName, lastName: lastName })
         .eq('id', id);
 
       if (error) throw error;
