@@ -82,12 +82,12 @@ export async function middleware(request: NextRequest) {
   }
 
   // if user is signed in and the current path is /dashboard and the user has not completed onboarding, redirect the user to /onboarding
-  if (session && isDashboardPath && !isOnboardingCompleted) {
+  if (isDashboardPath && !isOnboardingCompleted) {
     return NextResponse.redirect(new URL('/onboarding', request.url));
   }
 
   // if user is signed in and the current path is /onboarding and the user has completed onboarding, redirect the user to /dashboard
-  if (session && isOnboardingPath && isOnboardingCompleted) {
+  if (isOnboardingPath && isOnboardingCompleted) {
     return NextResponse.redirect(new URL('/dashboard', request.url));
   }
 
