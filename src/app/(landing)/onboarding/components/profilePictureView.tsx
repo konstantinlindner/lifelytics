@@ -1,62 +1,38 @@
 'use client';
 
-import { createBrowserClient } from '@supabase/ssr';
-import type { Database } from '@/types/supabase.types';
 import { useRouter } from 'next/navigation';
+
+import { useUser } from '@/contexts/UserContext';
 
 import ProfilePictureUpload from '@/components/profilePicturePicker';
 
 import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 
 interface ProfilePictureViewProps {
-  fullName: string;
-  avatarUrl: string;
   currentViewIndex: number;
   setCurrentViewIndex: (view: number) => void;
 }
 
 export default function ProfilePictureView({
-  fullName,
-  avatarUrl,
   currentViewIndex,
   setCurrentViewIndex,
 }: ProfilePictureViewProps) {
   const router = useRouter();
-  const supabase = createBrowserClient<Database>(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-  );
+  const { user, setOnboardingCompletedDate } = useUser();
 
-  const setOnboardingCompletedDate = async () => {
-    try {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      const id = session?.user.id;
+  const avatarUrl = user?.avatarUrl ?? '';
 
-      if (!id) {
-        return;
-      }
-
-      const currentDateString = new Date().toLocaleString();
-
-      const { error } = await supabase
-        .from('profiles')
-        .update({ onboardingCompletedDate: currentDateString })
-        .eq('id', id);
-
-      router.refresh();
-      if (error) throw error;
-    } catch (error) {
-      console.error(error);
-    }
+  const handleFinishPress = async () => {
+    setOnboardingCompletedDate();
+    router.refresh();
   };
 
   return (
     <section className="w-full space-y-10 flex flex-col items-center">
-      <div className="flex space-x-1 border border-black rounded-lg px-24 py-32">
-        <ProfilePictureUpload fullName={fullName} avatarUrl={avatarUrl} />
-      </div>
+      <Card className="flex px-24 py-32">
+        <ProfilePictureUpload />
+      </Card>
 
       <div className="flex space-x-2">
         <Button
@@ -69,7 +45,7 @@ export default function ProfilePictureView({
         <Button
           variant={avatarUrl ? 'default' : 'secondary'}
           className="w-44"
-          onClick={() => setOnboardingCompletedDate()}
+          onClick={() => handleFinishPress()}
         >
           {avatarUrl ? 'Finish' : 'Skip'}
         </Button>
