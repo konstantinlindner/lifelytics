@@ -4,6 +4,8 @@ import { createBrowserClient } from '@supabase/ssr';
 import type { Database } from '@/types/supabase.types';
 import { useRouter } from 'next/navigation';
 
+import { useUser } from '@/contexts/UserContext';
+
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
@@ -25,6 +27,7 @@ function SignUpForm() {
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
   );
+  const { addNamesToUserProfile } = useUser();
 
   const formSchema = z.object({
     email: z.string().email(),
@@ -37,28 +40,6 @@ function SignUpForm() {
     resolver: zodResolver(formSchema),
   });
 
-  const addNameToUserProfile = async (firstName: string, lastName: string) => {
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
-    const id = session?.user.id;
-
-    if (!id) {
-      return;
-    }
-
-    try {
-      const { error } = await supabase
-        .from('profiles')
-        .update({ firstName: firstName, lastName: lastName })
-        .eq('id', id);
-
-      if (error) throw error;
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   const handleSignUp = async (values: z.infer<typeof formSchema>) => {
     try {
       const { error } = await supabase.auth.signUp({
@@ -67,9 +48,8 @@ function SignUpForm() {
       });
       if (error) console.log(error);
 
+      addNamesToUserProfile(values.firstName, values.lastName);
       router.refresh();
-
-      addNameToUserProfile(values.firstName, values.lastName);
     } catch (error) {
       console.log(error);
     }
