@@ -17,7 +17,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
-import SignOutMenuItem from './signOutMenuItem';
+import SignOutButton from './signOutButton';
 import ModeToggle from '@/components/modeToggle';
 import PageHeader from './pageHeader';
 import CommandModal from './commandModal';
@@ -77,7 +77,7 @@ export default function Topbar() {
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <SignOutMenuItem />
+            <SignOutButton isMenuItem />
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
