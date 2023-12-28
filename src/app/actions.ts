@@ -2,14 +2,21 @@
 
 import cloudinary from '@/lib/cloudinary';
 
-export async function CloudinaryBase64ImageUpload(
-  image: string,
-  options: { folder: string; publicId: string },
-): Promise<string> {
+interface CloudinaryBase64ImageUploadProps {
+  image: string;
+  folder: string;
+  publicId: string;
+}
+
+export async function CloudinaryBase64ImageUpload({
+  image,
+  folder,
+  publicId,
+}: CloudinaryBase64ImageUploadProps): Promise<string> {
   return cloudinary.uploader
     .upload(image, {
-      folder: options.folder,
-      public_id: options.publicId,
+      folder: folder,
+      public_id: publicId,
     })
     .then((result) => {
       return result.url;
