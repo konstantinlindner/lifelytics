@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Card } from '@/components/ui/card';
 
 interface CurrencyPickerViewProps {
   currentViewIndex: number;
@@ -19,7 +20,7 @@ export default function CurrencyPickerView({
 
   return (
     <section className="w-full space-y-10 flex flex-col items-center">
-      <div className="flex space-x-1 border border-black rounded-lg px-10 py-12">
+      <Card className="flex space-x-1 px-10 py-12">
         {currencies.map((currency) => (
           <button
             key={currency}
@@ -41,7 +42,7 @@ export default function CurrencyPickerView({
             </Badge>
           </button>
         ))}
-      </div>
+      </Card>
 
       <Button
         disabled={selectedCurrencies.length === 0}
