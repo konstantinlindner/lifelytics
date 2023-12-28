@@ -8,8 +8,15 @@ import {
   DropdownMenuItem,
   DropdownMenuShortcut,
 } from '@/components/ui/dropdown-menu';
+import { Button } from '@/components/ui/button';
 
-function SignOutMenuItem() {
+interface SignOutButtonProps {
+  isMenuItem?: boolean;
+}
+
+export default function SignOutButton({
+  isMenuItem = false,
+}: SignOutButtonProps) {
   const router = useRouter();
   const supabase = createBrowserClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -26,12 +33,12 @@ function SignOutMenuItem() {
     }
   };
 
-  return (
+  return isMenuItem ? (
     <DropdownMenuItem className="cursor-pointer" onClick={handleSignOut}>
       Sign out
       <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
     </DropdownMenuItem>
+  ) : (
+    <Button onClick={handleSignOut}>Sign out</Button>
   );
 }
-
-export default SignOutMenuItem;
