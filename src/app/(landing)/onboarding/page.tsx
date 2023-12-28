@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import { useUser } from '@/contexts/ProfileContext';
+import { useUser } from '@/contexts/UserContext';
 
 import { motion } from 'framer-motion';
 
@@ -13,12 +13,7 @@ import BirthDateView from './components/birthDateView';
 import { Progress } from '@/components/ui/progress';
 
 export default function Onboarding() {
-  const user = useUser();
-
-  const firstName = user?.firstName;
-  const lastName = user?.lastName;
-  const fullName = `${firstName} ${lastName}`;
-  const avatarUrl = user?.avatarUrl ?? '';
+  const firstName = useUser().user?.firstName;
 
   const [currentViewIndex, setCurrentViewIndex] = useState(0);
 
@@ -90,8 +85,6 @@ export default function Onboarding() {
       key="profilePictureView"
       currentViewIndex={currentViewIndex}
       setCurrentViewIndex={setCurrentViewIndex}
-      fullName={fullName}
-      avatarUrl={avatarUrl}
     />,
   ];
 
