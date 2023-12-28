@@ -15,6 +15,8 @@ import { ThemeProvider } from '@/components/themeProvider';
 import { UserProvider } from '@/contexts/UserContext';
 import { DatabaseProvider } from '@/contexts/DatabaseContext';
 
+import { Toaster } from '@/components/ui/sonner';
+
 const fontSans = FontSans({
   subsets: ['latin'],
   variable: '--font-sans',
@@ -82,6 +84,7 @@ export default function RootLayout({
           </DatabaseProvider>
           <Analytics />
           <SpeedInsights />
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>
