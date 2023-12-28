@@ -1,6 +1,6 @@
 'use client';
 
-import { useUser } from '@/contexts/ProfileContext';
+import { useUser } from '@/contexts/UserContext';
 
 import Link from 'next/link';
 
@@ -23,7 +23,7 @@ import PageHeader from './pageHeader';
 import CommandModal from './commandModal';
 
 export default function Topbar() {
-  const user = useUser();
+  const user = useUser().user;
 
   const firstName = user?.firstName;
   const lastName = user?.lastName;
