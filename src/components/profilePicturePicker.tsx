@@ -1,11 +1,11 @@
 'use client';
 
 import { useState, ChangeEvent } from 'react';
-
-import { createBrowserClient } from '@supabase/ssr';
-import type { Database } from '@/types/supabase.types';
+import { useUser } from '@/contexts/UserContext';
 
 import { CloudinaryBase64ImageUpload } from '../app/actions';
+
+import LoadingIndicator from './loadingIndicator';
 
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
@@ -13,46 +13,16 @@ import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
-import { Pencil, Loader2 } from 'lucide-react';
+import { Pencil } from 'lucide-react';
 
-interface ProfilePictureUploadProps {
-  fullName: string;
-  avatarUrl: string;
-}
-
-export default function ProfilePictureUpload({
-  fullName,
-  avatarUrl,
-}: ProfilePictureUploadProps) {
+export default function ProfilePictureUpload() {
   const [open, setOpen] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
 
-  const addCloudinaryUrltoProfile = async (urlString: string) => {
-    const supabase = createBrowserClient<Database>(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    );
+  const { user, updateAvatarUrl } = useUser();
 
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
-    const id = session?.user.id;
-
-    if (!id) {
-      return;
-    }
-
-    try {
-      const { error } = await supabase
-        .from('profiles')
-        .update({ avatarUrl: urlString })
-        .eq('id', id);
-
-      if (error) throw error;
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  const avatarUrl = user?.avatarUrl ?? '';
+  const fullName = `${user?.firstName} ${user?.lastName}`;
 
   const uploadPhotoToCloudinary = async (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -64,13 +34,11 @@ export default function ProfilePictureUpload({
 
       reader.onloadend = async () => {
         try {
-          const url = await CloudinaryBase64ImageUpload(
-            reader.result as string,
-            {
-              folder: 'lifelytics_profile_pictures',
-              publicId: fileName,
-            },
-          );
+          const url = await CloudinaryBase64ImageUpload({
+            image: reader.result as string,
+            folder: 'lifelytics_profile_pictures',
+            publicId: fileName,
+          });
 
           resolve(url);
         } catch (error) {
@@ -93,7 +61,7 @@ export default function ProfilePictureUpload({
     }
 
     const url = await uploadPhotoToCloudinary(file);
-    await addCloudinaryUrltoProfile(url);
+    updateAvatarUrl(url);
 
     setIsUploading(false);
     setOpen(false);
@@ -122,7 +90,7 @@ export default function ProfilePictureUpload({
             {isUploading ? 'Uploading...' : 'Upload picture'}
           </Label>
           {isUploading ? (
-            <Loader2 className="animate-spin" />
+            <LoadingIndicator size="sm" />
           ) : (
             <Input
               id="image"
