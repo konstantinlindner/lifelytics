@@ -42,7 +42,7 @@ export interface Database {
           created_at: string | null;
           id: string;
           name: string | null;
-          short_name: string | null;
+          code: string | null;
           updated_at: string | null;
         };
         Insert: {
@@ -50,7 +50,7 @@ export interface Database {
           created_at?: string | null;
           id?: string;
           name?: string | null;
-          short_name?: string | null;
+          code?: string | null;
           updated_at?: string | null;
         };
         Update: {
@@ -58,7 +58,7 @@ export interface Database {
           created_at?: string | null;
           id?: string;
           name?: string | null;
-          short_name?: string | null;
+          code?: string | null;
           updated_at?: string | null;
         };
         Relationships: [
