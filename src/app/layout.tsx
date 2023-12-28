@@ -12,7 +12,8 @@ import localFont from 'next/font/local';
 import { cn } from '@/lib/utils';
 
 import { ThemeProvider } from '@/components/themeProvider';
-import { ProfileProvider } from '@/contexts/ProfileContext';
+import { UserProvider } from '@/contexts/UserContext';
+import { DatabaseProvider } from '@/contexts/DatabaseContext';
 
 const fontSans = FontSans({
   subsets: ['latin'],
@@ -76,7 +77,9 @@ export default function RootLayout({
         )}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <ProfileProvider>{children}</ProfileProvider>
+          <DatabaseProvider>
+            <UserProvider>{children}</UserProvider>
+          </DatabaseProvider>
           <Analytics />
           <SpeedInsights />
         </ThemeProvider>
