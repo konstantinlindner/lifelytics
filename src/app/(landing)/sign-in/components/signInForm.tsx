@@ -1,9 +1,10 @@
 'use client';
 
 import { createBrowserClient } from '@supabase/ssr';
+import type { Database } from '@/types/supabase.types';
 import { useRouter } from 'next/navigation';
 
-import type { Database } from '@/types/supabase.types';
+import { useUser } from '@/contexts/UserContext';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -19,13 +20,15 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { use } from 'react';
 
-function SignInForm() {
+export default function SignInForm() {
   const router = useRouter();
   const supabase = createBrowserClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
   );
+  const { fetchData } = useUser();
 
   const formSchema = z.object({
     email: z.string().email(),
@@ -43,6 +46,7 @@ function SignInForm() {
         password: values.password,
       });
       if (error) console.log(error);
+      fetchData();
       router.refresh();
     } catch (error) {
       console.log(error);
@@ -98,4 +102,4 @@ function SignInForm() {
   );
 }
 
-export default SignInForm;
+
