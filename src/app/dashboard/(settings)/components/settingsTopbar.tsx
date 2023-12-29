@@ -20,24 +20,22 @@ export function SettingsTopbar() {
   const pathname = usePathname();
 
   return (
-    <div className="max-w-max">
-      <nav className="flex flex-row space-x-1 bg-muted p-1 rounded-lg">
-        {SettingsTopbarItems.map((item) => (
-          <Link key={item.href} href={item.href}>
-            <Button
-              variant="ghost"
-              size="sm"
-              className={cn(
-                pathname === item.href &&
-                  'bg-white text-black hover:bg-white hover:text-black',
-                'w-48',
-              )}
-            >
-              {item.title}
-            </Button>
-          </Link>
-        ))}
-      </nav>
-    </div>
+    <nav className="flex flex-row space-x-1 bg-muted p-1 rounded-lg max-w-max">
+      {SettingsTopbarItems.map((item) => (
+        <Link key={item.href} href={item.href}>
+          <Button
+            variant="ghost"
+            size="sm"
+            className={cn(
+              pathname === item.href &&
+                'bg-white text-black hover:bg-white hover:text-black',
+              'w-48',
+            )}
+          >
+            {item.title}
+          </Button>
+        </Link>
+      ))}
+    </nav>
   );
 }
