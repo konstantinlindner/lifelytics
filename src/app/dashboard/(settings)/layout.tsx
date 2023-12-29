@@ -7,8 +7,10 @@ export default function SettingsLayout({
 }) {
   return (
     <div className="flex flex-col">
-      <SettingsTopbar />
-      <div className="flex flex-col pt-10">{children}</div>
+      <div className="flex justify-center pb-4">
+        <SettingsTopbar />
+      </div>
+      <div className="flex flex-col">{children}</div>
     </div>
   );
 }
