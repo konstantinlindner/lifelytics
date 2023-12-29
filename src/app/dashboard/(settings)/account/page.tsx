@@ -1,5 +1,7 @@
 'use client';
 
+import { toast } from 'sonner';
+
 import SignOutButton from '../../components/signOutButton';
 
 import { Button } from '@/components/ui/button';
@@ -14,7 +16,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { toast } from 'sonner';
 
 export default function Account() {
   function handleAccountDeletion() {
