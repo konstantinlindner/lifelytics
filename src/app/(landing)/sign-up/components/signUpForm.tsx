@@ -58,7 +58,7 @@ function SignUpForm() {
   return (
     <div>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleSignUp)} className=" space-y-6">
+        <form onSubmit={form.handleSubmit(handleSignUp)} className=" space-y-2">
           <FormField
             control={form.control}
             name="firstName"
@@ -139,9 +139,11 @@ function SignUpForm() {
               </FormItem>
             )}
           />
-          <Button className="w-full" type="submit">
-            Sign up
-          </Button>
+          <div className="pt-6">
+            <Button className="w-full" type="submit">
+              Sign up
+            </Button>
+          </div>
         </form>
       </Form>
     </div>

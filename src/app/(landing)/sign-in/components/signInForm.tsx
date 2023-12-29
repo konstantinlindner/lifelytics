@@ -55,7 +55,7 @@ export default function SignInForm() {
   return (
     <div>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleSignIn)} className=" space-y-6">
+        <form onSubmit={form.handleSubmit(handleSignIn)} className=" space-y-2">
           <FormField
             control={form.control}
             name="email"
@@ -92,9 +92,11 @@ export default function SignInForm() {
               </FormItem>
             )}
           />
-          <Button className="w-full" type="submit">
-            Sign in
-          </Button>
+          <div className="pt-6">
+            <Button className="w-full" type="submit">
+              Sign in
+            </Button>
+          </div>
         </form>
       </Form>
     </div>
