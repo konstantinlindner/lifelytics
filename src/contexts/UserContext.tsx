@@ -18,9 +18,11 @@ type User = {
   email: string;
   firstName: string | null;
   lastName: string | null;
+  fullName: string | null;
+  initials: string | null;
   hasCompletedOnboarding: boolean;
   avatarUrl: string | null;
-  dateOfBirth: Date | null;
+  birthDate: Date | null;
   website: string | null;
 };
 
@@ -28,8 +30,13 @@ const Context = createContext({
   user: null as User | null,
   fetchData: () => {},
   addNamesToUserProfile: (firstName: string, lastName: string) => {},
-  updateAvatarUrl: (urlString: string) => {},
-  setOnboardingCompletedDate: () => {},
+  setOnboardingComplete: () => {},
+  setEmail: (email: string) => {},
+  setFirstName: (firstName: string) => {},
+  setLastName: (lastName: string) => {},
+  setBirthDate: (date: Date) => {},
+  setAvatarUrl: (urlString: string) => {},
+  setWebsite: (website: string) => {},
 });
 
 export const useUser = () => useContext(Context);
@@ -43,7 +50,7 @@ export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
       lastName,
       onboardingCompletedDate,
       avatarUrl,
-      dateOfBirth,
+      birthDate,
       website
     `);
     const {
@@ -60,9 +67,11 @@ export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
         email: sessionUser.email,
         firstName: profile.firstName,
         lastName: profile.lastName,
+        fullName: `${profile.firstName} ${profile.lastName}`,
+        initials: `${profile.firstName?.[0]}${profile.lastName?.[0]}`,
         avatarUrl: profile.avatarUrl,
         hasCompletedOnboarding: !!profile.onboardingCompletedDate,
-        dateOfBirth: profile.dateOfBirth ? new Date(profile.dateOfBirth) : null,
+        birthDate: profile.birthDate ? new Date(profile.birthDate) : null,
         website: profile.website,
       });
     }
@@ -91,7 +100,7 @@ export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
     }
   };
 
-  const updateAvatarUrl = useCallback(
+  const setAvatarUrl = useCallback(
     async (urlString: string) => {
       const {
         data: { session },
@@ -116,7 +125,7 @@ export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
     [fetchData],
   );
 
-  const setOnboardingCompletedDate = useCallback(async () => {
+  const setOnboardingComplete = useCallback(async () => {
     try {
       const {
         data: { session },
@@ -141,6 +150,126 @@ export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
     }
   }, [fetchData]);
 
+  const setEmail = useCallback(
+    async (email: string) => {
+      try {
+        const { error } = await supabase.auth.updateUser({ email: email });
+
+        fetchData();
+        if (error) throw error;
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    [fetchData],
+  );
+
+  const setFirstName = useCallback(
+    async (firstName: string) => {
+      try {
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
+        const id = session?.user.id;
+
+        if (!id) {
+          return;
+        }
+
+        const { error } = await supabase
+          .from('profiles')
+          .update({ firstName: firstName })
+          .eq('id', id);
+
+        fetchData();
+        if (error) throw error;
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    [fetchData],
+  );
+
+  const setLastName = useCallback(
+    async (lastName: string) => {
+      try {
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
+        const id = session?.user.id;
+
+        if (!id) {
+          return;
+        }
+
+        const { error } = await supabase
+          .from('profiles')
+          .update({ lastName: lastName })
+          .eq('id', id);
+
+        fetchData();
+        if (error) throw error;
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    [fetchData],
+  );
+
+  const setBirthDate = useCallback(
+    async (date: Date) => {
+      try {
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
+        const id = session?.user.id;
+
+        if (!id) {
+          return;
+        }
+
+        const dateString = date.toLocaleString();
+
+        const { error } = await supabase
+          .from('profiles')
+          .update({ birthDate: dateString })
+          .eq('id', id);
+
+        fetchData();
+        if (error) throw error;
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    [fetchData],
+  );
+
+  const setWebsite = useCallback(
+    async (website: string) => {
+      try {
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
+        const id = session?.user.id;
+
+        if (!id) {
+          return;
+        }
+
+        const { error } = await supabase
+          .from('profiles')
+          .update({ website: website })
+          .eq('id', id);
+
+        fetchData();
+        if (error) throw error;
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    [fetchData],
+  );
+
   useEffect(() => {
     fetchData();
   }, [fetchData]);
@@ -158,8 +287,13 @@ export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
         user,
         fetchData,
         addNamesToUserProfile,
-        updateAvatarUrl,
-        setOnboardingCompletedDate,
+        setOnboardingComplete,
+        setEmail,
+        setFirstName,
+        setLastName,
+        setBirthDate,
+        setAvatarUrl,
+        setWebsite,
       }}
     >
       {children}
