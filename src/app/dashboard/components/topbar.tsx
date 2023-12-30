@@ -25,12 +25,10 @@ import CommandModal from './commandModal';
 export default function Topbar() {
   const user = useUser().user;
 
-  const firstName = user?.firstName;
-  const lastName = user?.lastName;
-  const fullName = `${firstName} ${lastName}`;
+  const fullName = user?.fullName ?? '';
+  const initials = user?.initials ?? '';
   const avatarUrl = user?.avatarUrl ?? '';
   const email = user?.email;
-  const initials = `${firstName?.charAt(0)}${lastName?.charAt(0)}`;
 
   return (
     <header className="flex justify-between gap-2 items-center py-6 px-10 h-24">
