@@ -74,7 +74,7 @@ export interface Database {
         Row: {
           avatarUrl: string | null;
           createdAt: string | null;
-          dateOfBirth: string | null;
+          birthDate: string | null;
           firstName: string | null;
           id: string;
           lastName: string | null;
@@ -86,7 +86,7 @@ export interface Database {
         Insert: {
           avatarUrl?: string | null;
           createdAt?: string | null;
-          dateOfBirth?: string | null;
+          birthDate?: string | null;
           firstName?: string | null;
           id?: string;
           lastName?: string | null;
@@ -98,7 +98,7 @@ export interface Database {
         Update: {
           avatarUrl?: string | null;
           createdAt?: string | null;
-          dateOfBirth?: string | null;
+          birthDate?: string | null;
           firstName?: string | null;
           id?: string | null;
           lastName?: string | null;
