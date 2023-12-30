@@ -19,12 +19,12 @@ export default function ProfilePictureView({
   setCurrentViewIndex,
 }: ProfilePictureViewProps) {
   const router = useRouter();
-  const { user, setOnboardingCompletedDate } = useUser();
+  const { user, setOnboardingComplete } = useUser();
 
   const avatarUrl = user?.avatarUrl ?? '';
 
   const handleFinishPress = async () => {
-    setOnboardingCompletedDate();
+    setOnboardingComplete();
     router.refresh();
   };
 
