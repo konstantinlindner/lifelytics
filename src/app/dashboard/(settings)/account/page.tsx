@@ -19,7 +19,7 @@ import {
 
 export default function Account() {
   function handleAccountDeletion() {
-    toast('Not yet implemented.');
+    toast('Not yet implemented');
   }
 
   return (
