@@ -19,10 +19,10 @@ export default function ProfilePictureUpload() {
   const [open, setOpen] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
 
-  const { user, updateAvatarUrl } = useUser();
+  const { user, setAvatarUrl } = useUser();
 
   const avatarUrl = user?.avatarUrl ?? '';
-  const fullName = `${user?.firstName} ${user?.lastName}`;
+  const fullName = user?.fullName ?? '';
 
   const uploadPhotoToCloudinary = async (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -61,7 +61,7 @@ export default function ProfilePictureUpload() {
     }
 
     const url = await uploadPhotoToCloudinary(file);
-    updateAvatarUrl(url);
+    setAvatarUrl(url);
 
     setIsUploading(false);
     setOpen(false);
