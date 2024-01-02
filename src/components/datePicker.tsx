@@ -31,7 +31,7 @@ export default function DatePicker({
   const [stringDate, setStringDate] = useState(
     initialDate ? format(initialDate, 'PPP') : '',
   );
-  const [errorMessage, setErrorMessage] = useState<string>('');
+  // const [errorMessage, setErrorMessage] = useState<string>('');
 
   function handleDateChangeInternal(date: Date) {
     setDate(date);
@@ -52,21 +52,22 @@ export default function DatePicker({
             setStringDate(e.target.value);
           }}
           onBlur={(e) => {
-            let parsedDate = new Date(e.target.value);
+            const parsedDate = new Date(e.target.value);
             if (parsedDate.toString() === 'Invalid Date') {
-              setErrorMessage('Invalid Date');
+              // setErrorMessage('Invalid Date');
+              console.log('Invalid date');
             } else {
-              setErrorMessage('');
+              // setErrorMessage('');
               handleDateChangeInternal(parsedDate);
               setStringDate(format(parsedDate, 'PPP'));
             }
           }}
         />
-        {errorMessage !== '' && (
+        {/* {errorMessage !== '' && (
           <div className="absolute bottom-[-1.75rem] left-0 text-red-400 text-sm">
             {errorMessage}
           </div>
-        )}
+        )} */}
         <PopoverTrigger asChild>
           <Button
             variant={'outline'}
@@ -89,7 +90,7 @@ export default function DatePicker({
             if (!selectedDate) return;
             handleDateChangeInternal(selectedDate);
             setStringDate(format(selectedDate, 'PPP'));
-            setErrorMessage('');
+            // setErrorMessage('');
           }}
           fromYear={fromYear}
           toYear={toYear}
