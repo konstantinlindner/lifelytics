@@ -17,20 +17,11 @@ export default function BirthDateView({
 }: ProfilePictureViewProps) {
   const { setBirthDate } = useUser();
 
-  const [date, setDate] = useState<Date | undefined>(undefined);
-
-  function handleDateChange(date: Date) {
-    setDate(date);
-  }
+  const [birthDate, setLocalBirthDate] = useState<Date | null>(null);
 
   function handleNextPress() {
     setCurrentViewIndex(currentViewIndex + 1);
-
-    if (!date) {
-      return;
-    }
-
-    setBirthDate(date);
+    setBirthDate(birthDate);
   }
 
   return (
@@ -38,7 +29,7 @@ export default function BirthDateView({
       <DatePicker
         fromYear={1900}
         toYear={2024}
-        handleDateChange={handleDateChange}
+        handleDateChange={setLocalBirthDate}
       />
 
       <div className="flex space-x-2">
@@ -50,11 +41,11 @@ export default function BirthDateView({
           Back
         </Button>
         <Button
-          variant={date ? 'default' : 'secondary'}
+          variant={birthDate ? 'default' : 'secondary'}
           className="w-44"
           onClick={() => handleNextPress()}
         >
-          {date ? 'Next' : 'Skip'}
+          {birthDate ? 'Next' : 'Skip'}
         </Button>
       </div>
     </section>
