@@ -34,7 +34,7 @@ const Context = createContext({
   setEmail: (email: string) => {},
   setFirstName: (firstName: string) => {},
   setLastName: (lastName: string) => {},
-  setBirthDate: (date: Date) => {},
+  setBirthDate: (date: Date | null) => {},
   setAvatarUrl: (urlString: string) => {},
   setWebsite: (website: string) => {},
 });
@@ -217,7 +217,7 @@ export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
   );
 
   const setBirthDate = useCallback(
-    async (date: Date) => {
+    async (date: Date | null) => {
       try {
         const {
           data: { session },
@@ -228,11 +228,11 @@ export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
           return;
         }
 
-        const dateString = date.toLocaleString();
+        const formattedDate = date ? date.toLocaleString() : null;
 
         const { error } = await supabase
           .from('profiles')
-          .update({ birthDate: dateString })
+          .update({ birthDate: formattedDate })
           .eq('id', id);
 
         fetchData();
