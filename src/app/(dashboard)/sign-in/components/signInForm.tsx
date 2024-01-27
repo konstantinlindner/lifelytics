@@ -25,6 +25,8 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 
+import { toast } from 'sonner';
+
 export default function SignInForm() {
   const [isLoading, setIsLoading] = useState(false);
 
@@ -53,12 +55,16 @@ export default function SignInForm() {
         password: values.password,
       });
 
-      if (error) console.log(error);
+      if (error) {
+        console.log(error);
+        toast(error.message);
+        setIsLoading(false);
+      }
+
       fetchData();
       router.refresh();
-    } catch (error) {
-      setIsLoading(false);
-      console.log(error);
+    } catch (e) {
+      console.log(e);
     }
   };
 
@@ -95,7 +101,12 @@ export default function SignInForm() {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input placeholder="********" type="password" {...field} />
+                  <Input
+                    placeholder="********"
+                    type="password"
+                    autoComplete="current-password"
+                    {...field}
+                  />
                 </FormControl>
 
                 <FormMessage />
