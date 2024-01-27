@@ -1,7 +1,7 @@
 import Topbar from './components/topbar';
 import Sidebar from './components/sidebar';
 
-export default function DashboardStyleLayout({
+export default function InnerDashboardLayout({
   children,
 }: {
   children: React.ReactNode;
