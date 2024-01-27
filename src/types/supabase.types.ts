@@ -15,7 +15,7 @@ export interface Database {
           id: number;
           iso2: string;
           iso3: string | null;
-          local_name: string | null;
+          localName: string | null;
           name: string | null;
         };
         Insert: {
@@ -23,7 +23,7 @@ export interface Database {
           id?: number;
           iso2: string;
           iso3?: string | null;
-          local_name?: string | null;
+          localName?: string | null;
           name?: string | null;
         };
         Update: {
@@ -31,7 +31,7 @@ export interface Database {
           id?: number;
           iso2?: string;
           iso3?: string | null;
-          local_name?: string | null;
+          localName?: string | null;
           name?: string | null;
         };
         Relationships: [];
@@ -39,27 +39,27 @@ export interface Database {
       currencies: {
         Row: {
           countries: number | null;
-          created_at: string | null;
+          createdAt: string | null;
           id: string;
           name: string | null;
           code: string | null;
-          updated_at: string | null;
+          updatedAt: string | null;
         };
         Insert: {
           countries?: number | null;
-          created_at?: string | null;
+          createdAt?: string | null;
           id?: string;
           name?: string | null;
           code?: string | null;
-          updated_at?: string | null;
+          updatedAt?: string | null;
         };
         Update: {
           countries?: number | null;
-          created_at?: string | null;
+          createdAt?: string | null;
           id?: string;
           name?: string | null;
           code?: string | null;
-          updated_at?: string | null;
+          updatedAt?: string | null;
         };
         Relationships: [
           {
@@ -126,35 +126,38 @@ export interface Database {
         Row: {
           amount: number | null;
           country: number | null;
-          created_at: string | null;
+          createdAt: string | null;
           currency: string | null;
           date: string | null;
           id: string;
-          name: string | null;
-          updated_at: string | null;
-          user_id: string | null;
+          title: string | null;
+          description: string | null;
+          updatedAt: string | null;
+          userId: string | null;
         };
         Insert: {
           amount?: number | null;
           country?: number | null;
-          created_at?: string | null;
+          createdAt?: string | null;
           currency?: string | null;
           date?: string | null;
           id?: string;
-          name?: string | null;
-          updated_at?: string | null;
-          user_id?: string | null;
+          title?: string | null;
+          description?: string | null;
+          updatedAt?: string | null;
+          userId?: string | null;
         };
         Update: {
           amount?: number | null;
           country?: number | null;
-          created_at?: string | null;
+          createdAt?: string | null;
           currency?: string | null;
           date?: string | null;
           id?: string;
-          name?: string | null;
-          updated_at?: string | null;
-          user_id?: string | null;
+          title?: string | null;
+          description?: string | null;
+          updatedAt?: string | null;
+          userId?: string | null;
         };
         Relationships: [
           {
@@ -171,7 +174,7 @@ export interface Database {
           },
           {
             foreignKeyName: 'transactions_user_id_fkey';
-            columns: ['user_id'];
+            columns: ['userId'];
             referencedRelation: 'profiles';
             referencedColumns: ['id'];
           },
