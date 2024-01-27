@@ -15,6 +15,7 @@ import * as z from 'zod';
 import LoadingIndicator from '@/components/loadingIndicator';
 
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import {
   Form,
   FormControl,
@@ -23,7 +24,8 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+
+import { toast } from 'sonner';
 
 function SignUpForm() {
   const [isLoading, setIsLoading] = useState(false);
@@ -36,10 +38,28 @@ function SignUpForm() {
   const { addNamesToUserProfile } = useUser();
 
   const formSchema = z.object({
-    email: z.string().email(),
-    password: z.string().min(8),
-    firstName: z.string(),
-    lastName: z.string(),
+    email: z
+      .string({
+        required_error: 'Email is required',
+      })
+      .email(),
+    password: z
+      .string({
+        required_error: 'Password is required',
+      })
+      .min(8, { message: 'Password should be at least 8 characters long' }),
+    firstName: z
+      .string({
+        required_error: 'First name is required',
+      })
+      .trim()
+      .min(2, { message: 'First name should be at least 2 characters long' }),
+    lastName: z
+      .string({
+        required_error: 'Last name is required',
+      })
+      .trim()
+      .min(2, { message: 'Last name should be at least 2 characters long' }),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -55,13 +75,16 @@ function SignUpForm() {
         password: values.password,
       });
 
-      if (error) console.log(error);
+      if (error) {
+        console.log(error);
+        toast(error.message);
+        setIsLoading(false);
+      }
 
       addNamesToUserProfile(values.firstName, values.lastName);
       router.refresh();
-    } catch (error) {
-      setIsLoading(false);
-      console.log(error);
+    } catch (e) {
+      console.log(e);
     }
   };
 
@@ -80,8 +103,8 @@ function SignUpForm() {
                     id="firstName"
                     placeholder="John"
                     type="text"
-                    autoCapitalize="first"
-                    autoComplete="first name"
+                    autoCapitalize="words"
+                    autoComplete="given-name"
                     autoCorrect="on"
                     {...field}
                   />
@@ -102,8 +125,8 @@ function SignUpForm() {
                     id="lastName"
                     placeholder="Appleseed"
                     type="text"
-                    autoCapitalize="first"
-                    autoComplete="last name"
+                    autoCapitalize="words"
+                    autoComplete="family-name"
                     autoCorrect="on"
                     {...field}
                   />
@@ -142,7 +165,12 @@ function SignUpForm() {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input placeholder="********" type="password" {...field} />
+                  <Input
+                    placeholder="********"
+                    type="password"
+                    autoComplete="new-password"
+                    {...field}
+                  />
                 </FormControl>
 
                 <FormMessage />
