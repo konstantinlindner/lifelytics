@@ -3,6 +3,10 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import type { Database } from '@/types/supabase.types';
 
+export const config = {
+  matcher: ['/sign-in/', '/sign-up', '/onboarding', '/dashboard/:path*'],
+};
+
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({
     request: {
