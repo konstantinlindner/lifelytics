@@ -12,8 +12,6 @@ import localFont from 'next/font/local';
 import { cn } from '@/lib/utils';
 
 import { ThemeProvider } from '@/components/themeProvider';
-import { UserProvider } from '@/contexts/UserContext';
-import { DatabaseProvider } from '@/contexts/DatabaseContext';
 
 import { Toaster } from '@/components/ui/sonner';
 
@@ -79,9 +77,7 @@ export default function RootLayout({
         )}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <DatabaseProvider>
-            <UserProvider>{children}</UserProvider>
-          </DatabaseProvider>
+          {children}
           <Analytics />
           <SpeedInsights />
           <Toaster />

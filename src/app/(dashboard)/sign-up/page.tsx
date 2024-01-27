@@ -2,7 +2,7 @@ import Link from 'next/link';
 import Logo from '@/components/logo';
 import { ChevronLeft } from 'lucide-react';
 
-import SignUpForm from '@/app/(landing)/sign-up/components/signUpForm';
+import SignUpForm from '@/app/(dashboard)/sign-up/components/signUpForm';
 import { Button } from '@/components/ui/button';
 
 export default async function SignUp() {
