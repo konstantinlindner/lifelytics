@@ -13,8 +13,6 @@ import { cn } from '@/lib/utils';
 
 import { ThemeProvider } from '@/components/themeProvider';
 
-import { Toaster } from '@/components/ui/sonner';
-
 const fontSans = FontSans({
   subsets: ['latin'],
   variable: '--font-sans',
@@ -80,7 +78,6 @@ export default function RootLayout({
           {children}
           <Analytics />
           <SpeedInsights />
-          <Toaster />
         </ThemeProvider>
       </body>
     </html>
