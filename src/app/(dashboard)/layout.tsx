@@ -3,17 +3,17 @@ import { DatabaseProvider } from '@/contexts/DatabaseContext';
 
 import { Toaster } from '@/components/ui/sonner';
 
-export default function DashboardLayout({
+export default function OuterDashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <DatabaseProvider>
-      <UserProvider>
+    <UserProvider>
+      <DatabaseProvider>
         {children}
         <Toaster />
-      </UserProvider>
-    </DatabaseProvider>
+      </DatabaseProvider>
+    </UserProvider>
   );
 }
