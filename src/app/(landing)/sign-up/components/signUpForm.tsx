@@ -1,5 +1,7 @@
 'use client';
 
+import { useState } from 'react';
+
 import { createBrowserClient } from '@supabase/ssr';
 import type { Database } from '@/types/supabase.types';
 import { useRouter } from 'next/navigation';
@@ -9,6 +11,8 @@ import { useUser } from '@/contexts/UserContext';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
+
+import LoadingIndicator from '@/components/loadingIndicator';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -22,6 +26,8 @@ import {
 import { Input } from '@/components/ui/input';
 
 function SignUpForm() {
+  const [isLoading, setIsLoading] = useState(false);
+
   const router = useRouter();
   const supabase = createBrowserClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -42,15 +48,19 @@ function SignUpForm() {
 
   const handleSignUp = async (values: z.infer<typeof formSchema>) => {
     try {
+      setIsLoading(true);
+
       const { error } = await supabase.auth.signUp({
         email: values.email,
         password: values.password,
       });
+
       if (error) console.log(error);
 
       addNamesToUserProfile(values.firstName, values.lastName);
       router.refresh();
     } catch (error) {
+      setIsLoading(false);
       console.log(error);
     }
   };
@@ -140,8 +150,8 @@ function SignUpForm() {
             )}
           />
           <div className="pt-6">
-            <Button className="w-full" type="submit">
-              Sign up
+            <Button disabled={isLoading} className="w-full" type="submit">
+              {isLoading ? <LoadingIndicator size="sm" /> : 'Sign up'}
             </Button>
           </div>
         </form>

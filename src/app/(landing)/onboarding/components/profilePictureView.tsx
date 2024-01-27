@@ -1,10 +1,13 @@
 'use client';
 
+import { useState } from 'react';
+
 import { useRouter } from 'next/navigation';
 
 import { useUser } from '@/contexts/UserContext';
 
 import ProfilePictureUpload from '@/components/profilePicturePicker';
+import LoadingIndicator from '@/components/loadingIndicator';
 
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -18,12 +21,15 @@ export default function ProfilePictureView({
   currentViewIndex,
   setCurrentViewIndex,
 }: ProfilePictureViewProps) {
+  const [isLoading, setIsLoading] = useState(false);
+
   const router = useRouter();
   const { user, setOnboardingComplete } = useUser();
 
   const avatarUrl = user?.avatarUrl ?? '';
 
   const handleFinishPress = async () => {
+    setIsLoading(true);
     setOnboardingComplete();
     router.refresh();
   };
@@ -43,11 +49,18 @@ export default function ProfilePictureView({
           Back
         </Button>
         <Button
+          disabled={isLoading}
           variant={avatarUrl ? 'default' : 'secondary'}
           className="w-44"
           onClick={() => handleFinishPress()}
         >
-          {avatarUrl ? 'Finish' : 'Skip'}
+          {isLoading ? (
+            <LoadingIndicator size="sm" />
+          ) : avatarUrl ? (
+            'Finish'
+          ) : (
+            'Skip'
+          )}
         </Button>
       </div>
     </section>
