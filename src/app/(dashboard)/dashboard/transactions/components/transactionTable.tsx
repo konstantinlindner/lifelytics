@@ -102,9 +102,9 @@ export function TransactionTable<TData, TValue>({
           </DropdownMenu>
           <Input
             placeholder="Search"
-            value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
+            value={(table.getColumn('title')?.getFilterValue() as string) ?? ''}
             onChange={(event) =>
-              table.getColumn('name')?.setFilterValue(event.target.value)
+              table.getColumn('title')?.setFilterValue(event.target.value)
             }
           />
         </div>
