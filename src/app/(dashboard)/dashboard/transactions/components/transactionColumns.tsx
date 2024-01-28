@@ -16,12 +16,17 @@ import { Checkbox } from '@/components/ui/checkbox';
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
+
+// fix-me, get type from central location
 export type Transaction = {
-  date: string;
-  name: string;
-  amount: string;
-  currency: string;
-  country: string;
+  id: string;
+  title: string | null;
+  description: string | null;
+  amount: number | null;
+  currency: string | null;
+  country: number | null;
+  date: string | null;
+  createdAt: string | null;
 };
 
 export const transactionColumns: ColumnDef<Transaction>[] = [
@@ -49,14 +54,14 @@ export const transactionColumns: ColumnDef<Transaction>[] = [
     header: 'Date',
   },
   {
-    accessorKey: 'name',
+    accessorKey: 'title',
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
-          Name
+          Title
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
@@ -104,7 +109,6 @@ export const transactionColumns: ColumnDef<Transaction>[] = [
           <DropdownMenuContent align="end" className="w-[160px]">
             <DropdownMenuItem>Edit</DropdownMenuItem>
             <DropdownMenuItem>Make a copy</DropdownMenuItem>
-            <DropdownMenuItem>Favorite</DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
               Delete
