@@ -17,8 +17,8 @@ type Currencies = {
   name: string | null;
   code: string | null;
   countries: number | null;
-  created_at: string | null;
-  updated_at: string | null;
+  createdAt: string | null;
+  updatedAt: string | null;
 }[];
 
 const Context = createContext({
@@ -37,8 +37,8 @@ export const DatabaseProvider: FC<{ children: ReactNode }> = ({ children }) => {
         name,
         code,
         countries,
-        created_at,
-        updated_at
+        createdAt,
+        updatedAt
     `);
 
     if (!currencies) {
@@ -49,8 +49,8 @@ export const DatabaseProvider: FC<{ children: ReactNode }> = ({ children }) => {
         name: currency.name,
         code: currency.code,
         countries: currency.countries,
-        created_at: currency.created_at,
-        updated_at: currency.updated_at,
+        createdAt: currency.createdAt,
+        updatedAt: currency.updatedAt,
       }));
 
       setCurrencies(formattedCurrencies);

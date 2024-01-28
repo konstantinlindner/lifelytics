@@ -24,10 +24,23 @@ type User = {
   avatarUrl: string | null;
   birthDate: Date | null;
   website: string | null;
+  createdAt: string | null;
 };
+
+type Transactions = {
+  id: string;
+  title: string | null;
+  description: string | null;
+  amount: number | null;
+  currency: string | null;
+  country: number | null;
+  date: string | null;
+  createdAt: string | null;
+}[];
 
 const Context = createContext({
   user: null as User | null,
+  transactions: null as Transactions | null,
   fetchData: () => {},
   addNamesToUserProfile: (firstName: string, lastName: string) => {},
   setOnboardingComplete: () => {},
@@ -43,6 +56,7 @@ export const useUser = () => useContext(Context);
 
 export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>();
+  const [transactions, setTransactions] = useState<Transactions | null>();
 
   const fetchData = useCallback(async () => {
     const { data: profiles } = await supabase.from('profiles').select(`
@@ -51,11 +65,24 @@ export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
       onboardingCompletedDate,
       avatarUrl,
       birthDate,
-      website
+      website,
+      createdAt
     `);
+
     const {
       data: { session },
     } = await supabase.auth.getSession();
+
+    const { data: transactions } = await supabase.from('transactions').select(`
+    id,
+    title,
+    description,
+    amount,
+    currency ( code ),
+    country ( name ),
+    date,
+    createdAt
+`);
 
     const profile = profiles?.[0];
     const sessionUser = session?.user;
@@ -73,7 +100,27 @@ export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
         hasCompletedOnboarding: !!profile.onboardingCompletedDate,
         birthDate: profile.birthDate ? new Date(profile.birthDate) : null,
         website: profile.website,
+        createdAt: profile.createdAt,
       });
+    }
+
+    if (!transactions) {
+      setTransactions(null);
+    } else {
+      const formattedTransactions = transactions.map((transaction) => ({
+        id: transaction.id,
+        title: transaction.title,
+        description: transaction.description,
+        amount: transaction.amount,
+        //@ts-ignore
+        currency: transaction.currency.code,
+        // @ts-ignore
+        country: transaction.country.name,
+        date: transaction.date,
+        createdAt: transaction.createdAt,
+      }));
+
+      setTransactions(formattedTransactions);
     }
   }, []);
 
@@ -274,7 +321,7 @@ export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
     fetchData();
   }, [fetchData]);
 
-  if (user === undefined)
+  if (user === undefined || transactions === undefined)
     return (
       <div className="w-full min-h-screen flex justify-center items-center">
         <LoadingIndicator size="lg" />
@@ -285,6 +332,7 @@ export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
     <Context.Provider
       value={{
         user,
+        transactions,
         fetchData,
         addNamesToUserProfile,
         setOnboardingComplete,
