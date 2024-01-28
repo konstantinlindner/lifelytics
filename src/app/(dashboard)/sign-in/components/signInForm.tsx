@@ -63,15 +63,15 @@ export default function SignInForm() {
 
       fetchData();
       router.refresh();
-    } catch (e) {
-      console.log(e);
+    } catch (error) {
+      console.log(error);
     }
   };
 
   return (
     <div>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleSignIn)} className=" space-y-2">
+        <form onSubmit={form.handleSubmit(handleSignIn)} className="space-y-2">
           <FormField
             control={form.control}
             name="email"
