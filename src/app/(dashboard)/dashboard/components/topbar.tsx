@@ -17,6 +17,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
+import { BadgeCheck } from 'lucide-react';
+
 import SignOutButton from './signOutButton';
 import ModeToggle from '@/components/modeToggle';
 import PageHeader from './pageHeader';
@@ -49,7 +51,10 @@ export default function Topbar() {
           <DropdownMenuContent className="w-56" align="end" forceMount>
             <DropdownMenuLabel className="font-normal">
               <div className="flex flex-col space-y-1">
-                <p className="text-sm font-medium leading-none">{fullName}</p>
+                <div className="flex space-x-1">
+                  <p className="text-sm font-medium leading-none">{fullName}</p>
+                  <BadgeCheck className="h-4 w-4" />
+                </div>
                 <p className="text-xs leading-none text-muted-foreground">
                   {email}
                 </p>
