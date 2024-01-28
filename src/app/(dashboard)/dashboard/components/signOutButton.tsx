@@ -9,6 +9,7 @@ import {
   DropdownMenuShortcut,
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
 
 interface SignOutButtonProps {
   isMenuItem?: boolean;
@@ -26,7 +27,12 @@ export default function SignOutButton({
   const handleSignOut = async () => {
     try {
       const { error } = await supabase.auth.signOut({});
-      if (error) console.log(error);
+
+      if (error) {
+        console.log(error);
+        toast(error.message);
+      }
+
       router.refresh();
     } catch (error) {
       console.log(error);
