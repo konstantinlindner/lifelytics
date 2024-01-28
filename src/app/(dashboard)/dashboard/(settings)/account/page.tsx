@@ -1,6 +1,10 @@
 'use client';
 
+import { useUser } from '@/contexts/UserContext';
+
 import { toast } from 'sonner';
+
+import dayjs from 'dayjs';
 
 import SignOutButton from '../../components/signOutButton';
 
@@ -18,6 +22,8 @@ import {
 } from '@/components/ui/alert-dialog';
 
 export default function Account() {
+  const { user } = useUser();
+
   function handleAccountDeletion() {
     toast('Not yet implemented');
   }
@@ -26,6 +32,8 @@ export default function Account() {
     <main>
       <div className="flex flex-col">
         <div className="w-full flex flex-col space-y-4 max-w-xs">
+          <p>Member since {dayjs(user?.createdAt).format('MMMM YYYY')}</p>
+
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <Button variant="destructive">Delete account</Button>
