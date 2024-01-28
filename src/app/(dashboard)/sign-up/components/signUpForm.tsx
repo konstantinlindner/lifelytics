@@ -83,15 +83,15 @@ function SignUpForm() {
 
       addNamesToUserProfile(values.firstName, values.lastName);
       router.refresh();
-    } catch (e) {
-      console.log(e);
+    } catch (error) {
+      console.log(error);
     }
   };
 
   return (
     <div>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleSignUp)} className=" space-y-2">
+        <form onSubmit={form.handleSubmit(handleSignUp)} className="space-y-2">
           <FormField
             control={form.control}
             name="firstName"
