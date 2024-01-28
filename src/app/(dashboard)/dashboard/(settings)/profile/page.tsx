@@ -26,8 +26,6 @@ import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
 export default function Profile() {
-  const [isLoading, setIsLoading] = useState(false);
-
   const {
     user,
     setEmail,
@@ -72,8 +70,6 @@ export default function Profile() {
 
   const handleSave = async (values: z.infer<typeof formSchema>) => {
     try {
-      setIsLoading(true);
-
       if (values.firstName !== user?.firstName) {
         setFirstName(values.firstName);
       }
@@ -97,8 +93,6 @@ export default function Profile() {
       values.email !== user?.email
         ? toast('Please check your inbox to confirm change of email')
         : toast('Successfully saved changes');
-
-      setIsLoading(false);
     } catch (error) {
       console.log(error);
       toast('Something went wrong saving the changes');
@@ -222,9 +216,7 @@ export default function Profile() {
               )}
             />
             <div className="pt-6">
-              <Button disabled={isLoading} type="submit">
-                {isLoading ? <LoadingIndicator size="sm" /> : 'Save'}
-              </Button>
+              <Button type="submit">Save</Button>
             </div>
           </form>
         </Form>
