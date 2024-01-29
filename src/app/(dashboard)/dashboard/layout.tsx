@@ -1,18 +1,18 @@
-import Topbar from './components/topbar';
-import Sidebar from './components/sidebar';
+import Sidebar from './components/sidebar'
+import Topbar from './components/topbar'
 
 export default function InnerDashboardLayout({
-  children,
+	children,
 }: {
-  children: React.ReactNode;
+	children: React.ReactNode
 }) {
-  return (
-    <div className="flex">
-      <Sidebar />
-      <div className="flex flex-col w-screen">
-        <Topbar />
-        <main className="px-10">{children}</main>
-      </div>
-    </div>
-  );
+	return (
+		<div className="flex">
+			<Sidebar />
+			<div className="flex w-screen flex-col">
+				<Topbar />
+				<main className="px-10">{children}</main>
+			</div>
+		</div>
+	)
 }

@@ -1,77 +1,77 @@
-'use client';
+'use client'
 
 import {
-  FC,
-  ReactNode,
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  useCallback,
-} from 'react';
+	FC,
+	ReactNode,
+	createContext,
+	useCallback,
+	useContext,
+	useEffect,
+	useState,
+} from 'react'
 
-import { useDatabase } from './DatabaseContext';
+import { useDatabase } from '@/contexts/DatabaseContext'
 
-import dayjs from 'dayjs';
+import supabase from '@/lib/supabase'
 
-import supabase from '@/lib/supabase';
+import dayjs from 'dayjs'
 
-import LoadingIndicator from '@/components/loadingIndicator';
+import LoadingIndicator from '@/components/loadingIndicator'
 
 type User = {
-  id: string;
-  email: string;
-  firstName: string | null;
-  lastName: string | null;
-  fullName: string | null;
-  initials: string | null;
-  hasCompletedOnboarding: boolean;
-  avatarUrl: string | null;
-  birthDate: Date | null;
-  website: string | null;
-  createdAt: string | null;
-  transactions: Transaction[];
-};
+	id: string
+	email: string
+	firstName: string | null
+	lastName: string | null
+	fullName: string | null
+	initials: string | null
+	hasCompletedOnboarding: boolean
+	avatarUrl: string | null
+	birthDate: Date | null
+	website: string | null
+	createdAt: string | null
+	transactions: Transaction[]
+}
 
 type Transaction = {
-  id: string;
-  title: string | null;
-  description: string | null;
-  amount: number | null;
-  currency: string | null;
-  country: number | null;
-  date: string | null;
-  createdAt: string | null;
-};
+	id: string
+	title: string | null
+	description: string | null
+	amount: number | null
+	currency: string | null
+	country: number | null
+	date: string | null
+	createdAt: string | null
+}
 
 const Context = createContext({
-  user: null as User | null,
-  fetchData: () => {},
-  addNamesToUserProfile: (firstName: string, lastName: string) => {},
-  setOnboardingComplete: () => {},
-  setEmail: (email: string) => {},
-  setFirstName: (firstName: string) => {},
-  setLastName: (lastName: string) => {},
-  setBirthDate: (date: Date | null) => {},
-  setAvatarUrl: (urlString: string) => {},
-  setWebsite: (website: string) => {},
-  addTransaction: (
-    title: string,
-    amount: number,
-    currency: string,
-    country: string,
-    date: Date,
-  ) => {},
-});
+	user: null as User | null,
+	fetchData: () => {},
+	addNamesToUserProfile: (firstName: string, lastName: string) => {},
+	setOnboardingComplete: () => {},
+	setEmail: (email: string) => {},
+	setFirstName: (firstName: string) => {},
+	setLastName: (lastName: string) => {},
+	setBirthDate: (date: Date | null) => {},
+	setAvatarUrl: (urlString: string) => {},
+	setWebsite: (website: string) => {},
+	addTransaction: (
+		title: string,
+		amount: number,
+		currency: string,
+		country: string,
+		date: Date,
+	) => {},
+})
 
-export const useUser = () => useContext(Context);
+export const useUser = () => useContext(Context)
 
 export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
-  const { currencies, countries } = useDatabase();
-  const [user, setUser] = useState<User | null>();
+	const { currencies, countries } = useDatabase()
+	const [user, setUser] = useState<User | null>()
 
-  const fetchData = useCallback(async () => {
-    const { data: profiles } = await supabase.from('profiles').select(`
+	const fetchData = useCallback(async () => {
+		const { data: profiles } = await supabase.from('profiles').select(`
       id,
       firstName,
       lastName,
@@ -80,13 +80,14 @@ export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
       birthDate,
       website,
       createdAt
-    `);
+    `)
 
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
+		const {
+			data: { session },
+		} = await supabase.auth.getSession()
 
-    const { data: transactions } = await supabase.from('transactions').select(`
+		const { data: transactions } = await supabase.from('transactions')
+			.select(`
       id,
       title,
       description,
@@ -95,275 +96,281 @@ export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
       country ( name ),
       date,
       createdAt
-    `);
+    `)
 
-    const formattedTransactions = transactions?.map((transaction) => ({
-      id: transaction.id,
-      title: transaction.title,
-      description: transaction.description,
-      amount: transaction.amount,
-      //@ts-ignore
-      currency: transaction.currency.code,
-      // @ts-ignore
-      country: transaction.country.name,
-      date: transaction.date,
-      createdAt: transaction.createdAt,
-    }));
+		const formattedTransactions = transactions?.map((transaction) => ({
+			id: transaction.id,
+			title: transaction.title,
+			description: transaction.description,
+			amount: transaction.amount,
+			//@ts-ignore
+			currency: transaction.currency.code,
+			// @ts-ignore
+			country: transaction.country.name,
+			date: transaction.date,
+			createdAt: transaction.createdAt,
+		}))
 
-    const profile = profiles?.[0];
-    const sessionUser = session?.user;
+		const profile = profiles?.[0]
+		const sessionUser = session?.user
 
-    if (!profile || !sessionUser?.email) {
-      setUser(null);
-    } else {
-      setUser({
-        id: profile.id,
-        email: sessionUser.email,
-        firstName: profile.firstName,
-        lastName: profile.lastName,
-        fullName: `${profile.firstName} ${profile.lastName}`,
-        initials: `${profile.firstName?.[0]}${profile.lastName?.[0]}`,
-        avatarUrl: profile.avatarUrl,
-        hasCompletedOnboarding: !!profile.onboardingCompletedDate,
-        birthDate: profile.birthDate ? new Date(profile.birthDate) : null,
-        website: profile.website,
-        createdAt: profile.createdAt,
-        transactions: formattedTransactions ?? [],
-      });
-    }
-  }, []);
+		if (!profile || !sessionUser?.email) {
+			setUser(null)
+		} else {
+			setUser({
+				id: profile.id,
+				email: sessionUser.email,
+				firstName: profile.firstName,
+				lastName: profile.lastName,
+				fullName: `${profile.firstName} ${profile.lastName}`,
+				initials: `${profile.firstName?.[0]}${profile.lastName?.[0]}`,
+				avatarUrl: profile.avatarUrl,
+				hasCompletedOnboarding: !!profile.onboardingCompletedDate,
+				birthDate: profile.birthDate
+					? new Date(profile.birthDate)
+					: null,
+				website: profile.website,
+				createdAt: profile.createdAt,
+				transactions: formattedTransactions ?? [],
+			})
+		}
+	}, [])
 
-  const addNamesToUserProfile = useCallback(
-    async (firstName: string, lastName: string) => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      const id = session?.user.id;
+	const addNamesToUserProfile = useCallback(
+		async (firstName: string, lastName: string) => {
+			const {
+				data: { session },
+			} = await supabase.auth.getSession()
 
-      if (!id) {
-        return;
-      }
+			if (!session) {
+				return
+			}
 
-      try {
-        const { error } = await supabase
-          .from('profiles')
-          .update({ firstName: firstName, lastName: lastName })
-          .eq('id', id);
+			const id = session.user.id
 
-        fetchData();
-        if (error) throw error;
-      } catch (error) {
-        console.error(error);
-      }
-    },
-    [fetchData],
-  );
+			try {
+				const { error } = await supabase
+					.from('profiles')
+					.update({ firstName: firstName, lastName: lastName })
+					.eq('id', id)
 
-  const setAvatarUrl = useCallback(
-    async (urlString: string) => {
-      if (!user) {
-        return;
-      }
+				fetchData()
+				if (error) throw error
+			} catch (error) {
+				console.error(error)
+			}
+		},
+		[fetchData],
+	)
 
-      try {
-        const { error } = await supabase
-          .from('profiles')
-          .update({ avatarUrl: urlString })
-          .eq('id', user.id);
+	const setAvatarUrl = useCallback(
+		async (urlString: string) => {
+			if (!user) {
+				return
+			}
 
-        fetchData();
-        if (error) throw error;
-      } catch (error) {
-        console.error(error);
-      }
-    },
-    [user, fetchData],
-  );
+			try {
+				const { error } = await supabase
+					.from('profiles')
+					.update({ avatarUrl: urlString })
+					.eq('id', user.id)
 
-  const setOnboardingComplete = useCallback(async () => {
-    try {
-      if (!user) {
-        return;
-      }
+				fetchData()
+				if (error) throw error
+			} catch (error) {
+				console.error(error)
+			}
+		},
+		[user, fetchData],
+	)
 
-      const currentDateString = new Date().toLocaleString();
+	const setOnboardingComplete = useCallback(async () => {
+		try {
+			if (!user) {
+				return
+			}
 
-      const { error } = await supabase
-        .from('profiles')
-        .update({ onboardingCompletedDate: currentDateString })
-        .eq('id', user.id);
+			const currentDateString = new Date().toLocaleString()
 
-      fetchData();
-      if (error) throw error;
-    } catch (error) {
-      console.error(error);
-    }
-  }, [user, fetchData]);
+			const { error } = await supabase
+				.from('profiles')
+				.update({ onboardingCompletedDate: currentDateString })
+				.eq('id', user.id)
 
-  const setEmail = useCallback(
-    async (email: string) => {
-      try {
-        const { error } = await supabase.auth.updateUser({ email: email });
+			fetchData()
+			if (error) throw error
+		} catch (error) {
+			console.error(error)
+		}
+	}, [user, fetchData])
 
-        fetchData();
-        if (error) throw error;
-      } catch (error) {
-        console.error(error);
-      }
-    },
-    [fetchData],
-  );
+	const setEmail = useCallback(
+		async (email: string) => {
+			try {
+				const { error } = await supabase.auth.updateUser({
+					email: email,
+				})
 
-  const setFirstName = useCallback(
-    async (firstName: string) => {
-      try {
-        if (!user) {
-          return;
-        }
+				fetchData()
+				if (error) throw error
+			} catch (error) {
+				console.error(error)
+			}
+		},
+		[fetchData],
+	)
 
-        const { error } = await supabase
-          .from('profiles')
-          .update({ firstName: firstName })
-          .eq('id', user.id);
+	const setFirstName = useCallback(
+		async (firstName: string) => {
+			try {
+				if (!user) {
+					return
+				}
 
-        fetchData();
-        if (error) throw error;
-      } catch (error) {
-        console.error(error);
-      }
-    },
-    [user, fetchData],
-  );
+				const { error } = await supabase
+					.from('profiles')
+					.update({ firstName: firstName })
+					.eq('id', user.id)
 
-  const setLastName = useCallback(
-    async (lastName: string) => {
-      try {
-        if (!user) {
-          return;
-        }
+				fetchData()
+				if (error) throw error
+			} catch (error) {
+				console.error(error)
+			}
+		},
+		[user, fetchData],
+	)
 
-        const { error } = await supabase
-          .from('profiles')
-          .update({ lastName: lastName })
-          .eq('id', user.id);
+	const setLastName = useCallback(
+		async (lastName: string) => {
+			try {
+				if (!user) {
+					return
+				}
 
-        fetchData();
-        if (error) throw error;
-      } catch (error) {
-        console.error(error);
-      }
-    },
-    [user, fetchData],
-  );
+				const { error } = await supabase
+					.from('profiles')
+					.update({ lastName: lastName })
+					.eq('id', user.id)
 
-  const setBirthDate = useCallback(
-    async (date: Date | null) => {
-      try {
-        if (!user) {
-          return;
-        }
+				fetchData()
+				if (error) throw error
+			} catch (error) {
+				console.error(error)
+			}
+		},
+		[user, fetchData],
+	)
 
-        const formattedDate = date ? date.toLocaleString() : null;
+	const setBirthDate = useCallback(
+		async (date: Date | null) => {
+			try {
+				if (!user) {
+					return
+				}
 
-        const { error } = await supabase
-          .from('profiles')
-          .update({ birthDate: formattedDate })
-          .eq('id', user.id);
+				const formattedDate = date ? date.toLocaleString() : null
 
-        fetchData();
-        if (error) throw error;
-      } catch (error) {
-        console.error(error);
-      }
-    },
-    [user, fetchData],
-  );
+				const { error } = await supabase
+					.from('profiles')
+					.update({ birthDate: formattedDate })
+					.eq('id', user.id)
 
-  const setWebsite = useCallback(
-    async (website: string) => {
-      try {
-        if (!user) {
-          return;
-        }
+				fetchData()
+				if (error) throw error
+			} catch (error) {
+				console.error(error)
+			}
+		},
+		[user, fetchData],
+	)
 
-        const { error } = await supabase
-          .from('profiles')
-          .update({ website: website })
-          .eq('id', user.id);
+	const setWebsite = useCallback(
+		async (website: string) => {
+			try {
+				if (!user) {
+					return
+				}
 
-        fetchData();
-        if (error) throw error;
-      } catch (error) {
-        console.error(error);
-      }
-    },
-    [user, fetchData],
-  );
+				const { error } = await supabase
+					.from('profiles')
+					.update({ website: website })
+					.eq('id', user.id)
 
-  const addTransaction = useCallback(
-    async (
-      title: string,
-      amount: number,
-      currency: string,
-      country: string,
-      date: Date,
-    ) => {
-      try {
-        if (!user || !countries || !currencies) {
-          return;
-        }
+				fetchData()
+				if (error) throw error
+			} catch (error) {
+				console.error(error)
+			}
+		},
+		[user, fetchData],
+	)
 
-        const { error } = await supabase.from('transactions').insert([
-          {
-            userId: user.id,
-            title: title,
-            amount: amount,
-            country: countries.find((c) => c.name === country)?.id,
-            currency: currencies.find((c) => c.code === currency)?.id,
-            date: dayjs(date).format('YYYY-MM-DD'),
-          },
-        ]);
+	const addTransaction = useCallback(
+		async (
+			title: string,
+			amount: number,
+			currency: string,
+			country: string,
+			date: Date,
+		) => {
+			try {
+				if (!user || !countries || !currencies) {
+					return
+				}
 
-        fetchData();
+				const { error } = await supabase.from('transactions').insert([
+					{
+						userId: user.id,
+						title: title,
+						amount: amount,
+						country: countries.find((c) => c.name === country)?.id,
+						currency: currencies.find((c) => c.code === currency)
+							?.id,
+						date: dayjs(date).format('YYYY-MM-DD'),
+					},
+				])
 
-        if (error) {
-          throw error;
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    },
-    [user, countries, currencies, fetchData],
-  );
+				fetchData()
 
-  useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+				if (error) {
+					throw error
+				}
+			} catch (error) {
+				console.error(error)
+			}
+		},
+		[user, countries, currencies, fetchData],
+	)
 
-  if (user === undefined)
-    return (
-      <div className="w-full min-h-screen flex justify-center items-center">
-        <LoadingIndicator size="lg" />
-      </div>
-    );
+	useEffect(() => {
+		fetchData()
+	}, [fetchData])
 
-  return (
-    <Context.Provider
-      value={{
-        user,
-        fetchData,
-        addNamesToUserProfile,
-        setOnboardingComplete,
-        setEmail,
-        setFirstName,
-        setLastName,
-        setBirthDate,
-        setAvatarUrl,
-        setWebsite,
-        addTransaction,
-      }}
-    >
-      {children}
-    </Context.Provider>
-  );
-};
+	if (user === undefined)
+		return (
+			<div className="flex min-h-screen w-full items-center justify-center">
+				<LoadingIndicator size="lg" />
+			</div>
+		)
+
+	return (
+		<Context.Provider
+			value={{
+				user,
+				fetchData,
+				addNamesToUserProfile,
+				setOnboardingComplete,
+				setEmail,
+				setFirstName,
+				setLastName,
+				setBirthDate,
+				setAvatarUrl,
+				setWebsite,
+				addTransaction,
+			}}
+		>
+			{children}
+		</Context.Provider>
+	)
+}

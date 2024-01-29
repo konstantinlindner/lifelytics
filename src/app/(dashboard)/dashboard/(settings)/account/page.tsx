@@ -1,63 +1,72 @@
-'use client';
+'use client'
 
-import { useUser } from '@/contexts/UserContext';
+import { useUser } from '@/contexts/UserContext'
 
-import { toast } from 'sonner';
+import dayjs from 'dayjs'
+import { toast } from 'sonner'
 
-import dayjs from 'dayjs';
-
-import SignOutButton from '../../components/signOutButton';
-
-import { Button } from '@/components/ui/button';
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from '@/components/ui/alert-dialog';
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogTitle,
+	AlertDialogTrigger,
+} from '@/components/ui/alert-dialog'
+import { Button } from '@/components/ui/button'
+
+import SignOutButton from '../../components/signOutButton'
 
 export default function Account() {
-  const { user } = useUser();
+	const { user } = useUser()
 
-  function handleAccountDeletion() {
-    toast('Not yet implemented');
-  }
+	function handleAccountDeletion() {
+		toast('Not yet implemented')
+	}
 
-  return (
-    <main>
-      <div className="flex flex-col">
-        <div className="w-full flex flex-col space-y-4 max-w-xs">
-          <p>Member since {dayjs(user?.createdAt).format('MMMM YYYY')}</p>
+	return (
+		<main>
+			<div className="flex flex-col">
+				<div className="flex w-full max-w-xs flex-col space-y-4">
+					<p>
+						Member since{' '}
+						{dayjs(user?.createdAt).format('MMMM YYYY')}
+					</p>
 
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button variant="destructive">Delete account</Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  This action cannot be undone. This will permanently delete
-                  your account and remove your data from our servers.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction onClick={handleAccountDeletion}>
-                  Continue
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+					<AlertDialog>
+						<AlertDialogTrigger asChild>
+							<Button variant="destructive">
+								Delete account
+							</Button>
+						</AlertDialogTrigger>
+						<AlertDialogContent>
+							<AlertDialogHeader>
+								<AlertDialogTitle>
+									Are you absolutely sure?
+								</AlertDialogTitle>
+								<AlertDialogDescription>
+									This action cannot be undone. This will
+									permanently delete your account and remove
+									your data from our servers.
+								</AlertDialogDescription>
+							</AlertDialogHeader>
+							<AlertDialogFooter>
+								<AlertDialogCancel>Cancel</AlertDialogCancel>
+								<AlertDialogAction
+									onClick={handleAccountDeletion}
+								>
+									Continue
+								</AlertDialogAction>
+							</AlertDialogFooter>
+						</AlertDialogContent>
+					</AlertDialog>
 
-          <SignOutButton />
-        </div>
-      </div>
-    </main>
-  );
+					<SignOutButton />
+				</div>
+			</div>
+		</main>
+	)
 }

@@ -1,19 +1,19 @@
-import { UserProvider } from '@/contexts/UserContext';
-import { DatabaseProvider } from '@/contexts/DatabaseContext';
+import { DatabaseProvider } from '@/contexts/DatabaseContext'
+import { UserProvider } from '@/contexts/UserContext'
 
-import { Toaster } from '@/components/ui/sonner';
+import { Toaster } from '@/components/ui/sonner'
 
 export default function OuterDashboardLayout({
-  children,
+	children,
 }: {
-  children: React.ReactNode;
+	children: React.ReactNode
 }) {
-  return (
-    <UserProvider>
-      <DatabaseProvider>
-        {children}
-        <Toaster />
-      </DatabaseProvider>
-    </UserProvider>
-  );
+	return (
+		<UserProvider>
+			<DatabaseProvider>
+				{children}
+				<Toaster />
+			</DatabaseProvider>
+		</UserProvider>
+	)
 }

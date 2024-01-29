@@ -1,13 +1,19 @@
-'use client'
+'use client';
 
-import { Progress } from '@/components/ui/progress'
-import { useUser } from '@/contexts/UserContext'
-import { motion } from 'framer-motion'
 import { useState } from 'react'
 
-import BirthDateView from './components/birthDateView'
-import CurrencyPickerView from './components/currencyPickerView'
-import ProfilePictureView from './components/profilePictureView'
+import { useUser } from '@/contexts/UserContext'
+
+import { motion } from 'framer-motion'
+
+import { Progress } from '@/components/ui/progress'
+
+
+
+import BirthDateView from './components/birthDateView';
+import CurrencyPickerView from './components/currencyPickerView';
+import ProfilePictureView from './components/profilePictureView';
+
 
 export default function Onboarding() {
 	const firstName = useUser().user?.firstName

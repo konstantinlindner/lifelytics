@@ -1,89 +1,112 @@
-'use client';
+'use client'
 
-import { useUser } from '@/contexts/UserContext';
+import Link from 'next/link'
 
-import Link from 'next/link';
+import { useUser } from '@/contexts/UserContext'
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
+import { BadgeCheck } from 'lucide-react'
+
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Button } from '@/components/ui/button'
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuGroup,
+	DropdownMenuItem,
+	DropdownMenuLabel,
+	DropdownMenuSeparator,
+	DropdownMenuShortcut,
+	DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 
-import { BadgeCheck } from 'lucide-react';
+import ModeToggle from '@/components/modeToggle'
 
-import SignOutButton from './signOutButton';
-import ModeToggle from '@/components/modeToggle';
-import PageHeader from './pageHeader';
-import CommandModal from './commandModal';
+import CommandModal from './commandModal'
+import PageHeader from './pageHeader'
+import SignOutButton from './signOutButton'
 
 export default function Topbar() {
-  const user = useUser().user;
+	const user = useUser().user
 
-  const fullName = user?.fullName ?? '';
-  const initials = user?.initials ?? '';
-  const avatarUrl = user?.avatarUrl ?? '';
-  const email = user?.email;
+	const fullName = user?.fullName ?? ''
+	const initials = user?.initials ?? ''
+	const avatarUrl = user?.avatarUrl ?? ''
+	const email = user?.email
 
-  return (
-    <header className="flex justify-between gap-2 items-center py-6 px-10 h-24">
-      <PageHeader />
-      <div className="flex gap-4 items-center">
-        <CommandModal />
-        <ModeToggle isRound />
+	return (
+		<header className="flex h-24 items-center justify-between gap-2 px-10 py-6">
+			<PageHeader />
+			<div className="flex items-center gap-4">
+				<CommandModal />
+				<ModeToggle isRound />
 
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-              <Avatar className="h-9 w-9">
-                <AvatarImage src={avatarUrl} alt={fullName} />
-                <AvatarFallback>{initials}</AvatarFallback>
-              </Avatar>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-56" align="end" forceMount>
-            <DropdownMenuLabel className="font-normal">
-              <div className="flex flex-col space-y-1">
-                <div className="flex space-x-1">
-                  <p className="text-sm font-medium leading-none">{fullName}</p>
-                  <BadgeCheck className="h-4 w-4" />
-                </div>
-                <p className="text-xs leading-none text-muted-foreground">
-                  {email}
-                </p>
-              </div>
-            </DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem asChild className="cursor-pointer">
-                <Link
-                  href="/dashboard/profile"
-                  passHref
-                  className="flex w-full"
-                >
-                  Profile
-                  <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild className="cursor-pointer">
-                <Link href="/dashboard/account" className="flex w-full">
-                  Account
-                  <DropdownMenuShortcut>⇧⌘A</DropdownMenuShortcut>
-                </Link>
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <SignOutButton isMenuItem />
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
-    </header>
-  );
+				<DropdownMenu>
+					<DropdownMenuTrigger asChild>
+						<Button
+							variant="ghost"
+							className="relative h-8 w-8 rounded-full"
+						>
+							<Avatar className="h-9 w-9">
+								<AvatarImage src={avatarUrl} alt={fullName} />
+								<AvatarFallback>{initials}</AvatarFallback>
+							</Avatar>
+						</Button>
+					</DropdownMenuTrigger>
+					<DropdownMenuContent
+						className="w-56"
+						align="end"
+						forceMount
+					>
+						<DropdownMenuLabel className="font-normal">
+							<div className="flex flex-col space-y-1">
+								<div className="flex space-x-1">
+									<p className="text-sm font-medium leading-none">
+										{fullName}
+									</p>
+									<BadgeCheck className="h-4 w-4" />
+								</div>
+								<p className="text-xs leading-none text-muted-foreground">
+									{email}
+								</p>
+							</div>
+						</DropdownMenuLabel>
+						<DropdownMenuSeparator />
+						<DropdownMenuGroup>
+							<DropdownMenuItem
+								asChild
+								className="cursor-pointer"
+							>
+								<Link
+									href="/dashboard/profile"
+									passHref
+									className="flex w-full"
+								>
+									Profile
+									<DropdownMenuShortcut>
+										⇧⌘P
+									</DropdownMenuShortcut>
+								</Link>
+							</DropdownMenuItem>
+							<DropdownMenuItem
+								asChild
+								className="cursor-pointer"
+							>
+								<Link
+									href="/dashboard/account"
+									className="flex w-full"
+								>
+									Account
+									<DropdownMenuShortcut>
+										⇧⌘A
+									</DropdownMenuShortcut>
+								</Link>
+							</DropdownMenuItem>
+						</DropdownMenuGroup>
+						<DropdownMenuSeparator />
+						<SignOutButton isMenuItem />
+					</DropdownMenuContent>
+				</DropdownMenu>
+			</div>
+		</header>
+	)
 }

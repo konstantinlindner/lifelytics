@@ -1,9 +1,9 @@
-import { DateRangePicker } from './components/dateRangePicker';
+import { DateRangePicker } from './components/dateRangePicker'
 
 export default async function Dashboard() {
-  return (
-    <main>
-      <DateRangePicker />
-    </main>
-  );
+	return (
+		<main>
+			<DateRangePicker />
+		</main>
+	)
 }
