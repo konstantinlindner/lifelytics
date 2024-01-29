@@ -6,7 +6,7 @@ import { transactionColumns } from './components/transactionColumns';
 import { TransactionTable } from './components/transactionTable';
 
 export default function Transactions() {
-  const { transactions } = useUser();
+  const transactions = useUser().user?.transactions;
 
   return (
     <main>
