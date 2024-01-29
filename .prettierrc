@@ -1,6 +1,11 @@
 {
+  "plugins": ["@trivago/prettier-plugin-sort-imports", "prettier-plugin-tailwindcss"],
+  "experimentalTernaries": true,
   "singleQuote": true,
-  "tabWidth": 2,
-  "semi": true,
-  "trailingComma": "all"
+  "useTabs": true,
+  "tabWidth": 4,
+  "semi": false,
+  "importOrder": ["^react", "^@vercel/(.*)$", "^next", "^@supabase", "^@/types", "<THIRD_PARTY_MODULES>", "^lucide-react", "^@/contexts/(.*)$", "^@/lib/(.*)$", "^@/components/ui/(.*)$", "^@/components/(.*)$", "^[./]" ],
+  "importOrderSeparation": true,
+  "importOrderSortSpecifiers": true
 }
