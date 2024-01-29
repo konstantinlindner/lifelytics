@@ -1,9 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-
-import { createBrowserClient } from '@supabase/ssr';
-import type { Database } from '@/types/supabase.types';
+import { useUser } from '@/contexts/UserContext';
+import { useDatabase } from '@/contexts/DatabaseContext';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { format } from 'date-fns';
@@ -14,6 +12,8 @@ import * as z from 'zod';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
+
+import { toast } from 'sonner';
 
 import {
   Command,
@@ -42,60 +42,49 @@ import { Textarea } from '@/components/ui/textarea';
 import { ChevronsUpDown, Check } from 'lucide-react';
 
 const FormSchema = z.object({
-  transaction_date: z.date({
-    required_error: 'A transaction date is required.',
-  }),
-  checkbox: z.boolean().default(false).optional(),
-  country: z.string({
-    required_error: 'Please select a country.',
+  transactionDate: z.date({
+    required_error: 'A transaction date is required',
   }),
   what: z.string({
-    required_error: 'Please specify what you purchased.',
+    required_error: 'Please specify what you purchased',
   }),
   place: z.string({
-    required_error: 'Please specify where you made the transaction.',
+    required_error: 'Please specify where you made the transaction',
   }),
-  notes: z.string().optional(),
+  amount: z.coerce.number({
+    required_error: 'Please specify the amount of the transaction',
+    invalid_type_error: 'Please specify the amount of the transaction',
+  }),
+  currency: z.string({
+    required_error: 'Please select a currency',
+  }),
+  worked: z.boolean().default(false),
+  country: z.string({
+    required_error: 'Please select a country',
+  }),
+  description: z.string().optional(),
 });
 
 interface AddTransactionDialogContentInputsProps {}
 
-type Country = {
-  name: string;
-  iso2: string;
-};
-
 export default function AddTransactionDialogContentInputs({}: AddTransactionDialogContentInputsProps) {
-  const [countries, setCountries] = useState<Country[]>([]);
-
-  useEffect(() => {
-    const supabase = createBrowserClient<Database>(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    );
-
-    const fetchData = async () => {
-      try {
-        const { data: countries, error } = await supabase
-          .from('countries')
-          .select('name, iso2');
-        if (error) throw error;
-        const countriesData = countries as Country[];
-        setCountries(countriesData);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    fetchData();
-  }, []);
+  const { countries, currencies } = useDatabase();
+  const { addTransaction } = useUser();
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
   });
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    console.log('You submitted: ', JSON.stringify(data, null, 2));
+    toast(JSON.stringify(data, null, 2));
+
+    addTransaction(
+      data.what,
+      data.amount,
+      data.currency,
+      data.country,
+      data.transactionDate,
+    );
   }
 
   return (
@@ -104,7 +93,7 @@ export default function AddTransactionDialogContentInputs({}: AddTransactionDial
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
           <FormField
             control={form.control}
-            name="transaction_date"
+            name="transactionDate"
             render={({ field }) => (
               <FormItem className="flex flex-col">
                 <FormLabel>Date</FormLabel>
@@ -177,7 +166,83 @@ export default function AddTransactionDialogContentInputs({}: AddTransactionDial
           />
           <FormField
             control={form.control}
-            name="checkbox"
+            name="currency"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel>Currency</FormLabel>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant="outline"
+                        role="combobox"
+                        className={cn(
+                          'w-[200px] justify-between',
+                          !field.value && 'text-muted-foreground',
+                        )}
+                      >
+                        {field.value
+                          ? currencies?.find(
+                              (currency) => currency.code === field.value,
+                            )?.name
+                          : 'Select currency'}
+                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-[200px] p-0">
+                    <Command>
+                      <CommandInput placeholder="Search currency..." />
+                      <CommandEmpty>No currency found.</CommandEmpty>
+                      <CommandGroup className="overflow-y-auto max-h-[20rem]">
+                        {currencies?.map((currency) => (
+                          <CommandItem
+                            value={currency.code ?? ''}
+                            key={currency.code}
+                            onSelect={() => {
+                              form.setValue('currency', currency.code ?? '');
+                            }}
+                          >
+                            <Check
+                              className={cn(
+                                'mr-2 h-4 w-4',
+                                currency.code === field.value
+                                  ? 'opacity-100'
+                                  : 'opacity-0',
+                              )}
+                            />
+                            {currency.code}
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="amount"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Amount</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="999"
+                    type="number"
+                    {...field}
+                    value={field.value}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="worked"
             render={({ field }) => (
               <FormItem className="flex flex-row items-start space-x-3 space-y-0">
                 <FormControl>
@@ -187,7 +252,7 @@ export default function AddTransactionDialogContentInputs({}: AddTransactionDial
                   />
                 </FormControl>
                 <div className="space-y-1 leading-none">
-                  <FormLabel>Checkbox</FormLabel>
+                  <FormLabel>Worked</FormLabel>
                 </div>
               </FormItem>
             )}
@@ -210,7 +275,7 @@ export default function AddTransactionDialogContentInputs({}: AddTransactionDial
                         )}
                       >
                         {field.value
-                          ? countries.find(
+                          ? countries?.find(
                               (country) => country.iso2 === field.value,
                             )?.name
                           : 'Select country'}
@@ -223,9 +288,9 @@ export default function AddTransactionDialogContentInputs({}: AddTransactionDial
                       <CommandInput placeholder="Search country..." />
                       <CommandEmpty>No country found.</CommandEmpty>
                       <CommandGroup className="overflow-y-auto max-h-[20rem]">
-                        {countries.map((country) => (
+                        {countries?.map((country) => (
                           <CommandItem
-                            value={country.name}
+                            value={country.name ?? ''}
                             key={country.iso2}
                             onSelect={() => {
                               form.setValue('country', country.iso2);
@@ -252,10 +317,10 @@ export default function AddTransactionDialogContentInputs({}: AddTransactionDial
           />
           <FormField
             control={form.control}
-            name="notes"
+            name="description"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Notes</FormLabel>
+                <FormLabel>Description</FormLabel>
                 <FormControl>
                   <Textarea
                     placeholder="Enter anything you like"
