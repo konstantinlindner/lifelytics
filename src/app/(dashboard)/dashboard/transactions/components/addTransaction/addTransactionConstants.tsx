@@ -124,8 +124,8 @@ const incomeChildren = [
     inputFields: [],
   },
   {
-    screen: 'realized-investments',
-    title: 'Realized investments',
+    screen: 'realized-investment',
+    title: 'Realized investment',
     description: 'Enter the details below.',
     icon: <Percent />,
     buttonChildren: [],
