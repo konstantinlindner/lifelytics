@@ -7,7 +7,7 @@ import ModeToggle from '@/components/modeToggle'
 
 export default function Navbar() {
 	return (
-		<header className="h-24` container flex flex-row items-center justify-between py-6">
+		<header className="container flex h-24 flex-row items-center justify-between py-6">
 			<nav className="flex items-center gap-10">
 				<Logo />
 
