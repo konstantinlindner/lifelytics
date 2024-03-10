@@ -61,6 +61,7 @@ const Context = createContext({
 		currencyId: string,
 		countryId: number,
 		date: Date,
+		description?: string,
 	) => {},
 })
 
@@ -313,6 +314,7 @@ export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
 			currencyId: string,
 			countryId: number,
 			date: Date,
+			description?: string,
 		) => {
 			try {
 				if (!user) {
@@ -327,6 +329,7 @@ export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
 						country: countryId,
 						currency: currencyId,
 						date: dayjs(date).format('YYYY-MM-DD'),
+						description: description,
 					},
 				])
 

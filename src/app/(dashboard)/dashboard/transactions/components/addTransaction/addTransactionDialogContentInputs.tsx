@@ -85,6 +85,7 @@ export default function AddTransactionDialogContentInputs({}: AddTransactionDial
 			data.currency,
 			data.country,
 			data.transactionDate,
+			data.description,
 		)
 	}
 
@@ -215,7 +216,7 @@ export default function AddTransactionDialogContentInputs({}: AddTransactionDial
 												{currencies?.map((currency) => (
 													<CommandItem
 														value={
-															currency.id ?? ''
+															currency.name ?? ''
 														}
 														key={currency.id}
 														onSelect={() => {
