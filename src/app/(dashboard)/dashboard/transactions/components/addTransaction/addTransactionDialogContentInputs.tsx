@@ -47,7 +47,7 @@ const FormSchema = z.object({
 	what: z.string({
 		required_error: 'Please specify what you purchased',
 	}),
-	place: z.string({
+	counterpart: z.string({
 		required_error: 'Please specify where you made the transaction',
 	}),
 	amount: z.coerce
@@ -82,6 +82,7 @@ export default function AddTransactionDialogContentInputs({}: AddTransactionDial
 		addTransaction(
 			data.what,
 			data.amount,
+			data.counterpart,
 			data.currency,
 			data.country,
 			data.transactionDate,
@@ -143,6 +144,7 @@ export default function AddTransactionDialogContentInputs({}: AddTransactionDial
 							</FormItem>
 						)}
 					/>
+
 					<FormField
 						control={form.control}
 						name="what"
@@ -160,12 +162,14 @@ export default function AddTransactionDialogContentInputs({}: AddTransactionDial
 							</FormItem>
 						)}
 					/>
+
+					{/* TODO add autocomplete and suggestions */}
 					<FormField
 						control={form.control}
-						name="place"
+						name="counterpart"
 						render={({ field }) => (
 							<FormItem>
-								<FormLabel>Place</FormLabel>
+								<FormLabel>Counterpart</FormLabel>
 								<FormControl>
 									<Input
 										placeholder="The Apple Store"
@@ -177,6 +181,7 @@ export default function AddTransactionDialogContentInputs({}: AddTransactionDial
 							</FormItem>
 						)}
 					/>
+
 					<FormField
 						control={form.control}
 						name="currency"
@@ -247,6 +252,7 @@ export default function AddTransactionDialogContentInputs({}: AddTransactionDial
 							</FormItem>
 						)}
 					/>
+
 					<FormField
 						control={form.control}
 						name="amount"
@@ -265,6 +271,7 @@ export default function AddTransactionDialogContentInputs({}: AddTransactionDial
 							</FormItem>
 						)}
 					/>
+
 					<FormField
 						control={form.control}
 						name="worked"
@@ -282,6 +289,7 @@ export default function AddTransactionDialogContentInputs({}: AddTransactionDial
 							</FormItem>
 						)}
 					/>
+
 					<FormField
 						control={form.control}
 						name="country"
@@ -351,6 +359,7 @@ export default function AddTransactionDialogContentInputs({}: AddTransactionDial
 							</FormItem>
 						)}
 					/>
+
 					<FormField
 						control={form.control}
 						name="description"
@@ -368,6 +377,7 @@ export default function AddTransactionDialogContentInputs({}: AddTransactionDial
 							</FormItem>
 						)}
 					/>
+
 					<Button type="submit">Submit</Button>
 				</form>
 			</Form>

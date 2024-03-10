@@ -10,8 +10,6 @@ import {
 	useState,
 } from 'react'
 
-import { useDatabase } from '@/contexts/DatabaseContext'
-
 import supabase from '@/lib/supabase'
 
 import dayjs from 'dayjs'
@@ -31,6 +29,7 @@ type User = {
 	website: string | null
 	createdAt: string | null
 	transactions: Transaction[]
+	counterparts: Counterpart[]
 }
 
 type Transaction = {
@@ -44,6 +43,15 @@ type Transaction = {
 	createdAt: string | null
 }
 
+type Counterpart = {
+	id: string
+	name: string | null
+	isIncome: boolean | null
+	isExpense: boolean | null
+	createdAt: string | null
+	updatedAt: string | null
+}
+
 const Context = createContext({
 	user: null as User | null,
 	fetchData: () => {},
@@ -55,9 +63,11 @@ const Context = createContext({
 	setBirthDate: (date: Date | null) => {},
 	setAvatarUrl: (urlString: string) => {},
 	setWebsite: (website: string) => {},
+	addCounterpart: (name: string, isIncome: boolean, isExpense: boolean) => {},
 	addTransaction: (
 		title: string,
 		amount: number,
+		counterpart: string,
 		currencyId: string,
 		countryId: number,
 		date: Date,
@@ -68,7 +78,6 @@ const Context = createContext({
 export const useUser = () => useContext(Context)
 
 export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
-	// const { countries, currencies } = useDatabase()
 	const [user, setUser] = useState<User | null>()
 
 	const fetchData = useCallback(async () => {
@@ -87,6 +96,16 @@ export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
 			data: { session },
 		} = await supabase.auth.getSession()
 
+		const { data: counterparts } = await supabase.from('counterparts')
+			.select(`
+		id,
+		createdAt,
+		updatedAt,
+		isIncome,
+		isExpense,
+		name
+	  `)
+
 		const { data: transactions } = await supabase.from('transactions')
 			.select(`
       id,
@@ -95,6 +114,7 @@ export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
       amount,
       currency ( code ),
       country ( name ),
+	  counterpart ( name ),
       date,
       createdAt
     `)
@@ -133,6 +153,7 @@ export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
 				website: profile.website,
 				createdAt: profile.createdAt,
 				transactions: formattedTransactions ?? [],
+				counterparts: counterparts ?? [],
 			})
 		}
 	}, [])
@@ -307,10 +328,63 @@ export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
 		[user, fetchData],
 	)
 
+	const addCounterpart = useCallback(
+		async (
+			name: string,
+			isIncome: boolean,
+			isExpense: boolean,
+		): Promise<{
+			createdAt: string
+			id: string
+			isExpense: boolean
+			isIncome: boolean
+			name: string | null
+			updatedAt: string | null
+			userId: string | null
+		} | null> => {
+			try {
+				if (!user) {
+					return null
+				}
+
+				const { data: existingCounterpart } = await supabase
+					.from('counterparts')
+					.select()
+					.eq('name', name)
+
+				if (existingCounterpart?.length) {
+					return existingCounterpart[0]
+				}
+
+				const { data: counterpart, error } = await supabase
+					.from('counterparts')
+					.insert([
+						{
+							userId: user.id,
+							name: name,
+							isIncome: isIncome,
+							isExpense: isExpense,
+						},
+					])
+					.select()
+
+				fetchData()
+				if (error) throw error
+
+				return counterpart[0]
+			} catch (error) {
+				console.error(error)
+				return null
+			}
+		},
+		[user, fetchData],
+	)
+
 	const addTransaction = useCallback(
 		async (
 			title: string,
 			amount: number,
+			counterpartName: string,
 			currencyId: string,
 			countryId: number,
 			date: Date,
@@ -321,6 +395,12 @@ export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
 					return
 				}
 
+				const counterpart = await addCounterpart(
+					counterpartName,
+					false,
+					false,
+				)
+
 				const { error } = await supabase.from('transactions').insert([
 					{
 						userId: user.id,
@@ -330,6 +410,7 @@ export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
 						currency: currencyId,
 						date: dayjs(date).format('YYYY-MM-DD'),
 						description: description,
+						counterpart: counterpart?.id,
 					},
 				])
 
@@ -342,7 +423,7 @@ export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
 				console.error(error)
 			}
 		},
-		[user, fetchData],
+		[user, addCounterpart, fetchData],
 	)
 
 	useEffect(() => {
@@ -369,6 +450,7 @@ export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
 				setBirthDate,
 				setAvatarUrl,
 				setWebsite,
+				addCounterpart,
 				addTransaction,
 			}}
 		>
