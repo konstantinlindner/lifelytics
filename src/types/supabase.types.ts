@@ -38,7 +38,6 @@ export interface Database {
 			}
 			currencies: {
 				Row: {
-					countries: number | null
 					createdAt: string | null
 					id: string
 					name: string | null
@@ -48,7 +47,6 @@ export interface Database {
 					updatedAt: string | null
 				}
 				Insert: {
-					countries?: number | null
 					createdAt?: string | null
 					id?: string
 					name?: string | null
@@ -58,7 +56,6 @@ export interface Database {
 					updatedAt?: string | null
 				}
 				Update: {
-					countries?: number | null
 					createdAt?: string | null
 					id?: string
 					name?: string | null
@@ -67,14 +64,7 @@ export interface Database {
 					isSymbolPrefix?: boolean
 					updatedAt?: string | null
 				}
-				Relationships: [
-					{
-						foreignKeyName: 'currencies_countries_fkey'
-						columns: ['countries']
-						referencedRelation: 'countries'
-						referencedColumns: ['id']
-					},
-				]
+				Relationships: []
 			}
 			profiles: {
 				Row: {

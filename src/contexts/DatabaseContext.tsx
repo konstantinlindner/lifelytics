@@ -18,7 +18,6 @@ type Currencies = {
 	code: string | null
 	symbol: string | null
 	isSymbolPrefix: boolean
-	countries: number | null
 	createdAt: string | null
 	updatedAt: string | null
 }[]
@@ -51,7 +50,6 @@ export const DatabaseProvider: FC<{ children: ReactNode }> = ({ children }) => {
         code,
         symbol,
         isSymbolPrefix,
-        countries,
         createdAt,
         updatedAt
     `)
@@ -74,7 +72,6 @@ export const DatabaseProvider: FC<{ children: ReactNode }> = ({ children }) => {
 				code: currency.code,
 				symbol: currency.symbol,
 				isSymbolPrefix: currency.isSymbolPrefix,
-				countries: currency.countries,
 				createdAt: currency.createdAt,
 				updatedAt: currency.updatedAt,
 			}))
