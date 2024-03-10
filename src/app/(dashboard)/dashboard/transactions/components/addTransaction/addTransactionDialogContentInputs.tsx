@@ -60,7 +60,7 @@ const FormSchema = z.object({
 		required_error: 'Please select a currency',
 	}),
 	worked: z.boolean().default(false),
-	country: z.string({
+	country: z.coerce.number({
 		required_error: 'Please select a country',
 	}),
 	description: z.string().optional(),
@@ -197,7 +197,7 @@ export default function AddTransactionDialogContentInputs({}: AddTransactionDial
 												{field.value
 													? currencies?.find(
 															(currency) =>
-																currency.code ===
+																currency.id ===
 																field.value,
 													  )?.name
 													: 'Select currency'}
@@ -215,13 +215,13 @@ export default function AddTransactionDialogContentInputs({}: AddTransactionDial
 												{currencies?.map((currency) => (
 													<CommandItem
 														value={
-															currency.code ?? ''
+															currency.id ?? ''
 														}
-														key={currency.code}
+														key={currency.id}
 														onSelect={() => {
 															form.setValue(
 																'currency',
-																currency.code ??
+																currency.id ??
 																	'',
 															)
 														}}
@@ -229,7 +229,7 @@ export default function AddTransactionDialogContentInputs({}: AddTransactionDial
 														<Check
 															className={cn(
 																'mr-2 h-4 w-4',
-																currency.code ===
+																currency.id ===
 																	field.value
 																	? 'opacity-100'
 																	: 'opacity-0',
@@ -302,7 +302,7 @@ export default function AddTransactionDialogContentInputs({}: AddTransactionDial
 												{field.value
 													? countries?.find(
 															(country) =>
-																country.iso2 ===
+																country.id ===
 																field.value,
 													  )?.name
 													: 'Select country'}
@@ -322,18 +322,18 @@ export default function AddTransactionDialogContentInputs({}: AddTransactionDial
 														value={
 															country.name ?? ''
 														}
-														key={country.iso2}
+														key={country.id}
 														onSelect={() => {
 															form.setValue(
 																'country',
-																country.iso2,
+																country.id,
 															)
 														}}
 													>
 														<Check
 															className={cn(
 																'mr-2 h-4 w-4',
-																country.iso2 ===
+																country.id ===
 																	field.value
 																	? 'opacity-100'
 																	: 'opacity-0',

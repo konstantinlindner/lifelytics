@@ -58,8 +58,8 @@ const Context = createContext({
 	addTransaction: (
 		title: string,
 		amount: number,
-		currency: string,
-		country: string,
+		currencyId: string,
+		countryId: number,
 		date: Date,
 	) => {},
 })
@@ -67,7 +67,7 @@ const Context = createContext({
 export const useUser = () => useContext(Context)
 
 export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
-	const { currencies, countries } = useDatabase()
+	// const { countries, currencies } = useDatabase()
 	const [user, setUser] = useState<User | null>()
 
 	const fetchData = useCallback(async () => {
@@ -310,12 +310,12 @@ export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
 		async (
 			title: string,
 			amount: number,
-			currency: string,
-			country: string,
+			currencyId: string,
+			countryId: number,
 			date: Date,
 		) => {
 			try {
-				if (!user || !countries || !currencies) {
+				if (!user) {
 					return
 				}
 
@@ -324,9 +324,8 @@ export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
 						userId: user.id,
 						title: title,
 						amount: amount,
-						country: countries.find((c) => c.name === country)?.id,
-						currency: currencies.find((c) => c.code === currency)
-							?.id,
+						country: countryId,
+						currency: currencyId,
 						date: dayjs(date).format('YYYY-MM-DD'),
 					},
 				])
@@ -340,7 +339,7 @@ export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
 				console.error(error)
 			}
 		},
-		[user, countries, currencies, fetchData],
+		[user, fetchData],
 	)
 
 	useEffect(() => {
