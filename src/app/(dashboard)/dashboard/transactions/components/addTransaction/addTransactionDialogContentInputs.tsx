@@ -50,10 +50,12 @@ const FormSchema = z.object({
 	place: z.string({
 		required_error: 'Please specify where you made the transaction',
 	}),
-	amount: z.coerce.number({
-		required_error: 'Please specify the amount of the transaction',
-		invalid_type_error: 'Please specify the amount of the transaction',
-	}),
+	amount: z.coerce
+		.number({
+			required_error: 'Please specify the amount of the transaction',
+			invalid_type_error: 'Please specify the amount of the transaction',
+		})
+		.positive(),
 	currency: z.string({
 		required_error: 'Please select a currency',
 	}),
