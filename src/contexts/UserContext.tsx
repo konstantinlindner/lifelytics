@@ -417,6 +417,7 @@ export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
 		[user, fetchData],
 	)
 
+	// TODO return promise
 	const addTransaction = useCallback(
 		async ({
 			transactionDate,

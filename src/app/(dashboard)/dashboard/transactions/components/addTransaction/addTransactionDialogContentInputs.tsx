@@ -77,6 +77,7 @@ export default function AddTransactionDialogContentInputs({}: AddTransactionDial
 	})
 
 	function onSubmit(data: z.infer<typeof FormSchema>) {
+		// TODO change toast
 		toast(JSON.stringify(data, null, 2))
 
 		addTransaction({
