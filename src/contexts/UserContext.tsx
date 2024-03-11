@@ -28,19 +28,21 @@ type User = {
 	birthDate: Date | null
 	website: string | null
 	createdAt: string | null
+	updatedAt: string | null
 	transactions: Transaction[]
 	counterparts: Counterpart[]
 }
 
 type Transaction = {
 	id: string
-	title: string | null
+	item: string | null
 	description: string | null
 	amount: number | null
 	currency: string | null
 	country: number | null
-	date: string | null
+	transactionDate: string | null
 	createdAt: string | null
+	updatedAt: string | null
 }
 
 type Counterpart = {
@@ -50,6 +52,16 @@ type Counterpart = {
 	isExpense: boolean | null
 	createdAt: string | null
 	updatedAt: string | null
+}
+
+type AddTransactionProps = {
+	transactionDate: Date
+	item: string
+	amount: number
+	counterpartName: string
+	currencyId: string
+	countryId: number
+	description?: string
 }
 
 const Context = createContext({
@@ -64,15 +76,7 @@ const Context = createContext({
 	setAvatarUrl: (urlString: string) => {},
 	setWebsite: (website: string) => {},
 	addCounterpart: (name: string, isIncome: boolean, isExpense: boolean) => {},
-	addTransaction: (
-		title: string,
-		amount: number,
-		counterpart: string,
-		currencyId: string,
-		countryId: number,
-		date: Date,
-		description?: string,
-	) => {},
+	addTransaction: (props: AddTransactionProps) => {},
 })
 
 export const useUser = () => useContext(Context)
@@ -89,8 +93,9 @@ export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
       avatarUrl,
       birthDate,
       website,
-      createdAt
-    `)
+      createdAt,
+	  updatedAt
+	`)
 
 		const {
 			data: { session },
@@ -104,32 +109,34 @@ export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
 		isIncome,
 		isExpense,
 		name
-	  `)
+		`)
 
 		const { data: transactions } = await supabase.from('transactions')
 			.select(`
-      id,
-      title,
-      description,
-      amount,
-      currency ( code ),
-      country ( name ),
-	  counterpart ( name ),
-      date,
-      createdAt
-    `)
+      	id,
+      	item,
+      	description,
+      	amount,
+      	currency ( code ),
+      	country ( name ),
+	  	counterpart ( name ),
+      	transactionDate,
+      	createdAt,
+	  	updatedAt
+    	`)
 
 		const formattedTransactions = transactions?.map((transaction) => ({
 			id: transaction.id,
-			title: transaction.title,
+			item: transaction.item,
 			description: transaction.description,
 			amount: transaction.amount,
 			//@ts-ignore
 			currency: transaction.currency.code,
 			// @ts-ignore
 			country: transaction.country.name,
-			date: transaction.date,
+			transactionDate: transaction.transactionDate,
 			createdAt: transaction.createdAt,
+			updatedAt: transaction.updatedAt,
 		}))
 
 		const profile = profiles?.[0]
@@ -152,12 +159,14 @@ export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
 					: null,
 				website: profile.website,
 				createdAt: profile.createdAt,
+				updatedAt: profile.updatedAt,
 				transactions: formattedTransactions ?? [],
 				counterparts: counterparts ?? [],
 			})
 		}
 	}, [])
 
+	// TODO handle only first or only last name
 	const addNamesToUserProfile = useCallback(
 		async (firstName: string, lastName: string) => {
 			const {
@@ -381,20 +390,21 @@ export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
 	)
 
 	const addTransaction = useCallback(
-		async (
-			title: string,
-			amount: number,
-			counterpartName: string,
-			currencyId: string,
-			countryId: number,
-			date: Date,
-			description?: string,
-		) => {
+		async ({
+			transactionDate,
+			item,
+			amount,
+			counterpartName,
+			currencyId,
+			countryId,
+			description,
+		}: AddTransactionProps) => {
 			try {
 				if (!user) {
 					return
 				}
 
+				// TODO handle isIncome and isExpense
 				const counterpart = await addCounterpart(
 					counterpartName,
 					false,
@@ -404,11 +414,12 @@ export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
 				const { error } = await supabase.from('transactions').insert([
 					{
 						userId: user.id,
-						title: title,
+						item: item,
 						amount: amount,
 						country: countryId,
 						currency: currencyId,
-						date: dayjs(date).format('YYYY-MM-DD'),
+						transactionDate:
+							dayjs(transactionDate).format('YYYY-MM-DD'),
 						description: description,
 						counterpart: counterpart?.id,
 					},

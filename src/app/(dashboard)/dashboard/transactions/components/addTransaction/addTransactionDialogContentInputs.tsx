@@ -44,7 +44,7 @@ const FormSchema = z.object({
 	transactionDate: z.date({
 		required_error: 'A transaction date is required',
 	}),
-	what: z.string({
+	item: z.string({
 		required_error: 'Please specify what you purchased',
 	}),
 	counterpart: z.string({
@@ -79,15 +79,15 @@ export default function AddTransactionDialogContentInputs({}: AddTransactionDial
 	function onSubmit(data: z.infer<typeof FormSchema>) {
 		toast(JSON.stringify(data, null, 2))
 
-		addTransaction(
-			data.what,
-			data.amount,
-			data.counterpart,
-			data.currency,
-			data.country,
-			data.transactionDate,
-			data.description,
-		)
+		addTransaction({
+			transactionDate: data.transactionDate,
+			item: data.item,
+			amount: data.amount,
+			counterpartName: data.counterpart,
+			currencyId: data.currency,
+			countryId: data.country,
+			description: data.description,
+		})
 	}
 
 	return (
@@ -147,10 +147,10 @@ export default function AddTransactionDialogContentInputs({}: AddTransactionDial
 
 					<FormField
 						control={form.control}
-						name="what"
+						name="item"
 						render={({ field }) => (
 							<FormItem>
-								<FormLabel>What</FormLabel>
+								<FormLabel>Item</FormLabel>
 								<FormControl>
 									<Input
 										placeholder="iPhone case"

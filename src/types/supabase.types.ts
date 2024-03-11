@@ -319,10 +319,10 @@ export type Database = {
 					country: number
 					createdAt: string
 					currency: string
-					date: string
 					description: string | null
 					id: string
-					title: string
+					item: string
+					transactionDate: string
 					updatedAt: string
 					userId: string
 				}
@@ -332,10 +332,10 @@ export type Database = {
 					country: number
 					createdAt?: string
 					currency: string
-					date: string
 					description?: string | null
 					id?: string
-					title?: string
+					item?: string
+					transactionDate: string
 					updatedAt?: string
 					userId: string
 				}
@@ -345,10 +345,10 @@ export type Database = {
 					country?: number
 					createdAt?: string
 					currency?: string
-					date?: string
 					description?: string | null
 					id?: string
-					title?: string
+					item?: string
+					transactionDate?: string
 					updatedAt?: string
 					userId?: string
 				}
