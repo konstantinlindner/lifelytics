@@ -106,12 +106,12 @@ export function TransactionTable<TData, TValue>({
 						placeholder="Search"
 						value={
 							(table
-								.getColumn('title')
+								.getColumn('item')
 								?.getFilterValue() as string) ?? ''
 						}
 						onChange={(event) =>
 							table
-								.getColumn('title')
+								.getColumn('item')
 								?.setFilterValue(event.target.value)
 						}
 					/>

@@ -18,15 +18,15 @@ import {
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 
-// fix-me, get type from central location
+// TODO get type from central location
 export type Transaction = {
 	id: string
-	title: string | null
+	item: string | null
 	description: string | null
 	amount: number | null
 	currency: string | null
 	country: number | null
-	date: string | null
+	transactionDate: string | null
 	createdAt: string | null
 }
 
@@ -53,11 +53,11 @@ export const transactionColumns: ColumnDef<Transaction>[] = [
 		enableHiding: false,
 	},
 	{
-		accessorKey: 'date',
+		accessorKey: 'transactionDate',
 		header: 'Date',
 	},
 	{
-		accessorKey: 'title',
+		accessorKey: 'item',
 		header: ({ column }) => {
 			return (
 				<Button
@@ -66,7 +66,7 @@ export const transactionColumns: ColumnDef<Transaction>[] = [
 						column.toggleSorting(column.getIsSorted() === 'asc')
 					}
 				>
-					Title
+					Item
 					<ArrowUpDown className="ml-2 h-4 w-4" />
 				</Button>
 			)

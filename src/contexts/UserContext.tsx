@@ -54,6 +54,41 @@ type Counterpart = {
 	updatedAt: string | null
 }
 
+type AddNamesToUserProfileProps = {
+	firstName: string
+	lastName: string
+}
+
+type SetEmailProps = {
+	email: string
+}
+
+type SetFirstNameProps = {
+	firstName: string
+}
+
+type SetLastNameProps = {
+	lastName: string
+}
+
+type SetBirthDateProps = {
+	date: Date | null
+}
+
+type SetAvatarUrlProps = {
+	urlString: string
+}
+
+type SetWebsiteProps = {
+	website: string
+}
+
+type AddCounterpartProps = {
+	name: string
+	isIncome: boolean
+	isExpense: boolean
+}
+
 type AddTransactionProps = {
 	transactionDate: Date
 	item: string
@@ -67,15 +102,15 @@ type AddTransactionProps = {
 const Context = createContext({
 	user: null as User | null,
 	fetchData: () => {},
-	addNamesToUserProfile: (firstName: string, lastName: string) => {},
-	setOnboardingComplete: () => {},
-	setEmail: (email: string) => {},
-	setFirstName: (firstName: string) => {},
-	setLastName: (lastName: string) => {},
-	setBirthDate: (date: Date | null) => {},
-	setAvatarUrl: (urlString: string) => {},
-	setWebsite: (website: string) => {},
-	addCounterpart: (name: string, isIncome: boolean, isExpense: boolean) => {},
+	addNamesToUserProfile: (props: AddNamesToUserProfileProps) => {},
+	setOnboardingCompleted: () => {},
+	setEmail: (props: SetEmailProps) => {},
+	setFirstName: (props: SetFirstNameProps) => {},
+	setLastName: (props: SetLastNameProps) => {},
+	setBirthDate: (props: SetBirthDateProps) => {},
+	setAvatarUrl: (props: SetAvatarUrlProps) => {},
+	setWebsite: (props: SetWebsiteProps) => {},
+	addCounterpart: (props: AddCounterpartProps) => {},
 	addTransaction: (props: AddTransactionProps) => {},
 })
 
@@ -168,7 +203,7 @@ export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
 	// TODO handle only first or only last name
 	const addNamesToUserProfile = useCallback(
-		async (firstName: string, lastName: string) => {
+		async ({ firstName, lastName }: AddNamesToUserProfileProps) => {
 			const {
 				data: { session },
 			} = await supabase.auth.getSession()
@@ -195,7 +230,7 @@ export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
 	)
 
 	const setAvatarUrl = useCallback(
-		async (urlString: string) => {
+		async ({ urlString }: SetAvatarUrlProps) => {
 			if (!user) {
 				return
 			}
@@ -215,12 +250,13 @@ export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
 		[user, fetchData],
 	)
 
-	const setOnboardingComplete = useCallback(async () => {
+	const setOnboardingCompleted = useCallback(async () => {
 		try {
 			if (!user) {
 				return
 			}
 
+			// TODO use dayjs?
 			const currentDateString = new Date().toLocaleString()
 
 			const { error } = await supabase
@@ -236,7 +272,7 @@ export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
 	}, [user, fetchData])
 
 	const setEmail = useCallback(
-		async (email: string) => {
+		async ({ email }: SetEmailProps) => {
 			try {
 				const { error } = await supabase.auth.updateUser({
 					email: email,
@@ -252,7 +288,7 @@ export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
 	)
 
 	const setFirstName = useCallback(
-		async (firstName: string) => {
+		async ({ firstName }: SetFirstNameProps) => {
 			try {
 				if (!user) {
 					return
@@ -273,7 +309,7 @@ export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
 	)
 
 	const setLastName = useCallback(
-		async (lastName: string) => {
+		async ({ lastName }: SetLastNameProps) => {
 			try {
 				if (!user) {
 					return
@@ -294,7 +330,7 @@ export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
 	)
 
 	const setBirthDate = useCallback(
-		async (date: Date | null) => {
+		async ({ date }: SetBirthDateProps) => {
 			try {
 				if (!user) {
 					return
@@ -317,7 +353,7 @@ export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
 	)
 
 	const setWebsite = useCallback(
-		async (website: string) => {
+		async ({ website }: SetWebsiteProps) => {
 			try {
 				if (!user) {
 					return
@@ -338,19 +374,11 @@ export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
 	)
 
 	const addCounterpart = useCallback(
-		async (
-			name: string,
-			isIncome: boolean,
-			isExpense: boolean,
-		): Promise<{
-			createdAt: string
-			id: string
-			isExpense: boolean
-			isIncome: boolean
-			name: string | null
-			updatedAt: string | null
-			userId: string | null
-		} | null> => {
+		async ({
+			name,
+			isIncome,
+			isExpense,
+		}: AddCounterpartProps): Promise<Counterpart | null> => {
 			try {
 				if (!user) {
 					return null
@@ -405,11 +433,11 @@ export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
 				}
 
 				// TODO handle isIncome and isExpense
-				const counterpart = await addCounterpart(
-					counterpartName,
-					false,
-					false,
-				)
+				const counterpart = await addCounterpart({
+					name: counterpartName,
+					isIncome: false,
+					isExpense: false,
+				})
 
 				const { error } = await supabase.from('transactions').insert([
 					{
@@ -454,7 +482,7 @@ export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
 				user,
 				fetchData,
 				addNamesToUserProfile,
-				setOnboardingComplete,
+				setOnboardingCompleted,
 				setEmail,
 				setFirstName,
 				setLastName,
