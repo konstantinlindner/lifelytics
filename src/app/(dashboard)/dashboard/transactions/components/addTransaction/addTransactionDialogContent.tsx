@@ -1,21 +1,4 @@
 import {
-	Car,
-	CircleDollarSign,
-	Coins,
-	Drama,
-	Gift,
-	Heart,
-	Home,
-	Landmark,
-	Percent,
-	Receipt,
-	RotateCw,
-	ShoppingBag,
-	Undo2,
-	UtensilsCrossed,
-} from 'lucide-react'
-
-import {
 	DialogContent,
 	DialogDescription,
 	DialogHeader,
@@ -35,6 +18,7 @@ export default function AddTransactionDialogContent({
 	screen,
 	setScreen,
 }: AddTransactionDialogContentProps) {
+	console.log(screen)
 	const currentScreen = allScreens.find((s) => s.screen === screen)
 
 	if (!currentScreen) {
@@ -71,7 +55,9 @@ export default function AddTransactionDialogContent({
 						))}
 					</div>
 				)}
-				{isEndScreen && <AddTransactionDialogContentInputs />}
+				{isEndScreen && (
+					<AddTransactionDialogContentInputs screen={screen} />
+				)}
 			</main>
 		</DialogContent>
 	)
