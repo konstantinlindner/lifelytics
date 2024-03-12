@@ -1,4 +1,8 @@
+'use client'
+
 import { useState } from 'react'
+
+import { useRouter, useSearchParams } from 'next/navigation'
 
 import { Coins, Plus } from 'lucide-react'
 
@@ -20,7 +24,13 @@ export default function AddTransactionDialog({
 	showButton,
 	showCommandItem,
 }: addTransactionDialogProps) {
-	const [screen, setScreen] = useState<ScreenType>(openingScreen)
+	const router = useRouter()
+	const searchParams = useSearchParams()
+	const screen = searchParams.get('screen') as ScreenType
+
+	const setScreen = (newScreen: ScreenType) => {
+		router.push(`?screen=${newScreen}`)
+	}
 
 	return (
 		<main>
