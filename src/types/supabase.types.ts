@@ -188,44 +188,6 @@ export type Database = {
 					},
 				]
 			}
-			income: {
-				Row: {
-					category: Database['public']['Enums']['incomeCategories']
-					createdAt: string
-					from: string
-					id: string
-					transactionId: string
-					updatedAt: string
-					what: string
-				}
-				Insert: {
-					category: Database['public']['Enums']['incomeCategories']
-					createdAt?: string
-					from?: string
-					id?: string
-					transactionId: string
-					updatedAt?: string
-					what?: string
-				}
-				Update: {
-					category?: Database['public']['Enums']['incomeCategories']
-					createdAt?: string
-					from?: string
-					id?: string
-					transactionId?: string
-					updatedAt?: string
-					what?: string
-				}
-				Relationships: [
-					{
-						foreignKeyName: 'income_transactionId_fkey'
-						columns: ['transactionId']
-						isOneToOne: false
-						referencedRelation: 'transactions'
-						referencedColumns: ['id']
-					},
-				]
-			}
 			paymentMethods: {
 				Row: {
 					createdAt: string
@@ -320,7 +282,13 @@ export type Database = {
 					createdAt: string
 					currency: string
 					description: string | null
+					expenseCategory:
+						| Database['public']['Enums']['expenseCategories']
+						| null
 					id: string
+					incomeCategory:
+						| Database['public']['Enums']['incomeCategories']
+						| null
 					item: string
 					transactionDate: string
 					updatedAt: string
@@ -333,7 +301,13 @@ export type Database = {
 					createdAt?: string
 					currency: string
 					description?: string | null
+					expenseCategory?:
+						| Database['public']['Enums']['expenseCategories']
+						| null
 					id?: string
+					incomeCategory?:
+						| Database['public']['Enums']['incomeCategories']
+						| null
 					item?: string
 					transactionDate: string
 					updatedAt?: string
@@ -346,7 +320,13 @@ export type Database = {
 					createdAt?: string
 					currency?: string
 					description?: string | null
+					expenseCategory?:
+						| Database['public']['Enums']['expenseCategories']
+						| null
 					id?: string
+					incomeCategory?:
+						| Database['public']['Enums']['incomeCategories']
+						| null
 					item?: string
 					transactionDate?: string
 					updatedAt?: string
@@ -399,6 +379,16 @@ export type Database = {
 				| 'Oceania'
 				| 'North America'
 				| 'South America'
+			expenseCategories:
+				| 'Home'
+				| 'Food and drink'
+				| 'Transportation'
+				| 'Entertainment'
+				| 'Health and wellness'
+				| 'Shopping'
+				| 'Savings and investments'
+				| 'Subscriptions'
+				| 'Other'
 			foodPlaceCategories:
 				| 'Grocery store'
 				| 'Convenience store'
