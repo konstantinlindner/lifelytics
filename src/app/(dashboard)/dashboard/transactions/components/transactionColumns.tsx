@@ -15,6 +15,8 @@ import {
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 
+// import { Transaction } from '@/types/globals.types'
+
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 
@@ -25,9 +27,10 @@ export type Transaction = {
 	description: string | null
 	amount: number | null
 	currency: string | null
-	country: number | null
+	country: string | null
 	transactionDate: string | null
 	createdAt: string | null
+	counterpart: string | null
 }
 
 export const transactionColumns: ColumnDef<Transaction>[] = [
