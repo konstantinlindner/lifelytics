@@ -1,5 +1,7 @@
 'use client'
 
+import { ExpenseCategory, IncomeCategory } from '@/types/globals.types'
+
 import { useDatabase } from '@/contexts/DatabaseContext'
 import { useUser } from '@/contexts/UserContext'
 
@@ -40,6 +42,8 @@ import {
 } from '@/components/ui/popover'
 import { Textarea } from '@/components/ui/textarea'
 
+import { ScreenType } from './addTransactionConstants'
+
 const FormSchema = z.object({
 	transactionDate: z.date({
 		required_error: 'A transaction date is required',
@@ -66,9 +70,13 @@ const FormSchema = z.object({
 	description: z.string().optional(),
 })
 
-interface AddTransactionDialogContentInputsProps {}
+interface AddTransactionDialogContentInputsProps {
+	screen: ScreenType
+}
 
-export default function AddTransactionDialogContentInputs({}: AddTransactionDialogContentInputsProps) {
+export default function AddTransactionDialogContentInputs({
+	screen,
+}: AddTransactionDialogContentInputsProps) {
 	const { countries, currencies } = useDatabase()
 	const { addTransaction } = useUser()
 
@@ -80,6 +88,33 @@ export default function AddTransactionDialogContentInputs({}: AddTransactionDial
 		// TODO change toast
 		toast(JSON.stringify(data, null, 2))
 
+		// TODO types
+		const SCREEN_TO_CATEGORY: {
+			[key in ScreenType]: IncomeCategory | ExpenseCategory
+		} = {
+			salary: 'Salary',
+			sale: 'Sale',
+			gift: 'Gift',
+			'tax-return': 'Tax return',
+			'realized-investment': 'Realized investment',
+			'other-income': 'Other income',
+			home: 'Home',
+			'food-and-drink': 'Food and drink',
+			transportation: 'Transportation',
+			entertainment: 'Entertainment',
+			'health-and-wellness': 'Health and wellness',
+			shopping: 'Shopping',
+			'savings-and-investments': 'Savings and investments',
+			subscriptions: 'Subscriptions',
+			other: 'Other',
+		}
+
+		function screenToCategory(
+			screen: ScreenType,
+		): IncomeCategory | ExpenseCategory {
+			return SCREEN_TO_CATEGORY[screen]
+		}
+
 		addTransaction({
 			transactionDate: data.transactionDate,
 			item: data.item,
@@ -88,6 +123,7 @@ export default function AddTransactionDialogContentInputs({}: AddTransactionDial
 			currencyId: data.currency,
 			countryId: data.country,
 			description: data.description,
+			category: screenToCategory(screen),
 		})
 	}
 
