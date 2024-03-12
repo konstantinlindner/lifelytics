@@ -10,6 +10,14 @@ import {
 	useState,
 } from 'react'
 
+import {
+	Counterpart,
+	ExpenseCategory,
+	IncomeCategory,
+	expenseCategories,
+	incomeCategories,
+} from '@/types/globals.types'
+
 import supabase from '@/lib/supabase'
 
 import dayjs from 'dayjs'
@@ -38,22 +46,15 @@ type Transaction = {
 	item: string | null
 	description: string | null
 	amount: number | null
-	currency: string | null
-	country: number | null
 	transactionDate: string | null
 	createdAt: string | null
 	updatedAt: string | null
+	counterpart: string | null
+	currency: string | null
+	country: number | null
 }
 
-type Counterpart = {
-	id: string
-	name: string | null
-	isIncome: boolean | null
-	isExpense: boolean | null
-	createdAt: string | null
-	updatedAt: string | null
-}
-
+// function types
 type AddNamesToUserProfileProps = {
 	firstName: string
 	lastName: string
@@ -72,11 +73,11 @@ type SetLastNameProps = {
 }
 
 type SetBirthDateProps = {
-	date: Date | null
+	birthDate: Date | null
 }
 
 type SetAvatarUrlProps = {
-	urlString: string
+	avatarUrl: string
 }
 
 type SetWebsiteProps = {
@@ -97,6 +98,7 @@ type AddTransactionProps = {
 	currencyId: string
 	countryId: number
 	description?: string
+	category: ExpenseCategory | IncomeCategory
 }
 
 const Context = createContext({
@@ -120,7 +122,10 @@ export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
 	const [user, setUser] = useState<User | null>()
 
 	const fetchData = useCallback(async () => {
-		const { data: profiles } = await supabase.from('profiles').select(`
+		const { data: profile } = await supabase
+			.from('profiles')
+			.select(
+				`
       id,
       firstName,
       lastName,
@@ -130,11 +135,15 @@ export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
       website,
       createdAt,
 	  updatedAt
-	`)
+	`,
+			)
+			.single()
 
 		const {
 			data: { session },
 		} = await supabase.auth.getSession()
+
+		const sessionUser = session?.user
 
 		const { data: counterparts } = await supabase.from('counterparts')
 			.select(`
@@ -143,7 +152,8 @@ export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
 		updatedAt,
 		isIncome,
 		isExpense,
-		name
+		name,
+		userId
 		`)
 
 		const { data: transactions } = await supabase.from('transactions')
@@ -152,30 +162,13 @@ export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
       	item,
       	description,
       	amount,
-      	currency ( code ),
-      	country ( name ),
-	  	counterpart ( name ),
+      	currency,
+      	country,
+	  	counterpart,
       	transactionDate,
       	createdAt,
 	  	updatedAt
     	`)
-
-		const formattedTransactions = transactions?.map((transaction) => ({
-			id: transaction.id,
-			item: transaction.item,
-			description: transaction.description,
-			amount: transaction.amount,
-			//@ts-ignore
-			currency: transaction.currency.code,
-			// @ts-ignore
-			country: transaction.country.name,
-			transactionDate: transaction.transactionDate,
-			createdAt: transaction.createdAt,
-			updatedAt: transaction.updatedAt,
-		}))
-
-		const profile = profiles?.[0]
-		const sessionUser = session?.user
 
 		if (!profile || !sessionUser?.email) {
 			setUser(null)
@@ -195,13 +188,12 @@ export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
 				website: profile.website,
 				createdAt: profile.createdAt,
 				updatedAt: profile.updatedAt,
-				transactions: formattedTransactions ?? [],
+				transactions: transactions ?? [],
 				counterparts: counterparts ?? [],
 			})
 		}
 	}, [])
 
-	// TODO handle only first or only last name
 	const addNamesToUserProfile = useCallback(
 		async ({ firstName, lastName }: AddNamesToUserProfileProps) => {
 			const {
@@ -230,7 +222,7 @@ export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
 	)
 
 	const setAvatarUrl = useCallback(
-		async ({ urlString }: SetAvatarUrlProps) => {
+		async ({ avatarUrl }: SetAvatarUrlProps) => {
 			if (!user) {
 				return
 			}
@@ -238,7 +230,7 @@ export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
 			try {
 				const { error } = await supabase
 					.from('profiles')
-					.update({ avatarUrl: urlString })
+					.update({ avatarUrl: avatarUrl })
 					.eq('id', user.id)
 
 				fetchData()
@@ -256,8 +248,7 @@ export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
 				return
 			}
 
-			// TODO use dayjs?
-			const currentDateString = new Date().toLocaleString()
+			const currentDateString = dayjs().format()
 
 			const { error } = await supabase
 				.from('profiles')
@@ -330,13 +321,15 @@ export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
 	)
 
 	const setBirthDate = useCallback(
-		async ({ date }: SetBirthDateProps) => {
+		async ({ birthDate }: SetBirthDateProps) => {
 			try {
 				if (!user) {
 					return
 				}
 
-				const formattedDate = date ? date.toLocaleString() : null
+				const formattedDate = birthDate
+					? dayjs(birthDate).format()
+					: null
 
 				const { error } = await supabase
 					.from('profiles')
@@ -427,17 +420,31 @@ export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
 			currencyId,
 			countryId,
 			description,
+			category,
 		}: AddTransactionProps) => {
 			try {
 				if (!user) {
 					return
 				}
 
-				// TODO handle isIncome and isExpense
+				const isExpenseCategory = (
+					category: ExpenseCategory | IncomeCategory,
+				): category is ExpenseCategory => {
+					return expenseCategories.includes(
+						category as ExpenseCategory,
+					)
+				}
+
+				const isIncomeCategory = (
+					category: ExpenseCategory | IncomeCategory,
+				): category is IncomeCategory => {
+					return incomeCategories.includes(category as IncomeCategory)
+				}
+
 				const counterpart = await addCounterpart({
 					name: counterpartName,
-					isIncome: false,
-					isExpense: false,
+					isIncome: isIncomeCategory(category),
+					isExpense: isExpenseCategory(category),
 				})
 
 				const { error } = await supabase.from('transactions').insert([
@@ -451,6 +458,12 @@ export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
 							dayjs(transactionDate).format('YYYY-MM-DD'),
 						description: description,
 						counterpart: counterpart?.id,
+						incomeCategory: isIncomeCategory(category)
+							? category
+							: null,
+						expenseCategory: isExpenseCategory(category)
+							? category
+							: null,
 					},
 				])
 
