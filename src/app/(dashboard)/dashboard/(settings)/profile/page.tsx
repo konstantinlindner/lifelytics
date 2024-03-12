@@ -1,7 +1,5 @@
 'use client'
 
-import { useState } from 'react'
-
 import { useUser } from '@/contexts/UserContext'
 
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -74,23 +72,23 @@ export default function Profile() {
 	const handleSave = async (values: z.infer<typeof formSchema>) => {
 		try {
 			if (values.firstName !== user?.firstName) {
-				setFirstName(values.firstName)
+				setFirstName({ firstName: values.firstName })
 			}
 
 			if (values.lastName !== user?.lastName) {
-				setLastName(values.lastName)
+				setLastName({ lastName: values.lastName })
 			}
 
 			if (values.email !== user?.email) {
-				setEmail(values.email)
+				setEmail({ email: values.email })
 			}
 
 			if (values.birthDate && values.birthDate !== user?.birthDate) {
-				setBirthDate(values.birthDate)
+				setBirthDate({ birthDate: values.birthDate })
 			}
 
 			if (values.website && values.website !== user?.website) {
-				setWebsite(values.website)
+				setWebsite({ website: values.website })
 			}
 
 			values.email !== user?.email
