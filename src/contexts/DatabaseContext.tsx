@@ -10,101 +10,111 @@ import {
 	useState,
 } from 'react'
 
+import {
+	City,
+	Country,
+	Currency,
+	TransactionCategory,
+} from '@/types/globals.types'
+
 import supabase from '@/lib/supabase'
 
-type Currencies = {
-	id: string
-	name: string | null
-	code: string | null
-	symbol: string | null
-	isSymbolPrefix: boolean
-	createdAt: string | null
-	updatedAt: string | null
-}[]
-
-type Countries = {
-	id: number
-	name: string | null
-	localName: string | null
-	iso2: string
-	iso3: string | null
-	continent: string | null
-}[]
-
 const Context = createContext({
-	currencies: null as Currencies | null,
-	countries: null as Countries | null,
+	currencies: null as Currency[] | null,
+	cities: null as City[] | null,
+	countries: null as Country[] | null,
+	transactionCategories: null as TransactionCategory[] | null,
 	fetchDatabaseData: () => {},
 })
 
 export const useDatabase = () => useContext(Context)
 
 export const DatabaseProvider: FC<{ children: ReactNode }> = ({ children }) => {
-	const [currencies, setCurrencies] = useState<Currencies | null>()
-	const [countries, setCountries] = useState<Countries | null>()
+	const [currencies, setCurrencies] = useState<Currency[] | null>()
+	const [cities, setCities] = useState<City[] | null>()
+	const [countries, setCountries] = useState<Country[] | null>()
+	const [transactionCategories, setTransactionCategories] = useState<
+		TransactionCategory[] | null
+	>()
+
+	console.log('databaseContext')
 
 	const fetchDatabaseData = useCallback(async () => {
-		const { data: currencies } = await supabase.from('currencies').select(`
-        id,
-        name,
-        code,
-        symbol,
-        isSymbolPrefix,
-        createdAt,
-        updatedAt
-    `)
+		const { data: currencies, error: currenciesError } = await supabase
+			.from('currencies')
+			.select()
 
-		const { data: countries } = await supabase.from('countries').select(`
-        id,
-        name,
-        localName,
-        iso2,
-        iso3,
-        continent
-    `)
+		const { data: cities, error: citiesError } = await supabase
+			.from('cities')
+			.select()
+
+		const { data: countries, error: countriesError } = await supabase
+			.from('countries')
+			.select()
+
+		const {
+			data: transactionCategories,
+			error: transactionCategoriesError,
+		} = await supabase.from('transactionCategories').select()
+
+		if (currenciesError) {
+			console.error('Error fetching currencies:', currenciesError)
+		}
+		if (citiesError) {
+			console.error('Error fetching cities:', citiesError)
+		}
+		if (countriesError) {
+			console.error('Error fetching countries:', countriesError)
+		}
+		if (transactionCategoriesError) {
+			console.error(
+				'Error fetching transaction categories:',
+				transactionCategoriesError,
+			)
+		}
 
 		if (!currencies) {
 			setCurrencies(null)
-		} else {
-			const formattedCurrencies = currencies.map((currency) => ({
-				id: currency.id,
-				name: currency.name,
-				code: currency.code,
-				symbol: currency.symbol,
-				isSymbolPrefix: currency.isSymbolPrefix,
-				createdAt: currency.createdAt,
-				updatedAt: currency.updatedAt,
-			}))
-
-			setCurrencies(formattedCurrencies)
 		}
-
+		if (!cities) {
+			setCities(null)
+		}
 		if (!countries) {
 			setCountries(null)
-		} else {
-			const formattedCountries = countries.map((country) => ({
-				id: country.id,
-				name: country.name,
-				localName: country.localName,
-				iso2: country.iso2,
-				iso3: country.iso3,
-				continent: country.continent,
-			}))
-
-			setCountries(formattedCountries)
 		}
+		if (!transactionCategories) {
+			setTransactionCategories(null)
+		}
+
+		setCurrencies(currencies)
+		setCities(cities)
+		setCountries(countries)
+		setTransactionCategories(transactionCategories)
 	}, [])
 
 	useEffect(() => {
 		fetchDatabaseData()
 	}, [fetchDatabaseData])
 
-	if (currencies === undefined || countries === undefined) {
+	if (
+		currencies === undefined ||
+		countries === undefined ||
+		cities === undefined ||
+		transactionCategories === undefined
+	) {
 		return null
 	}
 
 	return (
-		<Context.Provider value={{ currencies, countries, fetchDatabaseData }}>
+		<Context.Provider
+			value={{
+				currencies,
+				cities,
+				countries,
+				transactionCategories,
+				fetchDatabaseData,
+			}}
+		>
 			{children}
 		</Context.Provider>
 	)

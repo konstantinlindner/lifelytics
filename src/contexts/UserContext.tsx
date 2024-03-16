@@ -11,12 +11,14 @@ import {
 } from 'react'
 
 import {
+	City,
 	Counterpart,
-	ExpenseCategory,
-	IncomeCategory,
-	expenseCategories,
-	incomeCategories,
+	Country,
+	Currency,
+	TransactionCategory,
 } from '@/types/globals.types'
+
+import { useDatabase } from '@/contexts/DatabaseContext'
 
 import supabase from '@/lib/supabase'
 
@@ -31,30 +33,33 @@ type User = {
 	lastName: string | null
 	fullName: string | null
 	initials: string | null
-	hasCompletedOnboarding: boolean
+	isOnboardingCompleted: boolean
 	avatarUrl: string | null
 	birthDate: Date | null
 	website: string | null
 	createdAt: string | null
 	updatedAt: string | null
+	primaryCurrency: Currency | undefined
 	transactions: Transaction[]
 	counterparts: Counterpart[]
 }
 
-type Transaction = {
+export type Transaction = {
 	id: string
-	item: string | null
+	item: string
 	description: string | null
-	amount: number | null
-	transactionDate: string | null
-	createdAt: string | null
-	updatedAt: string | null
-	counterpart: string | null
-	currency: string | null
-	country: number | null
+	amount: number
+	transactionDate: Date
+	createdAt: string
+	updatedAt: string
+	counterpart: Counterpart | undefined
+	currency: Currency | undefined
+	city: City | undefined
+	country: Country | undefined
+	category: TransactionCategory | undefined
 }
 
-// function types
+// function prop types
 type AddNamesToUserProfileProps = {
 	firstName: string
 	lastName: string
@@ -91,14 +96,14 @@ type AddCounterpartProps = {
 }
 
 type AddTransactionProps = {
-	transactionDate: Date
+	date: Date
 	item: string
 	amount: number
 	counterpartName: string
-	currencyId: string
-	countryId: number
-	description?: string
-	category: ExpenseCategory | IncomeCategory
+	description?: string | null
+	currency: Currency
+	city: City
+	category: TransactionCategory
 }
 
 const Context = createContext({
@@ -119,24 +124,20 @@ const Context = createContext({
 export const useUser = () => useContext(Context)
 
 export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
+	const { countries, cities, currencies, transactionCategories } =
+		useDatabase()
+
+	console.log('userprovider')
+
 	const [user, setUser] = useState<User | null>()
+	const [transactions, setTransactions] = useState<Transaction[] | null>()
 
 	const fetchData = useCallback(async () => {
+		console.log('fetchData')
+
 		const { data: profile } = await supabase
 			.from('profiles')
-			.select(
-				`
-      id,
-      firstName,
-      lastName,
-      onboardingCompletedDate,
-      avatarUrl,
-      birthDate,
-      website,
-      createdAt,
-	  updatedAt
-	`,
-			)
+			.select()
 			.single()
 
 		const {
@@ -145,34 +146,61 @@ export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
 		const sessionUser = session?.user
 
-		const { data: counterparts } = await supabase.from('counterparts')
-			.select(`
-		id,
-		createdAt,
-		updatedAt,
-		isIncome,
-		isExpense,
-		name,
-		userId
-		`)
+		const { data: counterparts } = await supabase
+			.from('counterparts')
+			.select()
 
-		const { data: transactions } = await supabase.from('transactions')
-			.select(`
-      	id,
-      	item,
-      	description,
-      	amount,
-      	currency,
-      	country,
-	  	counterpart,
-      	transactionDate,
-      	createdAt,
-	  	updatedAt
-    	`)
+		const { data: dbTransactions } = await supabase
+			.from('transactions')
+			.select()
+
+		if (!dbTransactions) {
+			setTransactions(null)
+		} else {
+			console.log('set transactions')
+			const formattedTransactions = dbTransactions.map((transaction) => {
+				const counterpart = counterparts?.find(
+					(counterpart) =>
+						counterpart.id === transaction.counterpartId,
+				)
+				const currency = currencies?.find(
+					(currency) => currency.id === transaction.currencyId,
+				)
+				const city = cities?.find(
+					(city) => city.id === transaction.cityId,
+				)
+				const country = countries?.find(
+					(country) => country.id === city?.countryId,
+				)
+				const category = transactionCategories?.find(
+					(category) => category.id === transaction.categoryId,
+				)
+
+				return {
+					id: transaction.id,
+					item: transaction.item,
+					description: transaction.description,
+					amount: transaction.amount,
+					transactionDate: dayjs(
+						transaction.transactionDate,
+					).toDate(),
+					createdAt: transaction.createdAt,
+					updatedAt: transaction.updatedAt,
+					counterpart: counterpart,
+					currency: currency,
+					city: city,
+					country: country,
+					category: category,
+				}
+			})
+
+			setTransactions(formattedTransactions)
+		}
 
 		if (!profile || !sessionUser?.email) {
 			setUser(null)
 		} else {
+			console.log('set user')
 			setUser({
 				id: profile.id,
 				email: sessionUser.email,
@@ -181,18 +209,21 @@ export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
 				fullName: `${profile.firstName} ${profile.lastName}`,
 				initials: `${profile.firstName?.[0]}${profile.lastName?.[0]}`,
 				avatarUrl: profile.avatarUrl,
-				hasCompletedOnboarding: !!profile.onboardingCompletedDate,
+				isOnboardingCompleted: !!profile.onboardingCompletedDate,
 				birthDate: profile.birthDate
 					? new Date(profile.birthDate)
 					: null,
 				website: profile.website,
 				createdAt: profile.createdAt,
 				updatedAt: profile.updatedAt,
+				primaryCurrency: currencies?.find(
+					(currency) => currency.id === profile.primaryCurrencyId,
+				),
 				transactions: transactions ?? [],
 				counterparts: counterparts ?? [],
 			})
 		}
-	}, [])
+	}, [cities, countries, currencies, transactionCategories, transactions])
 
 	const addNamesToUserProfile = useCallback(
 		async ({ firstName, lastName }: AddNamesToUserProfileProps) => {
@@ -383,6 +414,22 @@ export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
 					.eq('name', name)
 
 				if (existingCounterpart?.length) {
+					if (
+						existingCounterpart[0].isIncome !== isIncome ||
+						existingCounterpart[0].isExpense !== isExpense
+					) {
+						const { error } = await supabase
+							.from('counterparts')
+							.update({
+								isIncome: isIncome,
+								isExpense: isExpense,
+							})
+							.eq('id', existingCounterpart[0].id)
+
+						fetchData()
+						if (error) throw error
+					}
+
 					return existingCounterpart[0]
 				}
 
@@ -413,13 +460,13 @@ export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
 	// TODO return promise
 	const addTransaction = useCallback(
 		async ({
-			transactionDate,
+			date,
 			item,
 			amount,
 			counterpartName,
-			currencyId,
-			countryId,
 			description,
+			currency,
+			city,
 			category,
 		}: AddTransactionProps) => {
 			try {
@@ -427,43 +474,28 @@ export const UserProvider: FC<{ children: ReactNode }> = ({ children }) => {
 					return
 				}
 
-				const isExpenseCategory = (
-					category: ExpenseCategory | IncomeCategory,
-				): category is ExpenseCategory => {
-					return expenseCategories.includes(
-						category as ExpenseCategory,
-					)
-				}
-
-				const isIncomeCategory = (
-					category: ExpenseCategory | IncomeCategory,
-				): category is IncomeCategory => {
-					return incomeCategories.includes(category as IncomeCategory)
-				}
-
 				const counterpart = await addCounterpart({
 					name: counterpartName,
-					isIncome: isIncomeCategory(category),
-					isExpense: isExpenseCategory(category),
+					isIncome: category.isIncome,
+					isExpense: !category.isIncome,
 				})
+
+				if (!counterpart) {
+					console.log('Could not add counterpart')
+					return
+				}
 
 				const { error } = await supabase.from('transactions').insert([
 					{
 						userId: user.id,
 						item: item,
 						amount: amount,
-						country: countryId,
-						currency: currencyId,
-						transactionDate:
-							dayjs(transactionDate).format('YYYY-MM-DD'),
+						cityId: city.id,
+						currencyId: currency.id,
+						transactionDate: dayjs(date).format('YYYY-MM-DD'),
 						description: description,
-						counterpart: counterpart?.id,
-						incomeCategory: isIncomeCategory(category)
-							? category
-							: null,
-						expenseCategory: isExpenseCategory(category)
-							? category
-							: null,
+						counterpartId: counterpart.id,
+						categoryId: category.id,
 					},
 				])
 
