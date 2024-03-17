@@ -10,11 +10,11 @@ import { Button } from '@/components/ui/button'
 import { CommandItem } from '@/components/ui/command'
 import { Dialog, DialogTrigger } from '@/components/ui/dialog'
 
-import { ScreenType } from './addTransactionConstants'
+import { Screen, screens } from './addTransactionConstants'
 import AddTransactionDialogContent from './addTransactionDialogContent'
 
 interface addTransactionDialogProps {
-	openingScreen: ScreenType
+	openingScreen?: Screen
 	showButton?: boolean
 	showCommandItem?: boolean
 }
@@ -24,23 +24,11 @@ export default function AddTransactionDialog({
 	showButton,
 	showCommandItem,
 }: addTransactionDialogProps) {
-	const router = useRouter()
-	const searchParams = useSearchParams()
-	const screen = searchParams.get('screen') as ScreenType
-
-	const setScreen = (newScreen: ScreenType) => {
-		router.push(`?screen=${newScreen}`)
-	}
+	const [screen, setScreen] = useState<Screen>(openingScreen ?? screens[0])
 
 	return (
 		<main>
-			<Dialog
-				onOpenChange={(isOpen) => {
-					if (isOpen) {
-						setScreen(openingScreen)
-					}
-				}}
-			>
+			<Dialog>
 				{showButton && (
 					<DialogTrigger asChild>
 						<Button variant="outline">
