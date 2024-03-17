@@ -1,22 +1,18 @@
-'use client';
+'use client'
 
 import { useState } from 'react'
 
-import { useUser } from '@/contexts/UserContext'
-
+import { useUser } from '@/store/Store'
 import { motion } from 'framer-motion'
 
 import { Progress } from '@/components/ui/progress'
 
-
-
-import BirthDateView from './components/birthDateView';
-import CurrencyPickerView from './components/currencyPickerView';
-import ProfilePictureView from './components/profilePictureView';
-
+import BirthDateView from './components/birthDateView'
+import CurrencyPickerView from './components/currencyPickerView'
+import ProfilePictureView from './components/profilePictureView'
 
 export default function Onboarding() {
-	const firstName = useUser().user?.firstName
+	const firstName = useUser((state) => state.firstName)
 
 	const [currentViewIndex, setCurrentViewIndex] = useState(0)
 
