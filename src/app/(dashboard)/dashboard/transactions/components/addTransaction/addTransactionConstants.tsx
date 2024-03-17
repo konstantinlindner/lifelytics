@@ -15,165 +15,158 @@ import {
 	UtensilsCrossed,
 } from 'lucide-react'
 
-const expenseChildren = [
-	{
-		screen: 'home',
-		title: 'Home',
-		description: 'Enter the details below.',
-		icon: <Home />,
-		buttonChildren: [],
-		inputFields: [],
-	},
-	{
-		screen: 'food-and-drink',
-		title: 'Food and drink',
-		description: 'Enter the details below.',
-		icon: <UtensilsCrossed />,
-		buttonChildren: [],
-		inputFields: [],
-	},
-	{
-		screen: 'transportation',
-		title: 'Transportation',
-		description: 'Enter the details below.',
-		icon: <Car />,
-		buttonChildren: [],
-		inputFields: [],
-	},
-	{
-		screen: 'entertainment',
-		title: 'Entertainment',
-		description: 'Enter the details below.',
-		icon: <Drama />,
-		buttonChildren: [],
-		inputFields: [],
-	},
-	{
-		screen: 'health-and-wellness',
-		title: 'Health and wellness',
-		description: 'Enter the details below.',
-		icon: <Heart />,
-		buttonChildren: [],
-		inputFields: [],
-	},
-	{
-		screen: 'shopping',
-		title: 'Shopping',
-		description: 'Enter the details below.',
-		icon: <ShoppingBag />,
-		buttonChildren: [],
-		inputFields: [],
-	},
-	{
-		screen: 'savings-and-investments',
-		title: 'Savings and investments',
-		description: 'Enter the details below.',
-		icon: <Percent />,
-		buttonChildren: [],
-		inputFields: [],
-	},
-	{
-		screen: 'subscriptions',
-		title: 'Subscriptions',
-		description: 'Enter the details below.',
-		icon: <RotateCw />,
-		buttonChildren: [],
-		inputFields: [],
-	},
-	{
-		screen: 'other-expenses',
-		title: 'Other expenses',
-		description: 'Enter the details below.',
-		icon: <CircleDollarSign />,
-		buttonChildren: [],
-		inputFields: [],
-	},
-]
+export type Screen = {
+	id: number
+	parent: number | null
+	title: string
+	subtitle: string
+	transactionCategoryId: number | null
+	icon: JSX.Element | null
+}
 
-const incomeChildren = [
+export const screens: Screen[] = [
 	{
-		screen: 'salary',
-		title: 'Salary',
-		description: 'Enter the details below.',
-		icon: <Coins />,
-		buttonChildren: [],
-		inputFields: [],
-	},
-	{
-		screen: 'sale',
-		title: 'Sale',
-		description: 'Enter the details below.',
-		icon: <Receipt />,
-		buttonChildren: [],
-		inputFields: [],
-	},
-	{
-		screen: 'gift',
-		title: 'Gift',
-		description: 'Enter the details below.',
-		icon: <Gift />,
-		buttonChildren: [],
-		inputFields: [],
-	},
-	{
-		screen: 'tax-return',
-		title: 'Tax return',
-		description: 'Enter the details below.',
-		icon: <Undo2 />,
-		buttonChildren: [],
-		inputFields: [],
-	},
-	{
-		screen: 'realized-investment',
-		title: 'Realized investment',
-		description: 'Enter the details below.',
-		icon: <Percent />,
-		buttonChildren: [],
-		inputFields: [],
-	},
-	{
-		screen: 'other-income',
-		title: 'Other income',
-		description: 'Enter the details below.',
-		icon: <CircleDollarSign />,
-		buttonChildren: [],
-		inputFields: [],
-	},
-]
-
-const incomeExpense = [
-	{
-		screen: 'income',
-		title: 'Income',
-		description: 'What type of income is this transaction?',
-		icon: <Landmark />,
-		buttonChildren: incomeChildren,
-	},
-	{
-		screen: 'expense',
-		title: 'Expense',
-		description: 'What type of expense is this transaction?',
-		icon: <CircleDollarSign />,
-		buttonChildren: expenseChildren,
-	},
-]
-
-const start = [
-	{
-		screen: 'new-record',
+		id: 1,
+		parent: null,
 		title: 'New record',
-		description:
-			'Follow the prompts to add a new record. You can use the number on your keyboard to speed up the entering process.',
+		subtitle: 'Follow the prompts to add a new record.',
+		transactionCategoryId: null,
 		icon: null,
-		buttonChildren: incomeExpense,
 	},
-]
-
-export const allScreens = [
-	...start,
-	...incomeExpense,
-	...incomeChildren,
-	...expenseChildren,
+	{
+		id: 2,
+		parent: 1,
+		title: 'Income',
+		subtitle: 'What type of income is this transaction?',
+		transactionCategoryId: null,
+		icon: <Landmark />,
+	},
+	{
+		id: 3,
+		parent: 1,
+		title: 'Expense',
+		subtitle: 'What type of expense is this transaction?',
+		transactionCategoryId: null,
+		icon: <CircleDollarSign />,
+	},
+	{
+		id: 4,
+		parent: 2,
+		title: 'Salary',
+		subtitle: 'Enter the details below.',
+		transactionCategoryId: 10,
+		icon: <Coins />,
+	},
+	{
+		id: 5,
+		parent: 2,
+		title: 'Sale',
+		subtitle: 'Enter the details below.',
+		transactionCategoryId: 11,
+		icon: <Receipt />,
+	},
+	{
+		id: 6,
+		parent: 2,
+		title: 'Gift',
+		subtitle: 'Enter the details below.',
+		transactionCategoryId: 12,
+		icon: <Gift />,
+	},
+	{
+		id: 7,
+		parent: 2,
+		title: 'Tax return',
+		subtitle: 'Enter the details below.',
+		transactionCategoryId: 13,
+		icon: <Undo2 />,
+	},
+	{
+		id: 8,
+		parent: 2,
+		title: 'Realized investment',
+		subtitle: 'Enter the details below.',
+		transactionCategoryId: 14,
+		icon: <Percent />,
+	},
+	{
+		id: 9,
+		parent: 2,
+		title: 'Other income',
+		subtitle: 'Enter the details below.',
+		transactionCategoryId: 15,
+		icon: <CircleDollarSign />,
+	},
+	{
+		id: 10,
+		parent: 3,
+		title: 'Home',
+		subtitle: 'Enter the details below.',
+		transactionCategoryId: 1,
+		icon: <Home />,
+	},
+	{
+		id: 11,
+		parent: 3,
+		title: 'Food and drink',
+		subtitle: 'Enter the details below.',
+		transactionCategoryId: 2,
+		icon: <UtensilsCrossed />,
+	},
+	{
+		id: 12,
+		parent: 3,
+		title: 'Transportation',
+		subtitle: 'Enter the details below.',
+		transactionCategoryId: 3,
+		icon: <Car />,
+	},
+	{
+		id: 13,
+		parent: 3,
+		title: 'Entertainment',
+		subtitle: 'Enter the details below.',
+		transactionCategoryId: 4,
+		icon: <Drama />,
+	},
+	{
+		id: 14,
+		parent: 3,
+		title: 'Health and wellness',
+		subtitle: 'Enter the details below.',
+		transactionCategoryId: 5,
+		icon: <Heart />,
+	},
+	{
+		id: 15,
+		parent: 3,
+		title: 'Shopping',
+		subtitle: 'Enter the details below.',
+		transactionCategoryId: 6,
+		icon: <ShoppingBag />,
+	},
+	{
+		id: 16,
+		parent: 3,
+		title: 'Savings and investments',
+		subtitle: 'Enter the details below.',
+		transactionCategoryId: 7,
+		icon: <Percent />,
+	},
+	{
+		id: 17,
+		parent: 3,
+		title: 'Subscriptions',
+		subtitle: 'Enter the details below.',
+		transactionCategoryId: 8,
+		icon: <RotateCw />,
+	},
+	{
+		id: 18,
+		parent: 3,
+		title: 'Other expenses',
+		subtitle: 'Enter the details below.',
+		transactionCategoryId: 9,
+		icon: <CircleDollarSign />,
+	},
 ] as const
-
-export type ScreenType = (typeof allScreens)[number]['screen']
