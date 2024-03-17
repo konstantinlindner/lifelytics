@@ -1,5 +1,6 @@
 'use client'
 
+import { Transaction } from '@/store/Store'
 import { ColumnDef } from '@tanstack/react-table'
 
 import { ArrowUpDown, MoreHorizontal } from 'lucide-react'
@@ -14,24 +15,6 @@ import {
 	DropdownMenuShortcut,
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-
-// import { Transaction } from '@/types/globals.types'
-
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
-
-// TODO get type from central location
-export type Transaction = {
-	id: string
-	item: string | null
-	description: string | null
-	amount: number | null
-	currency: string | null
-	country: string | null
-	transactionDate: string | null
-	createdAt: string | null
-	counterpart: string | null
-}
 
 export const transactionColumns: ColumnDef<Transaction>[] = [
 	{
@@ -82,12 +65,14 @@ export const transactionColumns: ColumnDef<Transaction>[] = [
 			const amount = parseFloat(row.getValue('amount'))
 			const currency: string = row.getValue('currency')
 
-			const formatted = new Intl.NumberFormat('en-US', {
-				style: 'currency',
-				currency: currency,
-			}).format(amount)
+			// todo
 
-			return <div>{formatted}</div>
+			// const formatted = new Intl.NumberFormat('en-US', {
+			// 	style: 'currency',
+			// 	currency: currency,
+			// }).format(amount)
+
+			return <div>{amount}</div>
 		},
 	},
 	{
