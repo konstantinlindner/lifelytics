@@ -48,10 +48,7 @@ export default function CommandModal() {
 				<CommandList>
 					<CommandEmpty>No results found.</CommandEmpty>
 					<CommandGroup heading="Suggestions">
-						<AddTransactionDialog
-							openingScreen="new-record"
-							showCommandItem
-						/>
+						<AddTransactionDialog showCommandItem />
 						<CommandItem>
 							<Calendar className="mr-2 h-4 w-4" />
 							<span>Calendar</span>
