@@ -1,7 +1,6 @@
 'use client'
 
-import { useUser } from '@/contexts/UserContext'
-
+import { useUser } from '@/store/Store'
 import dayjs from 'dayjs'
 import { toast } from 'sonner'
 
@@ -21,8 +20,6 @@ import { Button } from '@/components/ui/button'
 import SignOutButton from '../../components/signOutButton'
 
 export default function Account() {
-	const { user } = useUser()
-
 	function handleAccountDeletion() {
 		toast('Not yet implemented')
 	}
@@ -33,7 +30,9 @@ export default function Account() {
 				<div className="flex w-full max-w-xs flex-col space-y-4">
 					<p>
 						Member since{' '}
-						{dayjs(user?.createdAt).format('MMMM YYYY')}
+						{dayjs(useUser((state) => state.createdAt)).format(
+							'MMMM YYYY',
+						)}
 					</p>
 
 					<AlertDialog>
