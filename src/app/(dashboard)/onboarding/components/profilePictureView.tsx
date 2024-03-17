@@ -4,7 +4,8 @@ import { useState } from 'react'
 
 import { useRouter } from 'next/navigation'
 
-import { useUser } from '@/contexts/UserContext'
+import { useUser } from '@/store/Store'
+import { setIsOnboardingCompleted } from '@/store/StoreHelper'
 
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
@@ -24,13 +25,12 @@ export default function ProfilePictureView({
 	const [isLoading, setIsLoading] = useState(false)
 
 	const router = useRouter()
-	const { user, setOnboardingComplete } = useUser()
 
-	const avatarUrl = user?.avatarUrl ?? ''
+	const avatarUrl = useUser((state) => state.avatarUrl)
 
 	const handleFinishPress = async () => {
 		setIsLoading(true)
-		setOnboardingComplete()
+		setIsOnboardingCompleted({ value: true })
 		router.refresh()
 	}
 
