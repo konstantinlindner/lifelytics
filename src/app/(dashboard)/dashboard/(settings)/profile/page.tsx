@@ -1,7 +1,6 @@
 'use client'
 
-import { useUser } from '@/contexts/UserContext'
-
+import { useUser } from '@/store/Store'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
@@ -23,14 +22,17 @@ import LoadingIndicator from '@/components/loadingIndicator'
 import ProfilePictureUpload from '@/components/profilePicturePicker'
 
 export default function Profile() {
-	const {
-		user,
-		setEmail,
-		setFirstName,
-		setLastName,
-		setBirthDate,
-		setWebsite,
-	} = useUser()
+	const firstName = useUser((state) => state.firstName)
+	const lastName = useUser((state) => state.lastName)
+	const email = useUser((state) => state.email)
+	const birthDate = useUser((state) => state.birthDate)
+	const website = useUser((state) => state.website)
+
+	const setEmail = useUser((state) => state.setEmail)
+	const setFirstName = useUser((state) => state.setFirstName)
+	const setLastName = useUser((state) => state.setLastName)
+	const setBirthDate = useUser((state) => state.setBirthDate)
+	const setWebsite = useUser((state) => state.setWebsite)
 
 	const formSchema = z.object({
 		firstName: z
@@ -60,38 +62,38 @@ export default function Profile() {
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		defaultValues: {
-			firstName: user?.firstName ?? undefined,
-			lastName: user?.lastName ?? undefined,
-			email: user?.email ?? undefined,
-			birthDate: user?.birthDate ?? undefined,
-			website: user?.website ?? undefined,
+			firstName: firstName ?? undefined,
+			lastName: lastName ?? undefined,
+			email: email,
+			birthDate: birthDate ?? undefined,
+			website: website ?? undefined,
 		},
 		resolver: zodResolver(formSchema),
 	})
 
 	const handleSave = async (values: z.infer<typeof formSchema>) => {
 		try {
-			if (values.firstName !== user?.firstName) {
-				setFirstName({ firstName: values.firstName })
+			if (values.firstName !== firstName) {
+				setFirstName(values.firstName)
 			}
 
-			if (values.lastName !== user?.lastName) {
-				setLastName({ lastName: values.lastName })
+			if (values.lastName !== lastName) {
+				setLastName(values.lastName)
 			}
 
-			if (values.email !== user?.email) {
-				setEmail({ email: values.email })
+			if (values.email !== email) {
+				setEmail(values.email)
 			}
 
-			if (values.birthDate && values.birthDate !== user?.birthDate) {
-				setBirthDate({ birthDate: values.birthDate })
+			if (values.birthDate && values.birthDate !== birthDate) {
+				setBirthDate(values.birthDate)
 			}
 
-			if (values.website && values.website !== user?.website) {
-				setWebsite({ website: values.website })
+			if (values.website && values.website !== website) {
+				setWebsite(values.website)
 			}
 
-			values.email !== user?.email
+			values.email !== email
 				? toast('Please check your inbox to confirm change of email')
 				: toast('Successfully saved changes')
 		} catch (error) {
@@ -119,7 +121,7 @@ export default function Profile() {
 									<FormControl>
 										<Input
 											id="firstName"
-											defaultValue={user?.firstName ?? ''}
+											defaultValue={firstName ?? ''}
 											type="text"
 											autoCapitalize="words"
 											autoComplete="given-name"
@@ -140,7 +142,7 @@ export default function Profile() {
 									<FormControl>
 										<Input
 											id="lastName"
-											defaultValue={user?.lastName ?? ''}
+											defaultValue={lastName ?? ''}
 											type="text"
 											autoCapitalize="words"
 											autoComplete="family-name"
@@ -161,7 +163,7 @@ export default function Profile() {
 									<FormControl>
 										<Input
 											id="email"
-											defaultValue={user?.email ?? ''}
+											defaultValue={email ?? ''}
 											type="email"
 											autoCapitalize="none"
 											autoComplete="email"
@@ -182,8 +184,8 @@ export default function Profile() {
 									<FormControl>
 										<DatePicker
 											initialDate={
-												user?.birthDate
-													? user?.birthDate
+												birthDate
+													? birthDate
 													: undefined
 											}
 											fromYear={1900}
@@ -207,7 +209,7 @@ export default function Profile() {
 									<FormControl>
 										<Input
 											id="website"
-											defaultValue={user?.website ?? ''}
+											defaultValue={website ?? ''}
 											type="text"
 											autoCapitalize="none"
 											autoCorrect="off"
