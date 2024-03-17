@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 
-import { useUser } from '@/contexts/UserContext'
+import { useUser } from '@/store/Store'
 
 import { BadgeCheck } from 'lucide-react'
 
@@ -26,12 +26,10 @@ import PageHeader from './pageHeader'
 import SignOutButton from './signOutButton'
 
 export default function Topbar() {
-	const user = useUser().user
-
-	const fullName = user?.fullName ?? ''
-	const initials = user?.initials ?? ''
-	const avatarUrl = user?.avatarUrl ?? ''
-	const email = user?.email
+	const fullName = useUser((state) => state.fullName)
+	const initials = useUser((state) => state.initials)
+	const avatarUrl = useUser((state) => state.avatarUrl)
+	const email = useUser((state) => state.email)
 
 	return (
 		<header className="flex h-24 items-center justify-between gap-2 px-10 py-6">
@@ -47,7 +45,10 @@ export default function Topbar() {
 							className="relative h-8 w-8 rounded-full"
 						>
 							<Avatar className="h-9 w-9">
-								<AvatarImage src={avatarUrl} alt={fullName} />
+								<AvatarImage
+									src={avatarUrl ?? ''}
+									alt={fullName ?? ''}
+								/>
 								<AvatarFallback>{initials}</AvatarFallback>
 							</Avatar>
 						</Button>
