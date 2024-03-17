@@ -11,33 +11,33 @@ export type Database = {
 		Tables: {
 			cities: {
 				Row: {
-					country: number
+					countryId: number
 					createdAt: string
 					englishName: string
-					id: string
+					id: number
 					localName: string
 					updatedAt: string
 				}
 				Insert: {
-					country: number
+					countryId: number
 					createdAt?: string
-					englishName?: string
-					id?: string
-					localName?: string
+					englishName: string
+					id?: number
+					localName: string
 					updatedAt?: string
 				}
 				Update: {
-					country?: number
+					countryId?: number
 					createdAt?: string
 					englishName?: string
-					id?: string
+					id?: number
 					localName?: string
 					updatedAt?: string
 				}
 				Relationships: [
 					{
-						foreignKeyName: 'cities_country_fkey'
-						columns: ['country']
+						foreignKeyName: 'public_cities2_countryId_fkey'
+						columns: ['countryId']
 						isOneToOne: false
 						referencedRelation: 'countries'
 						referencedColumns: ['id']
@@ -85,7 +85,7 @@ export type Database = {
 			countries: {
 				Row: {
 					continent: Database['public']['Enums']['continents'] | null
-					currency: string | null
+					currencyId: string | null
 					id: number
 					iso2: string
 					iso3: string
@@ -94,7 +94,7 @@ export type Database = {
 				}
 				Insert: {
 					continent?: Database['public']['Enums']['continents'] | null
-					currency?: string | null
+					currencyId?: string | null
 					id?: number
 					iso2?: string
 					iso3?: string
@@ -103,7 +103,7 @@ export type Database = {
 				}
 				Update: {
 					continent?: Database['public']['Enums']['continents'] | null
-					currency?: string | null
+					currencyId?: string | null
 					id?: number
 					iso2?: string
 					iso3?: string
@@ -113,7 +113,7 @@ export type Database = {
 				Relationships: [
 					{
 						foreignKeyName: 'countries_currency_fkey'
-						columns: ['currency']
+						columns: ['currencyId']
 						isOneToOne: false
 						referencedRelation: 'currencies'
 						referencedColumns: ['id']
@@ -152,7 +152,6 @@ export type Database = {
 			}
 			food: {
 				Row: {
-					city: string
 					createdAt: string
 					foodPlaceCategory: Database['public']['Enums']['foodPlaceCategories']
 					foodTypeCategory: Database['public']['Enums']['foodTypeCategories']
@@ -161,7 +160,6 @@ export type Database = {
 					updatedAt: string
 				}
 				Insert: {
-					city: string
 					createdAt?: string
 					foodPlaceCategory: Database['public']['Enums']['foodPlaceCategories']
 					foodTypeCategory: Database['public']['Enums']['foodTypeCategories']
@@ -170,7 +168,6 @@ export type Database = {
 					updatedAt?: string
 				}
 				Update: {
-					city?: string
 					createdAt?: string
 					foodPlaceCategory?: Database['public']['Enums']['foodPlaceCategories']
 					foodTypeCategory?: Database['public']['Enums']['foodTypeCategories']
@@ -178,15 +175,7 @@ export type Database = {
 					place?: string
 					updatedAt?: string
 				}
-				Relationships: [
-					{
-						foreignKeyName: 'food_city_fkey'
-						columns: ['city']
-						isOneToOne: false
-						referencedRelation: 'cities'
-						referencedColumns: ['id']
-					},
-				]
+				Relationships: []
 			}
 			paymentMethods: {
 				Row: {
@@ -228,8 +217,9 @@ export type Database = {
 					firstName: string | null
 					id: string
 					lastName: string | null
+					LocationCityId: number | null
 					onboardingCompletedDate: string | null
-					primaryCurrency: string | null
+					primaryCurrencyId: string | null
 					updatedAt: string
 					website: string | null
 				}
@@ -240,8 +230,9 @@ export type Database = {
 					firstName?: string | null
 					id: string
 					lastName?: string | null
+					LocationCityId?: number | null
 					onboardingCompletedDate?: string | null
-					primaryCurrency?: string | null
+					primaryCurrencyId?: string | null
 					updatedAt?: string
 					website?: string | null
 				}
@@ -252,8 +243,9 @@ export type Database = {
 					firstName?: string | null
 					id?: string
 					lastName?: string | null
+					LocationCityId?: number | null
 					onboardingCompletedDate?: string | null
-					primaryCurrency?: string | null
+					primaryCurrencyId?: string | null
 					updatedAt?: string
 					website?: string | null
 				}
@@ -267,28 +259,54 @@ export type Database = {
 					},
 					{
 						foreignKeyName: 'profiles_primaryCurrency_fkey'
-						columns: ['primaryCurrency']
+						columns: ['primaryCurrencyId']
 						isOneToOne: false
 						referencedRelation: 'currencies'
 						referencedColumns: ['id']
 					},
+					{
+						foreignKeyName: 'public_profiles_cityId_fkey'
+						columns: ['LocationCityId']
+						isOneToOne: false
+						referencedRelation: 'cities'
+						referencedColumns: ['id']
+					},
 				]
+			}
+			transactionCategories: {
+				Row: {
+					createdAt: string
+					id: number
+					isIncome: boolean
+					name: string
+					updatedAt: string
+				}
+				Insert: {
+					createdAt?: string
+					id?: number
+					isIncome?: boolean
+					name: string
+					updatedAt?: string
+				}
+				Update: {
+					createdAt?: string
+					id?: number
+					isIncome?: boolean
+					name?: string
+					updatedAt?: string
+				}
+				Relationships: []
 			}
 			transactions: {
 				Row: {
 					amount: number
-					counterpart: string | null
-					country: number
+					categoryId: number | null
+					cityId: number
+					counterpartId: string | null
 					createdAt: string
-					currency: string
+					currencyId: string
 					description: string | null
-					expenseCategory:
-						| Database['public']['Enums']['expenseCategories']
-						| null
 					id: string
-					incomeCategory:
-						| Database['public']['Enums']['incomeCategories']
-						| null
 					item: string
 					transactionDate: string
 					updatedAt: string
@@ -296,18 +314,13 @@ export type Database = {
 				}
 				Insert: {
 					amount: number
-					counterpart?: string | null
-					country: number
+					categoryId?: number | null
+					cityId: number
+					counterpartId?: string | null
 					createdAt?: string
-					currency: string
+					currencyId: string
 					description?: string | null
-					expenseCategory?:
-						| Database['public']['Enums']['expenseCategories']
-						| null
 					id?: string
-					incomeCategory?:
-						| Database['public']['Enums']['incomeCategories']
-						| null
 					item?: string
 					transactionDate: string
 					updatedAt?: string
@@ -315,18 +328,13 @@ export type Database = {
 				}
 				Update: {
 					amount?: number
-					counterpart?: string | null
-					country?: number
+					categoryId?: number | null
+					cityId?: number
+					counterpartId?: string | null
 					createdAt?: string
-					currency?: string
+					currencyId?: string
 					description?: string | null
-					expenseCategory?:
-						| Database['public']['Enums']['expenseCategories']
-						| null
 					id?: string
-					incomeCategory?:
-						| Database['public']['Enums']['incomeCategories']
-						| null
 					item?: string
 					transactionDate?: string
 					updatedAt?: string
@@ -334,22 +342,29 @@ export type Database = {
 				}
 				Relationships: [
 					{
+						foreignKeyName: 'public_transactions_category_fkey'
+						columns: ['categoryId']
+						isOneToOne: false
+						referencedRelation: 'transactionCategories'
+						referencedColumns: ['id']
+					},
+					{
+						foreignKeyName: 'public_transactions_cityId_fkey'
+						columns: ['cityId']
+						isOneToOne: false
+						referencedRelation: 'cities'
+						referencedColumns: ['id']
+					},
+					{
 						foreignKeyName: 'public_transactions_counterpart_fkey'
-						columns: ['counterpart']
+						columns: ['counterpartId']
 						isOneToOne: false
 						referencedRelation: 'counterparts'
 						referencedColumns: ['id']
 					},
 					{
-						foreignKeyName: 'transactions_country_fkey'
-						columns: ['country']
-						isOneToOne: false
-						referencedRelation: 'countries'
-						referencedColumns: ['id']
-					},
-					{
 						foreignKeyName: 'transactions_currency_fkey'
-						columns: ['currency']
+						columns: ['currencyId']
 						isOneToOne: false
 						referencedRelation: 'currencies'
 						referencedColumns: ['id']
@@ -379,16 +394,6 @@ export type Database = {
 				| 'Oceania'
 				| 'North America'
 				| 'South America'
-			expenseCategories:
-				| 'Home'
-				| 'Food and drink'
-				| 'Transportation'
-				| 'Entertainment'
-				| 'Health and wellness'
-				| 'Shopping'
-				| 'Savings and investments'
-				| 'Subscriptions'
-				| 'Other'
 			foodPlaceCategories:
 				| 'Grocery store'
 				| 'Convenience store'
@@ -406,13 +411,6 @@ export type Database = {
 				| 'Snacks and beverages'
 				| 'Drinks out'
 				| 'Alcohol'
-			incomeCategories:
-				| 'Salary'
-				| 'Sale'
-				| 'Gift'
-				| 'Tax return'
-				| 'Realized investment'
-				| 'Other income'
 		}
 		CompositeTypes: {
 			[_ in never]: never
