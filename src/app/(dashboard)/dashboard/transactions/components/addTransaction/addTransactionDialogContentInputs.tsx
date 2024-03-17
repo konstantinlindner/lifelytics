@@ -1,12 +1,9 @@
 'use client'
 
-import { ExpenseCategory, IncomeCategory } from '@/types/globals.types'
-
-import { useDatabase } from '@/contexts/DatabaseContext'
-import { useUser } from '@/contexts/UserContext'
-
 import { cn } from '@/lib/utils'
 
+import { useDatabase } from '@/store/Store'
+import { addTransaction } from '@/store/StoreHelper'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { format } from 'date-fns'
 import { useForm } from 'react-hook-form'
@@ -42,9 +39,12 @@ import {
 } from '@/components/ui/popover'
 import { Textarea } from '@/components/ui/textarea'
 
-import { ScreenType } from './addTransactionConstants'
+import { Screen } from './addTransactionConstants'
 
 const FormSchema = z.object({
+	category: z.coerce.number({
+		required_error: 'Please select a category',
+	}),
 	transactionDate: z.date({
 		required_error: 'A transaction date is required',
 	}),
@@ -64,66 +64,72 @@ const FormSchema = z.object({
 		required_error: 'Please select a currency',
 	}),
 	worked: z.boolean().default(false),
-	country: z.coerce.number({
-		required_error: 'Please select a country',
+	city: z.coerce.number({
+		required_error: 'Please select a city',
 	}),
 	description: z.string().optional(),
 })
 
 interface AddTransactionDialogContentInputsProps {
-	screen: ScreenType
+	screen: Screen
 }
 
 export default function AddTransactionDialogContentInputs({
 	screen,
 }: AddTransactionDialogContentInputsProps) {
-	const { countries, currencies } = useDatabase()
-	const { addTransaction } = useUser()
+	const cities = useDatabase((state) => state.cities)
+	const currencies = useDatabase((state) => state.currencies)
+	const transactionCategories = useDatabase(
+		(state) => state.transactionCategories,
+	)
 
 	const form = useForm<z.infer<typeof FormSchema>>({
 		resolver: zodResolver(FormSchema),
+		defaultValues: {
+			category: !screen.transactionCategoryId
+				? undefined
+				: screen.transactionCategoryId,
+		},
 	})
 
 	function onSubmit(data: z.infer<typeof FormSchema>) {
 		// TODO change toast
 		toast(JSON.stringify(data, null, 2))
 
-		// TODO types
-		const SCREEN_TO_CATEGORY: {
-			[key in ScreenType]: IncomeCategory | ExpenseCategory
-		} = {
-			salary: 'Salary',
-			sale: 'Sale',
-			gift: 'Gift',
-			'tax-return': 'Tax return',
-			'realized-investment': 'Realized investment',
-			'other-income': 'Other income',
-			home: 'Home',
-			'food-and-drink': 'Food and drink',
-			transportation: 'Transportation',
-			entertainment: 'Entertainment',
-			'health-and-wellness': 'Health and wellness',
-			shopping: 'Shopping',
-			'savings-and-investments': 'Savings and investments',
-			subscriptions: 'Subscriptions',
-			other: 'Other',
+		const category = transactionCategories?.find(
+			(category) => category.id === data.category,
+		)
+
+		const currency = currencies?.find(
+			(currency) => currency.id === data.currency,
+		)
+
+		const city = cities?.find((city) => city.id === data.city)
+
+		if (!category) {
+			toast('Error applying transaction category')
+			return
 		}
 
-		function screenToCategory(
-			screen: ScreenType,
-		): IncomeCategory | ExpenseCategory {
-			return SCREEN_TO_CATEGORY[screen]
+		if (!currency) {
+			toast('Error applying transaction currency')
+			return
+		}
+
+		if (!city) {
+			toast('Error applying transaction city')
+			return
 		}
 
 		addTransaction({
-			transactionDate: data.transactionDate,
+			date: data.transactionDate,
 			item: data.item,
 			amount: data.amount,
 			counterpartName: data.counterpart,
-			currencyId: data.currency,
-			countryId: data.country,
+			currency: currency,
+			city: city,
+			category: category,
 			description: data.description,
-			category: screenToCategory(screen),
 		})
 	}
 
@@ -134,6 +140,78 @@ export default function AddTransactionDialogContentInputs({
 					onSubmit={form.handleSubmit(onSubmit)}
 					className="space-y-5"
 				>
+					<FormField
+						control={form.control}
+						name="category"
+						render={({ field }) => (
+							<FormItem className="flex flex-col">
+								<FormLabel>Category</FormLabel>
+								<Popover>
+									<PopoverTrigger asChild>
+										<FormControl>
+											<Button
+												variant="outline"
+												role="combobox"
+												className={cn(
+													'w-[200px] justify-between',
+													!field.value &&
+														'text-muted-foreground',
+												)}
+											>
+												{field.value
+													? transactionCategories?.find(
+															(category) =>
+																category.id ===
+																field.value,
+													  )?.name
+													: 'Select category'}
+												<ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+											</Button>
+										</FormControl>
+									</PopoverTrigger>
+									<PopoverContent className="w-[200px] p-0">
+										<Command>
+											<CommandInput placeholder="Search category..." />
+											<CommandEmpty>
+												No category found.
+											</CommandEmpty>
+											<CommandGroup className="max-h-[20rem] overflow-y-auto">
+												{transactionCategories?.map(
+													(category) => (
+														<CommandItem
+															value={
+																category.name
+															}
+															key={category.id}
+															onSelect={() => {
+																form.setValue(
+																	'category',
+																	category.id,
+																)
+															}}
+														>
+															<Check
+																className={cn(
+																	'mr-2 h-4 w-4',
+																	category.id ===
+																		field.value
+																		? 'opacity-100'
+																		: 'opacity-0',
+																)}
+															/>
+															{category.name}
+														</CommandItem>
+													),
+												)}
+											</CommandGroup>
+										</Command>
+									</PopoverContent>
+								</Popover>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+
 					<FormField
 						control={form.control}
 						name="transactionDate"
@@ -329,10 +407,10 @@ export default function AddTransactionDialogContentInputs({
 
 					<FormField
 						control={form.control}
-						name="country"
+						name="city"
 						render={({ field }) => (
 							<FormItem className="flex flex-col">
-								<FormLabel>Country</FormLabel>
+								<FormLabel>Location</FormLabel>
 								<Popover>
 									<PopoverTrigger asChild>
 										<FormControl>
@@ -346,46 +424,47 @@ export default function AddTransactionDialogContentInputs({
 												)}
 											>
 												{field.value
-													? countries?.find(
-															(country) =>
-																country.id ===
+													? cities?.find(
+															(city) =>
+																city.id ===
 																field.value,
-													  )?.name
-													: 'Select country'}
+													  )?.englishName
+													: 'Select city'}
 												<ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
 											</Button>
 										</FormControl>
 									</PopoverTrigger>
 									<PopoverContent className="w-[200px] p-0">
 										<Command>
-											<CommandInput placeholder="Search country..." />
+											<CommandInput placeholder="Search city..." />
 											<CommandEmpty>
-												No country found.
+												No city found.
 											</CommandEmpty>
 											<CommandGroup className="max-h-[20rem] overflow-y-auto">
-												{countries?.map((country) => (
+												{cities?.map((city) => (
 													<CommandItem
 														value={
-															country.name ?? ''
+															city.englishName ??
+															''
 														}
-														key={country.id}
+														key={city.id}
 														onSelect={() => {
 															form.setValue(
-																'country',
-																country.id,
+																'city',
+																city.id,
 															)
 														}}
 													>
 														<Check
 															className={cn(
 																'mr-2 h-4 w-4',
-																country.id ===
+																city.id ===
 																	field.value
 																	? 'opacity-100'
 																	: 'opacity-0',
 															)}
 														/>
-														{country.name}
+														{city.englishName}
 													</CommandItem>
 												))}
 											</CommandGroup>
