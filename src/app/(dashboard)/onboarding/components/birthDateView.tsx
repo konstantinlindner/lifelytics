@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import { useUser } from '@/contexts/UserContext'
+import { useUser } from '@/store/Store'
 
 import { Button } from '@/components/ui/button'
 
@@ -15,11 +15,16 @@ export default function BirthDateView({
 	currentViewIndex,
 	setCurrentViewIndex,
 }: ProfilePictureViewProps) {
-	const { setBirthDate } = useUser()
+	const setBirthDate = useUser((state) => state.setBirthDate)
 
 	const [birthDate, setLocalBirthDate] = useState<Date | null>(null)
 
 	function handleNextPress() {
+		if (!birthDate) {
+			setCurrentViewIndex(currentViewIndex + 1)
+			return
+		}
+
 		setCurrentViewIndex(currentViewIndex + 1)
 		setBirthDate(birthDate)
 	}
