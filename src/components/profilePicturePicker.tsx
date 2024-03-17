@@ -2,9 +2,10 @@
 
 import { ChangeEvent, useState } from 'react'
 
-import { useUser } from '@/contexts/UserContext'
-
 import { CloudinaryBase64ImageUpload } from '@/actions'
+
+import { useUser } from '@/store/Store'
+import { setAvatarUrl } from '@/store/StoreHelper'
 
 import { Pencil } from 'lucide-react'
 
@@ -20,12 +21,14 @@ export default function ProfilePictureUpload() {
 	const [open, setOpen] = useState(false)
 	const [isUploading, setIsUploading] = useState(false)
 
-	const { user, setAvatarUrl } = useUser()
-
-	const avatarUrl = user?.avatarUrl ?? ''
-	const fullName = user?.fullName ?? ''
+	const avatarUrl = useUser((state) => state.avatarUrl)
+	const fullName = useUser((state) => state.fullName)
 
 	const uploadPhotoToCloudinary = async (file: File): Promise<string> => {
+		if (!fullName) {
+			return ''
+		}
+
 		return new Promise((resolve, reject) => {
 			const reader = new FileReader()
 
@@ -62,7 +65,7 @@ export default function ProfilePictureUpload() {
 		}
 
 		const url = await uploadPhotoToCloudinary(file)
-		setAvatarUrl(url)
+		setAvatarUrl({ avatarUrl: url })
 
 		setIsUploading(false)
 		setOpen(false)
@@ -74,7 +77,7 @@ export default function ProfilePictureUpload() {
 				<Button variant="outline" className="h-40 w-40 rounded-full">
 					<div className="relative flex h-40 w-40 items-center justify-center rounded-full">
 						<Avatar className="h-40 w-40">
-							<AvatarImage src={avatarUrl} alt={fullName} />
+							<AvatarImage src={avatarUrl ?? ''} alt={fullName} />
 							<AvatarFallback className="bg-muted-foreground text-5xl text-white">
 								<Pencil strokeWidth="3" size={36} />
 							</AvatarFallback>
