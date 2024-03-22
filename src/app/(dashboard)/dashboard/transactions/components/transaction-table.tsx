@@ -164,7 +164,7 @@ export function TransactionTable<TData, TValue>({
 									colSpan={columns.length}
 									className="h-24 text-center"
 								>
-									No transactions yet, add your first now
+									No transactions yet, add your first one now
 								</TableCell>
 							</TableRow>
 						)}
