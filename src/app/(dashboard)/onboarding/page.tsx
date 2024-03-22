@@ -58,7 +58,7 @@ export default function Onboarding() {
 	const text = (() => {
 		switch (currentViewIndex) {
 			case 0:
-				return `This will be your primary currency, but don't worry, you can still use the other ones as well`
+				return `This will be your default currency, but don't worry, you can still add transactions with any other currency as well`
 			case 1:
 				return ''
 			case 2:
