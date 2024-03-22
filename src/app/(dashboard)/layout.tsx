@@ -14,7 +14,7 @@ export default function OuterDashboardLayout({
 	children: React.ReactNode
 }) {
 	useEffect(() => {
-		console.log('ran SetStore')
+		console.log('InitializeStore called from layout.tsx')
 		InitializeStore()
 	}, [])
 
