@@ -32,7 +32,9 @@ export default function Onboarding() {
 	const header = (() => {
 		switch (currentViewIndex) {
 			case 0:
-				return `Welcome to Lifelytics, ${firstName}!`
+				return `Welcome to Lifelytics${
+					firstName ? `, ${firstName}` : ''
+				}!`
 			case 1:
 				return 'Nice!'
 			case 2:
