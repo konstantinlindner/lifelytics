@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 
-import { useUser } from '@/store/store'
+import { useUser } from '@/store/UseStore'
 import { motion } from 'framer-motion'
 
 import { Progress } from '@/components/ui/progress'

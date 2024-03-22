@@ -4,7 +4,7 @@ import { ChangeEvent, useState } from 'react'
 
 import { CloudinaryBase64ImageUpload } from '@/actions'
 
-import { useUser } from '@/store/store'
+import { useUser } from '@/store/UseStore'
 import { setAvatarUrl } from '@/store/store-helper'
 
 import { Pencil } from 'lucide-react'

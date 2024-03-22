@@ -2,7 +2,7 @@
 
 import { cn } from '@/lib/utils'
 
-import { useDatabase } from '@/store/store'
+import { useDatabase } from '@/store/UseStore'
 import { addTransaction } from '@/store/store-helper'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { format } from 'date-fns'

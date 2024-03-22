@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 
-import { useUser } from '@/store/store'
+import { useUser } from '@/store/UseStore'
 import {
 	setBirthDate,
 	setFirstName,

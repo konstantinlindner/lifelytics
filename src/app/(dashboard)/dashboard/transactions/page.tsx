@@ -1,6 +1,6 @@
 'use client'
 
-import { useUser } from '@/store/store'
+import { useUser } from '@/store/UseStore'
 
 import { transactionColumns } from './components/transaction-columns'
 import { TransactionTable } from './components/transaction-table'

@@ -1,6 +1,6 @@
 'use client'
 
-import { Transaction } from '@/store/store'
+import { Transaction } from '@/store/UseStore'
 import { ColumnDef } from '@tanstack/react-table'
 
 import { ArrowUpDown, MoreHorizontal } from 'lucide-react'
