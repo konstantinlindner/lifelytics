@@ -2,14 +2,14 @@
 
 import { useState } from 'react'
 
-import { useUser } from '@/store/Store'
+import { useUser } from '@/store/store'
 import { motion } from 'framer-motion'
 
 import { Progress } from '@/components/ui/progress'
 
-import BirthDateView from './components/birthDateView'
-import CurrencyPickerView from './components/currencyPickerView'
-import ProfilePictureView from './components/profilePictureView'
+import BirthDateView from './components/birth-date-view'
+import CurrencyPickerView from './components/currency-picker-view'
+import ProfilePictureView from './components/profile-picture-view'
 
 export default function Onboarding() {
 	const firstName = useUser((state) => state.firstName)

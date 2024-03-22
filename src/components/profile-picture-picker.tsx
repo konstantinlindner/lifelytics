@@ -4,8 +4,8 @@ import { ChangeEvent, useState } from 'react'
 
 import { CloudinaryBase64ImageUpload } from '@/actions'
 
-import { useUser } from '@/store/Store'
-import { setAvatarUrl } from '@/store/StoreHelper'
+import { useUser } from '@/store/store'
+import { setAvatarUrl } from '@/store/store-helper'
 
 import { Pencil } from 'lucide-react'
 
@@ -15,7 +15,7 @@ import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 
-import LoadingIndicator from './loadingIndicator'
+import LoadingIndicator from './loading-indicator'
 
 export default function ProfilePictureUpload() {
 	const [open, setOpen] = useState(false)

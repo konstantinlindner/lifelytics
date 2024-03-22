@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
 
-import { SettingsTopbar } from './components/settingsTopbar'
+import { SettingsTopbar } from './components/settings-topbar'
 
 export default function SettingsLayout({ children }: { children: ReactNode }) {
 	return (

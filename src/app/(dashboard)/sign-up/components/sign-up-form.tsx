@@ -8,7 +8,7 @@ import { createBrowserClient } from '@supabase/ssr'
 
 import type { Database } from '@/types/supabase.types'
 
-import { setFirstName, setLastName } from '@/store/StoreHelper'
+import { setFirstName, setLastName } from '@/store/store-helper'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
@@ -25,7 +25,7 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 
-import LoadingIndicator from '@/components/loadingIndicator'
+import LoadingIndicator from '@/components/loading-indicator'
 
 function SignUpForm() {
 	const [isLoading, setIsLoading] = useState(false)

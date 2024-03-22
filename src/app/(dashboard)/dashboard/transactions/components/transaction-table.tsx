@@ -34,7 +34,7 @@ import {
 	TableRow,
 } from '@/components/ui/table'
 
-import AddTransactionDialog from './addTransaction/addTransactionDialog'
+import AddTransactionDialog from './addTransaction/add-transaction-dialog'
 
 interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[]

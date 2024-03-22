@@ -2,7 +2,7 @@
 
 import { usePathname } from 'next/navigation'
 
-import { SettingsTopbarItems } from '../(settings)/components/settingsTopbar'
+import { SettingsTopbarItems } from '../(settings)/components/settings-topbar'
 import { SidebarItems } from './sidebar'
 
 const allSidebarItems = [...SidebarItems, ...SettingsTopbarItems]

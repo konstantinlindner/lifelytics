@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 
-import { useUser } from '@/store/Store'
+import { useUser } from '@/store/store'
 
 import { BadgeCheck } from 'lucide-react'
 
@@ -19,11 +19,11 @@ import {
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 
-import ModeToggle from '@/components/modeToggle'
+import ModeToggle from '@/components/mode-toggle'
 
-import CommandModal from './commandModal'
-import PageHeader from './pageHeader'
-import SignOutButton from './signOutButton'
+import CommandModal from './command-modal'
+import PageHeader from './page-header'
+import SignOutButton from './sign-out-button'
 
 export default function Topbar() {
 	const fullName = useUser((state) => state.fullName)

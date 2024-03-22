@@ -10,8 +10,8 @@ import { Button } from '@/components/ui/button'
 import { CommandItem } from '@/components/ui/command'
 import { Dialog, DialogTrigger } from '@/components/ui/dialog'
 
-import { Screen, screens } from './addTransactionConstants'
-import AddTransactionDialogContent from './addTransactionDialogContent'
+import { Screen, screens } from './add-transaction-constants'
+import AddTransactionDialogContent from './add-transaction-dialog-content'
 
 interface addTransactionDialogProps {
 	openingScreen?: Screen

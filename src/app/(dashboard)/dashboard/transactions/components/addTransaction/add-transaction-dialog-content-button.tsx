@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
 
-import { Screen, screens } from './addTransactionConstants'
+import { Screen, screens } from './add-transaction-constants'
 
 interface AddTransactionDialogContentButtonProps {
 	screen: Screen

@@ -1,9 +1,9 @@
 'use client'
 
-import { useUser } from '@/store/Store'
+import { useUser } from '@/store/store'
 
-import { transactionColumns } from './components/transactionColumns'
-import { TransactionTable } from './components/transactionTable'
+import { transactionColumns } from './components/transaction-columns'
+import { TransactionTable } from './components/transaction-table'
 
 export default function Transactions() {
 	const transactions = useUser((state) => state.transactions)

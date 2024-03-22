@@ -24,7 +24,7 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 
-import LoadingIndicator from '@/components/loadingIndicator'
+import LoadingIndicator from '@/components/loading-indicator'
 
 export default function SignInForm() {
 	const [isLoading, setIsLoading] = useState(false)

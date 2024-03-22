@@ -1,10 +1,10 @@
 import { useState } from 'react'
 
-import { useUser } from '@/store/Store'
+import { useUser } from '@/store/store'
 
 import { Button } from '@/components/ui/button'
 
-import DatePicker from '@/components/datePicker'
+import DatePicker from '@/components/date-picker'
 
 interface ProfilePictureViewProps {
 	currentViewIndex: number

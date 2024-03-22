@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils'
 
 import '@/styles/globals.css'
 
-import { ThemeProvider } from '@/components/themeProvider'
+import { ThemeProvider } from '@/components/theme-provider'
 
 export const dynamic = 'force-dynamic'
 

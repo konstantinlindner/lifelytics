@@ -1,6 +1,6 @@
 'use client'
 
-import { useUser } from '@/store/Store'
+import { useUser } from '@/store/store'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
@@ -17,9 +17,9 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 
-import DatePicker from '@/components/datePicker'
-import LoadingIndicator from '@/components/loadingIndicator'
-import ProfilePictureUpload from '@/components/profilePicturePicker'
+import DatePicker from '@/components/date-picker'
+import LoadingIndicator from '@/components/loading-indicator'
+import ProfilePictureUpload from '@/components/profile-picture-picker'
 
 export default function Profile() {
 	const firstName = useUser((state) => state.firstName)

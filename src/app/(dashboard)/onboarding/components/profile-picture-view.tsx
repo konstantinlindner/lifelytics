@@ -4,14 +4,14 @@ import { useState } from 'react'
 
 import { useRouter } from 'next/navigation'
 
-import { useUser } from '@/store/Store'
-import { setIsOnboardingCompleted } from '@/store/StoreHelper'
+import { useUser } from '@/store/store'
+import { setIsOnboardingCompleted } from '@/store/store-helper'
 
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 
-import LoadingIndicator from '@/components/loadingIndicator'
-import ProfilePictureUpload from '@/components/profilePicturePicker'
+import LoadingIndicator from '@/components/loading-indicator'
+import ProfilePictureUpload from '@/components/profile-picture-picker'
 
 interface ProfilePictureViewProps {
 	currentViewIndex: number

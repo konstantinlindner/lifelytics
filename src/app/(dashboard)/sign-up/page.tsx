@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 
 import Logo from '@/components/logo'
 
-import SignUpForm from './components/signUpForm'
+import SignUpForm from './components/sign-up-form'
 
 export default async function SignUp() {
 	return (

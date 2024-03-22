@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react'
 
-import { InitializeStore } from '@/store/StoreHelper'
+import { InitializeStore } from '@/store/store-helper'
 
 import { Toaster } from '@/components/ui/sonner'
 

@@ -5,9 +5,9 @@ import {
 	DialogTitle,
 } from '@/components/ui/dialog'
 
-import { Screen, screens } from './addTransactionConstants'
-import AddTransactionDialogContentButton from './addTransactionDialogContentButton'
-import AddTransactionDialogContentInputs from './addTransactionDialogContentInputs'
+import { Screen, screens } from './add-transaction-constants'
+import AddTransactionDialogContentButton from './add-transaction-dialog-content-button'
+import AddTransactionDialogContentInput from './add-transaction-dialog-content-input'
 
 interface AddTransactionDialogContentProps {
 	screen: Screen
@@ -48,7 +48,7 @@ export default function AddTransactionDialogContent({
 					</div>
 				)}
 				{!screenChildren.length && (
-					<AddTransactionDialogContentInputs screen={screen} />
+					<AddTransactionDialogContentInput screen={screen} />
 				)}
 			</main>
 		</DialogContent>

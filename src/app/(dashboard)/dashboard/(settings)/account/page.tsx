@@ -1,6 +1,6 @@
 'use client'
 
-import { useUser } from '@/store/Store'
+import { useUser } from '@/store/store'
 import dayjs from 'dayjs'
 import { toast } from 'sonner'
 
@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 
-import SignOutButton from '../../components/signOutButton'
+import SignOutButton from '../../components/sign-out-button'
 
 export default function Account() {
 	function handleAccountDeletion() {

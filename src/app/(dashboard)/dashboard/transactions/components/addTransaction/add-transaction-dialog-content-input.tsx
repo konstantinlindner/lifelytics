@@ -2,8 +2,8 @@
 
 import { cn } from '@/lib/utils'
 
-import { useDatabase } from '@/store/Store'
-import { addTransaction } from '@/store/StoreHelper'
+import { useDatabase } from '@/store/store'
+import { addTransaction } from '@/store/store-helper'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { format } from 'date-fns'
 import { useForm } from 'react-hook-form'
@@ -39,7 +39,7 @@ import {
 } from '@/components/ui/popover'
 import { Textarea } from '@/components/ui/textarea'
 
-import { Screen } from './addTransactionConstants'
+import { Screen } from './add-transaction-constants'
 
 const FormSchema = z.object({
 	category: z.coerce.number({
@@ -74,7 +74,7 @@ interface AddTransactionDialogContentInputsProps {
 	screen: Screen
 }
 
-export default function AddTransactionDialogContentInputs({
+export default function AddTransactionDialogContentInput({
 	screen,
 }: AddTransactionDialogContentInputsProps) {
 	const cities = useDatabase((state) => state.cities)

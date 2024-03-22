@@ -5,7 +5,7 @@ import { City, Currency, TransactionCategory } from '@/types/globals.types'
 
 import supabase from '@/lib/supabase'
 
-import { useDatabase, useUser } from '@/store/Store'
+import { useDatabase, useUser } from '@/store/store'
 import dayjs from 'dayjs'
 
 // setup the store
@@ -302,7 +302,7 @@ export async function setFirstName({ firstName }: SetFirstNameProps) {
 
 		if (error) throw error
 	} catch (error) {
-		// if there's an error, revert to preivious state
+		// if there's an error, revert to previous state
 		setFirstName(previousFirstName)
 
 		console.error('Error setting first name:', error)
@@ -332,7 +332,7 @@ export async function setLastName({ lastName }: SetLastNameProps) {
 
 		if (error) throw error
 	} catch (error) {
-		// if there's an error, revert to preivious state
+		// if there's an error, revert to previous state
 		setLastName(previousLastName)
 
 		console.error('Error setting last name:', error)
@@ -364,7 +364,7 @@ export async function setBirthDate({ birthDate }: SetBirthDateProps) {
 
 		if (error) throw error
 	} catch (error) {
-		// if there's an error, revert to preivious state
+		// if there's an error, revert to previous state
 		setBirthDate(previousBirthDate)
 
 		console.error('Error setting birth date:', error)
@@ -394,7 +394,7 @@ export async function setWebsite({ website }: SetWebsiteProps) {
 
 		if (error) throw error
 	} catch (error) {
-		// if there's an error, revert to preivious state
+		// if there's an error, revert to previous state
 		setWebsite(previousWebsite)
 
 		console.error('Error setting website:', error)
@@ -426,7 +426,7 @@ export async function setAvatarUrl({ avatarUrl }: SetAvatarUrlProps) {
 
 		if (error) throw error
 	} catch (error) {
-		// if there's an error, revert to preivious state
+		// if there's an error, revert to previous state
 		setAvatarUrl(previousAvatarUrl)
 
 		console.error('Error setting avatar URL:', error)
@@ -460,7 +460,7 @@ export async function setIsOnboardingCompleted({
 
 		if (error) throw error
 	} catch (error) {
-		// if there's an error, revert to preivious state
+		// if there's an error, revert to previous state
 		setIsOnboardingCompleted(previousValue)
 
 		console.error('Error setting onboarding completed value:', error)

@@ -17,7 +17,7 @@ import {
 	CommandShortcut,
 } from '@/components/ui/command'
 
-import AddTransactionDialog from '../transactions/components/addTransaction/addTransactionDialog'
+import AddTransactionDialog from '../transactions/components/addTransaction/add-transaction-dialog'
 
 export default function CommandModal() {
 	const [open, setOpen] = useState(false)

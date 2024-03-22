@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 
 import Logo from '@/components/logo'
 
-import SignInForm from './components/signInForm'
+import SignInForm from './components/sign-in-form'
 
 export default async function SignIn() {
 	return (
