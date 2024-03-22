@@ -26,7 +26,8 @@ const fontHeading = localFont({
 export const metadata: Metadata = {
 	metadataBase: new URL('https://life.konstantin.app'),
 	title: {
-		default: 'Lifelytics',
+		default:
+			'Lifelytics - A base for productivity and financial well being',
 		template: `%s | Lifelytics`,
 	},
 	description: 'A base for productivity and financial well being.',
