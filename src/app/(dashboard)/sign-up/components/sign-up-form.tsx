@@ -4,11 +4,7 @@ import { useState } from 'react'
 
 import { useRouter } from 'next/navigation'
 
-import { createBrowserClient } from '@supabase/ssr'
-
-import type { Database } from '@/types/supabase.types'
-
-import { setFirstName, setLastName } from '@/store/store-helper'
+import { SignUp } from '@/store/store-helper'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
@@ -31,10 +27,6 @@ function SignUpForm() {
 	const [isLoading, setIsLoading] = useState(false)
 
 	const router = useRouter()
-	const supabase = createBrowserClient<Database>(
-		process.env.NEXT_PUBLIC_SUPABASE_URL!,
-		process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-	)
 
 	const formSchema = z.object({
 		email: z
@@ -72,26 +64,22 @@ function SignUpForm() {
 	})
 
 	const handleSignUp = async (values: z.infer<typeof formSchema>) => {
-		try {
-			setIsLoading(true)
+		setIsLoading(true)
 
-			const { error } = await supabase.auth.signUp({
-				email: values.email,
-				password: values.password,
-			})
+		const error = await SignUp({
+			email: values.email,
+			password: values.password,
+			firstName: values.firstName,
+			lastName: values.lastName,
+		})
 
-			if (error) {
-				console.log(error)
-				toast(error.message)
-				setIsLoading(false)
-			}
-
-			setFirstName({ firstName: values.firstName })
-			setLastName({ lastName: values.lastName })
-			router.refresh()
-		} catch (error) {
-			console.log(error)
+		if (error) {
+			console.error(error)
+			toast(error.message)
+			setIsLoading(false)
 		}
+
+		router.refresh()
 	}
 
 	return (
