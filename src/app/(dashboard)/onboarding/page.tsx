@@ -24,8 +24,6 @@ export default function Onboarding() {
 				return 60
 			case 2:
 				return 85
-			default:
-				return 100
 		}
 	})()
 
@@ -39,8 +37,6 @@ export default function Onboarding() {
 				return 'Nice!'
 			case 2:
 				return 'Last step'
-			default:
-				return ''
 		}
 	})()
 
@@ -52,8 +48,6 @@ export default function Onboarding() {
 				return 'Now enter your date of birth'
 			case 2:
 				return 'Upload a profile picture'
-			default:
-				return ''
 		}
 	})()
 
@@ -66,8 +60,6 @@ export default function Onboarding() {
 			case 2:
 				return `Users who upload a profile picture are 80% more likely to stick to
         their goals`
-			default:
-				return ''
 		}
 	})()
 
