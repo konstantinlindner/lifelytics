@@ -1,7 +1,13 @@
+import { Metadata } from 'next'
+
 import Sidebar from './components/sidebar'
 import Topbar from './components/topbar'
 
-export default function InnerDashboardLayout({
+export const metadata: Metadata = {
+	title: { default: 'Dashboard', template: '%s | Lifelytics' },
+}
+
+export default function DashboardLayout({
 	children,
 }: {
 	children: React.ReactNode
