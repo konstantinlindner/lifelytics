@@ -1,6 +1,15 @@
 'use client'
 
+import { useState } from 'react'
+
 import { useUser } from '@/store/store'
+import {
+	setBirthDate,
+	setFirstName,
+	setLastName,
+	setWebsite,
+	updateEmail,
+} from '@/store/store-helper'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
@@ -22,17 +31,13 @@ import LoadingIndicator from '@/components/loading-indicator'
 import ProfilePictureUpload from '@/components/profile-picture-picker'
 
 export default function Profile() {
+	const [isLoading, setIsLoading] = useState(false)
+
 	const firstName = useUser((state) => state.firstName)
 	const lastName = useUser((state) => state.lastName)
 	const email = useUser((state) => state.email)
 	const birthDate = useUser((state) => state.birthDate)
 	const website = useUser((state) => state.website)
-
-	const setEmail = useUser((state) => state.setEmail)
-	const setFirstName = useUser((state) => state.setFirstName)
-	const setLastName = useUser((state) => state.setLastName)
-	const setBirthDate = useUser((state) => state.setBirthDate)
-	const setWebsite = useUser((state) => state.setWebsite)
 
 	const formSchema = z.object({
 		firstName: z
@@ -60,6 +65,8 @@ export default function Profile() {
 		website: z.string().trim().optional(),
 	})
 
+	// todo fix issue with fake empty fields
+
 	const form = useForm<z.infer<typeof formSchema>>({
 		defaultValues: {
 			firstName: firstName ?? undefined,
@@ -72,27 +79,30 @@ export default function Profile() {
 	})
 
 	const handleSave = async (values: z.infer<typeof formSchema>) => {
+		setIsLoading(true)
+
 		try {
 			if (values.firstName !== firstName) {
-				setFirstName(values.firstName)
+				await setFirstName({ firstName: values.firstName })
 			}
 
 			if (values.lastName !== lastName) {
-				setLastName(values.lastName)
+				await setLastName({ lastName: values.lastName })
 			}
 
 			if (values.email !== email) {
-				setEmail(values.email)
+				await updateEmail({ email: values.email })
 			}
 
 			if (values.birthDate && values.birthDate !== birthDate) {
-				setBirthDate(values.birthDate)
+				await setBirthDate({ birthDate: values.birthDate })
 			}
 
 			if (values.website && values.website !== website) {
-				setWebsite(values.website)
+				await setWebsite({ website: values.website })
 			}
 
+			// toast
 			values.email !== email
 				? toast('Please check your inbox to confirm change of email')
 				: toast('Successfully saved changes')
@@ -100,6 +110,8 @@ export default function Profile() {
 			console.log(error)
 			toast('Something went wrong saving the changes')
 		}
+
+		setIsLoading(false)
 	}
 
 	return (
@@ -221,7 +233,13 @@ export default function Profile() {
 							)}
 						/>
 						<div className="pt-6">
-							<Button type="submit">Save</Button>
+							<Button type="submit">
+								{isLoading ? (
+									<LoadingIndicator size="sm" />
+								) : (
+									'Save'
+								)}
+							</Button>
 						</div>
 					</form>
 				</Form>
