@@ -15,10 +15,10 @@ import {
 	PopoverTrigger,
 } from '@/components/ui/popover'
 
-interface ProfilePictureViewProps {
+type DatePickerProps = {
 	fromYear: number
 	toYear: number
-	initialDate?: Date
+	initialDate?: Date | undefined
 	handleDateChange: (date: Date) => void
 }
 
@@ -27,7 +27,7 @@ export default function DatePicker({
 	fromYear,
 	toYear,
 	handleDateChange,
-}: ProfilePictureViewProps) {
+}: DatePickerProps) {
 	const [date, setDate] = useState<Date | undefined>(initialDate)
 	const [stringDate, setStringDate] = useState(
 		initialDate ? format(initialDate, 'PPP') : '',
