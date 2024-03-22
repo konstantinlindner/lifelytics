@@ -322,6 +322,43 @@ async function fetchTransactionCategories() {
 
 // helper functions
 
+type UpdateEmailProps = {
+	email: string
+}
+
+export async function updateEmail({ email }: UpdateEmailProps) {
+	const userId = useUser.getState().id
+
+	if (!userId) {
+		console.error('No user ID found')
+		return
+	}
+
+	const setEmail = useUser.getState().setEmail
+
+	const previousEmail = useUser.getState().email
+
+	// optimistically set the state
+	setEmail(email)
+
+	try {
+		if (email === previousEmail) {
+			throw new Error('The new email is the same as the current one.')
+		}
+
+		const { error } = await supabase.auth.updateUser({
+			email: email,
+		})
+
+		if (error) throw error
+	} catch (error) {
+		// if there's an error, revert to previous state
+		setEmail(previousEmail)
+
+		console.error('Error updating email:', error)
+	}
+}
+
 type SetFirstNameProps = {
 	firstName: string
 }
@@ -335,11 +372,18 @@ export async function setFirstName({ firstName }: SetFirstNameProps) {
 	}
 
 	const setFirstName = useUser.getState().setFirstName
+	const setFullName = useUser.getState().setFullName
+	const setInitials = useUser.getState().setInitials
 
 	const previousFirstName = useUser.getState().firstName
+	const previousLastName = useUser.getState().firstName
+	const previousFullName = useUser.getState().fullName
+	const previousInitials = useUser.getState().initials
 
 	// optimistically set the state
 	setFirstName(firstName)
+	setFullName(`${firstName} ${previousLastName}`)
+	setInitials(`${firstName[0]}${previousLastName?.[0]}`)
 
 	try {
 		if (firstName === previousFirstName) {
@@ -357,6 +401,8 @@ export async function setFirstName({ firstName }: SetFirstNameProps) {
 	} catch (error) {
 		// if there's an error, revert to previous state
 		setFirstName(previousFirstName)
+		setFullName(previousFullName)
+		setInitials(previousInitials)
 
 		console.error('Error setting first name:', error)
 	}
@@ -375,11 +421,18 @@ export async function setLastName({ lastName }: SetLastNameProps) {
 	}
 
 	const setLastName = useUser.getState().setLastName
+	const setFullName = useUser.getState().setFullName
+	const setInitials = useUser.getState().setInitials
 
 	const previousLastName = useUser.getState().lastName
+	const previousFirstName = useUser.getState().firstName
+	const previousFullName = useUser.getState().fullName
+	const previousInitials = useUser.getState().initials
 
 	// optimistically set the state
 	setLastName(lastName)
+	setFullName(`${previousFirstName} ${lastName}`)
+	setInitials(`${previousFirstName?.[0]}${lastName[0]}`)
 
 	try {
 		if (lastName === previousLastName) {
@@ -395,6 +448,8 @@ export async function setLastName({ lastName }: SetLastNameProps) {
 	} catch (error) {
 		// if there's an error, revert to previous state
 		setLastName(previousLastName)
+		setFullName(previousFullName)
+		setInitials(previousInitials)
 
 		console.error('Error setting last name:', error)
 	}
@@ -559,6 +614,48 @@ export async function setIsOnboardingCompleted({
 		setIsOnboardingCompleted(previousValue)
 
 		console.error('Error setting onboarding completed value:', error)
+	}
+}
+
+type setPrimaryCurrencyProps = {
+	primaryCurrency: Currency
+}
+
+export async function setPrimaryCurrency({
+	primaryCurrency,
+}: setPrimaryCurrencyProps) {
+	const userId = useUser.getState().id
+
+	if (!userId) {
+		console.error('No user ID found')
+		return
+	}
+
+	const setPrimaryCurrency = useUser.getState().setPrimaryCurrency
+
+	const previousPrimaryCurrency = useUser.getState().primaryCurrency
+
+	// optimistically set the state
+	setPrimaryCurrency(primaryCurrency)
+
+	try {
+		if (primaryCurrency === previousPrimaryCurrency) {
+			throw new Error(
+				'The new primary currency is the same as the current one.',
+			)
+		}
+
+		const { error } = await supabase
+			.from('profiles')
+			.update({ primaryCurrencyId: primaryCurrency.id })
+			.eq('id', userId)
+
+		if (error) throw error
+	} catch (error) {
+		// if there's an error, revert to previous state
+		setPrimaryCurrency(previousPrimaryCurrency)
+
+		console.error('Error setting primary currency:', error)
 	}
 }
 
