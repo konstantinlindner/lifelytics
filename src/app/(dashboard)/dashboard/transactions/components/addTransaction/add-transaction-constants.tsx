@@ -24,7 +24,7 @@ export type Screen = {
 	icon: JSX.Element | null
 }
 
-export const screens: Screen[] = [
+export const screens = [
 	{
 		id: 1,
 		parent: null,
@@ -169,4 +169,4 @@ export const screens: Screen[] = [
 		transactionCategoryId: 9,
 		icon: <CircleDollarSign />,
 	},
-] as const
+] as Screen[]
