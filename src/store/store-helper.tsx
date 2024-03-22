@@ -329,8 +329,6 @@ type SetFirstNameProps = {
 export async function setFirstName({ firstName }: SetFirstNameProps) {
 	const userId = useUser.getState().id
 
-	console.log('userId:', userId)
-
 	if (!userId) {
 		console.error('No user ID found')
 		return
@@ -529,8 +527,6 @@ export async function setIsOnboardingCompleted({
 }: SetIsOnboardingCompletedProps) {
 	const userId = useUser.getState().id
 
-	console.log('userId onboarding:', userId)
-
 	if (!userId) {
 		console.error('No user ID found')
 		return
@@ -539,9 +535,6 @@ export async function setIsOnboardingCompleted({
 	const setIsOnboardingCompleted = useUser.getState().setIsOnboardingCompleted
 
 	const previousValue = useUser.getState().isOnboardingCompleted
-
-	console.log('previousValue:', previousValue)
-	console.log('value:', value)
 
 	// optimistically set the state
 	setIsOnboardingCompleted(value)
