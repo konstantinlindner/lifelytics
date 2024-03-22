@@ -4,10 +4,7 @@ import { useState } from 'react'
 
 import { useRouter } from 'next/navigation'
 
-import { createBrowserClient } from '@supabase/ssr'
-
-import type { Database } from '@/types/supabase.types'
-
+import { SignIn } from '@/store/store-helper'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
@@ -30,10 +27,6 @@ export default function SignInForm() {
 	const [isLoading, setIsLoading] = useState(false)
 
 	const router = useRouter()
-	const supabase = createBrowserClient<Database>(
-		process.env.NEXT_PUBLIC_SUPABASE_URL!,
-		process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-	)
 
 	const formSchema = z.object({
 		email: z.string().email(),
@@ -45,24 +38,20 @@ export default function SignInForm() {
 	})
 
 	const handleSignIn = async (values: z.infer<typeof formSchema>) => {
-		try {
-			setIsLoading(true)
+		setIsLoading(true)
 
-			const { error } = await supabase.auth.signInWithPassword({
-				email: values.email,
-				password: values.password,
-			})
+		const error = await SignIn({
+			email: values.email,
+			password: values.password,
+		})
 
-			if (error) {
-				console.log(error)
-				toast(error.message)
-				setIsLoading(false)
-			}
-
-			router.refresh()
-		} catch (error) {
+		if (error) {
 			console.log(error)
+			toast(error.message)
+			setIsLoading(false)
 		}
+
+		router.refresh()
 	}
 
 	return (
