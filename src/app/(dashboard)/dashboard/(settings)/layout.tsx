@@ -1,6 +1,12 @@
 import { ReactNode } from 'react'
 
+import { Metadata } from 'next'
+
 import { SettingsTopbar } from './components/settings-topbar'
+
+export const metadata: Metadata = {
+	title: 'Settings',
+}
 
 export default function SettingsLayout({ children }: { children: ReactNode }) {
 	return (
