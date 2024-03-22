@@ -8,6 +8,49 @@ import supabase from '@/lib/supabase'
 import { useDatabase, useUser } from '@/store/store'
 import dayjs from 'dayjs'
 
+type SignInProps = {
+	email: string
+	password: string
+}
+
+export async function SignIn({ email, password }: SignInProps) {
+	const { error } = await supabase.auth.signInWithPassword({
+		email: email,
+		password: password,
+	})
+
+	if (error) return error
+
+	await InitializeStore()
+}
+
+type SignUpProps = {
+	email: string
+	password: string
+	firstName: string
+	lastName: string
+}
+
+export async function SignUp({
+	email,
+	password,
+	firstName,
+	lastName,
+}: SignUpProps) {
+	const { error } = await supabase.auth.signUp({
+		email: email,
+		password: password,
+	})
+
+	if (error) return error
+
+	await InitializeStore()
+
+	// todo send to supabase with signUp call
+	await setFirstName({ firstName: firstName })
+	await setLastName({ lastName: lastName })
+}
+
 // setup the store
 export async function InitializeStore() {
 	// set database
@@ -60,7 +103,9 @@ export async function InitializeStore() {
 		setInitials(`${profile.firstName?.[0]}${profile.lastName?.[0]}`)
 		setIsOnboardingCompleted(!!profile.onboardingCompletedDate)
 		setAvatarUrl(profile.avatarUrl)
-		setBirthDate(dayjs(profile.birthDate).toDate())
+		setBirthDate(
+			profile.birthDate ? dayjs(profile.birthDate).toDate() : null,
+		)
 		setWebsite(profile.website)
 		setCreatedAt(profile.createdAt)
 		setUpdatedAt(profile.updatedAt)
@@ -282,6 +327,15 @@ type SetFirstNameProps = {
 }
 
 export async function setFirstName({ firstName }: SetFirstNameProps) {
+	const userId = useUser.getState().id
+
+	console.log('userId:', userId)
+
+	if (!userId) {
+		console.error('No user ID found')
+		return
+	}
+
 	const setFirstName = useUser.getState().setFirstName
 
 	const previousFirstName = useUser.getState().firstName
@@ -299,6 +353,7 @@ export async function setFirstName({ firstName }: SetFirstNameProps) {
 		const { error } = await supabase
 			.from('profiles')
 			.update({ firstName: firstName })
+			.eq('id', userId)
 
 		if (error) throw error
 	} catch (error) {
@@ -314,6 +369,13 @@ type SetLastNameProps = {
 }
 
 export async function setLastName({ lastName }: SetLastNameProps) {
+	const userId = useUser.getState().id
+
+	if (!userId) {
+		console.error('No user ID found')
+		return
+	}
+
 	const setLastName = useUser.getState().setLastName
 
 	const previousLastName = useUser.getState().lastName
@@ -329,6 +391,7 @@ export async function setLastName({ lastName }: SetLastNameProps) {
 		const { error } = await supabase
 			.from('profiles')
 			.update({ lastName: lastName })
+			.eq('id', userId)
 
 		if (error) throw error
 	} catch (error) {
@@ -344,6 +407,13 @@ type SetBirthDateProps = {
 }
 
 export async function setBirthDate({ birthDate }: SetBirthDateProps) {
+	const userId = useUser.getState().id
+
+	if (!userId) {
+		console.error('No user ID found')
+		return
+	}
+
 	const setBirthDate = useUser.getState().setBirthDate
 
 	const previousBirthDate = useUser.getState().birthDate
@@ -361,6 +431,7 @@ export async function setBirthDate({ birthDate }: SetBirthDateProps) {
 		const { error } = await supabase
 			.from('profiles')
 			.update({ birthDate: dayjs(birthDate).format() })
+			.eq('id', userId)
 
 		if (error) throw error
 	} catch (error) {
@@ -376,6 +447,13 @@ type SetWebsiteProps = {
 }
 
 export async function setWebsite({ website }: SetWebsiteProps) {
+	const userId = useUser.getState().id
+
+	if (!userId) {
+		console.error('No user ID found')
+		return
+	}
+
 	const setWebsite = useUser.getState().setWebsite
 
 	const previousWebsite = useUser.getState().website
@@ -391,6 +469,7 @@ export async function setWebsite({ website }: SetWebsiteProps) {
 		const { error } = await supabase
 			.from('profiles')
 			.update({ website: website })
+			.eq('id', userId)
 
 		if (error) throw error
 	} catch (error) {
@@ -406,6 +485,13 @@ type SetAvatarUrlProps = {
 }
 
 export async function setAvatarUrl({ avatarUrl }: SetAvatarUrlProps) {
+	const userId = useUser.getState().id
+
+	if (!userId) {
+		console.error('No user ID found')
+		return
+	}
+
 	const setAvatarUrl = useUser.getState().setAvatarUrl
 
 	const previousAvatarUrl = useUser.getState().avatarUrl
@@ -423,6 +509,7 @@ export async function setAvatarUrl({ avatarUrl }: SetAvatarUrlProps) {
 		const { error } = await supabase
 			.from('profiles')
 			.update({ avatarUrl: avatarUrl })
+			.eq('id', userId)
 
 		if (error) throw error
 	} catch (error) {
@@ -440,9 +527,21 @@ type SetIsOnboardingCompletedProps = {
 export async function setIsOnboardingCompleted({
 	value,
 }: SetIsOnboardingCompletedProps) {
+	const userId = useUser.getState().id
+
+	console.log('userId onboarding:', userId)
+
+	if (!userId) {
+		console.error('No user ID found')
+		return
+	}
+
 	const setIsOnboardingCompleted = useUser.getState().setIsOnboardingCompleted
 
 	const previousValue = useUser.getState().isOnboardingCompleted
+
+	console.log('previousValue:', previousValue)
+	console.log('value:', value)
 
 	// optimistically set the state
 	setIsOnboardingCompleted(value)
@@ -454,9 +553,12 @@ export async function setIsOnboardingCompleted({
 			)
 		}
 
-		const { error } = await supabase.from('profiles').update({
-			onboardingCompletedDate: value ? dayjs().toString() : null,
-		})
+		const { error } = await supabase
+			.from('profiles')
+			.update({
+				onboardingCompletedDate: value ? dayjs().toString() : null,
+			})
+			.eq('id', userId)
 
 		if (error) throw error
 	} catch (error) {
