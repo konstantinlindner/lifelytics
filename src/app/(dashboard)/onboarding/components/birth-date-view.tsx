@@ -1,10 +1,11 @@
 import { useState } from 'react'
 
-import { useUser } from '@/store/store'
+import { setBirthDate } from '@/store/store-helper'
 
 import { Button } from '@/components/ui/button'
 
 import DatePicker from '@/components/date-picker'
+import LoadingIndicator from '@/components/loading-indicator'
 
 interface ProfilePictureViewProps {
 	currentViewIndex: number
@@ -15,18 +16,22 @@ export default function BirthDateView({
 	currentViewIndex,
 	setCurrentViewIndex,
 }: ProfilePictureViewProps) {
-	const setBirthDate = useUser((state) => state.setBirthDate)
+	const [isLoading, setIsLoading] = useState(false)
+	const [selectedBirthDate, setSelectedBirthDate] = useState<Date | null>(
+		null,
+	)
 
-	const [birthDate, setLocalBirthDate] = useState<Date | null>(null)
-
-	function handleNextPress() {
-		if (!birthDate) {
+	const handleNextPress = async () => {
+		if (!selectedBirthDate) {
 			setCurrentViewIndex(currentViewIndex + 1)
 			return
 		}
 
+		setIsLoading(true)
+
+		await setBirthDate({ birthDate: selectedBirthDate })
+
 		setCurrentViewIndex(currentViewIndex + 1)
-		setBirthDate(birthDate)
 	}
 
 	return (
@@ -34,7 +39,7 @@ export default function BirthDateView({
 			<DatePicker
 				fromYear={1900}
 				toYear={2024}
-				handleDateChange={setLocalBirthDate}
+				handleDateChange={setSelectedBirthDate}
 			/>
 
 			<div className="flex space-x-2">
@@ -46,11 +51,17 @@ export default function BirthDateView({
 					Back
 				</Button>
 				<Button
-					variant={birthDate ? 'default' : 'secondary'}
+					variant={selectedBirthDate ? 'default' : 'secondary'}
 					className="w-44"
 					onClick={() => handleNextPress()}
 				>
-					{birthDate ? 'Next' : 'Skip'}
+					{isLoading ? (
+						<LoadingIndicator size="sm" />
+					) : selectedBirthDate ? (
+						'Next'
+					) : (
+						'Skip'
+					)}
 				</Button>
 			</div>
 		</section>
