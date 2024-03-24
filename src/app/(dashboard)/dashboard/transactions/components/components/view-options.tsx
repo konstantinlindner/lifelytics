@@ -22,12 +22,12 @@ export function ViewOptions<TData>({ table }: ViewOptionsProps<TData>) {
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
-				<Button variant="outline">
+				<Button size="sm" variant="outline" className="h-8">
 					<Settings2Icon className="mr-2 h-4 w-4" />
 					View
 				</Button>
 			</DropdownMenuTrigger>
-			<DropdownMenuContent align="start" className="w-[150px]">
+			<DropdownMenuContent align="start" className="w-[200px]">
 				<DropdownMenuLabel>Toggle columns</DropdownMenuLabel>
 				<DropdownMenuSeparator />
 				{table
