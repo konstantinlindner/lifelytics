@@ -4,10 +4,10 @@ import { ChangeEvent, useState } from 'react'
 
 import { CloudinaryBase64ImageUpload } from '@/actions'
 
-import { useUser } from '@/store/UseStore'
 import { setAvatarUrl } from '@/store/store-helper'
+import { useUser } from '@/store/useStore'
 
-import { Pencil } from 'lucide-react'
+import { PencilIcon } from 'lucide-react'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
@@ -79,11 +79,11 @@ export default function ProfilePictureUpload() {
 						<Avatar className="h-40 w-40">
 							<AvatarImage src={avatarUrl ?? ''} alt={fullName} />
 							<AvatarFallback className="bg-muted-foreground text-5xl text-white">
-								<Pencil strokeWidth="3" size={36} />
+								<PencilIcon strokeWidth="3" size={36} />
 							</AvatarFallback>
 						</Avatar>
 						<div className="absolute bottom-0 left-0 right-0 top-0 flex h-40 w-40 items-center justify-center rounded-full text-white opacity-0 hover:opacity-100">
-							<Pencil strokeWidth="3" size={36} />
+							<PencilIcon strokeWidth="3" size={36} />
 						</div>
 					</div>
 				</Button>
