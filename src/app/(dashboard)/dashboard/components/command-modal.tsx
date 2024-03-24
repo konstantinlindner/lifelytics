@@ -4,7 +4,13 @@ import { useEffect, useState } from 'react'
 
 import Link from 'next/link'
 
-import { Calculator, Calendar, Coins, Settings, User } from 'lucide-react'
+import {
+	CalculatorIcon,
+	CalendarIcon,
+	CoinsIcon,
+	SettingsIcon,
+	UserIcon,
+} from 'lucide-react'
 
 import {
 	CommandDialog,
@@ -17,7 +23,7 @@ import {
 	CommandShortcut,
 } from '@/components/ui/command'
 
-import AddTransactionDialog from '../transactions/components/addTransaction/add-transaction-dialog'
+import AddTransactionDialog from '../transactions/components/add-transaction/add-transaction-dialog'
 
 export default function CommandModal() {
 	const [open, setOpen] = useState(false)
@@ -50,23 +56,23 @@ export default function CommandModal() {
 					<CommandGroup heading="Suggestions">
 						<AddTransactionDialog showCommandItem />
 						<CommandItem>
-							<Calendar className="mr-2 h-4 w-4" />
+							<CalendarIcon className="mr-2 h-4 w-4" />
 							<span>Calendar</span>
 						</CommandItem>
 						<CommandItem>
-							<Calculator className="mr-2 h-4 w-4" />
+							<CalculatorIcon className="mr-2 h-4 w-4" />
 							<span>Calculator</span>
 						</CommandItem>
 					</CommandGroup>
 					<CommandSeparator />
 					<CommandGroup heading="Settings">
 						<CommandItem>
-							<User className="mr-2 h-4 w-4" />
+							<UserIcon className="mr-2 h-4 w-4" />
 							<span>Profile</span>
 							<CommandShortcut>⇧⌘P</CommandShortcut>
 						</CommandItem>
 						<CommandItem>
-							<Settings className="mr-2 h-4 w-4" />
+							<SettingsIcon className="mr-2 h-4 w-4" />
 							<span>Account</span>
 							<CommandShortcut>⇧⌘A</CommandShortcut>
 						</CommandItem>
