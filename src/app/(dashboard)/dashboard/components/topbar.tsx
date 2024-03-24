@@ -2,9 +2,9 @@
 
 import Link from 'next/link'
 
-import { useUser } from '@/store/UseStore'
+import { useUser } from '@/store/useStore'
 
-import { BadgeCheck } from 'lucide-react'
+import { BadgeCheckIcon } from 'lucide-react'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
@@ -64,7 +64,7 @@ export default function Topbar() {
 									<p className="text-sm font-medium leading-none">
 										{fullName}
 									</p>
-									<BadgeCheck className="h-4 w-4" />
+									<BadgeCheckIcon className="h-4 w-4" />
 								</div>
 								<p className="text-xs leading-none text-muted-foreground">
 									{email}
