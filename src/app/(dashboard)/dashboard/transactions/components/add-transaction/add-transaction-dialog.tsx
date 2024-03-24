@@ -29,7 +29,7 @@ export default function AddTransactionDialog({
 			<Dialog>
 				{showButton && (
 					<DialogTrigger asChild>
-						<Button variant="outline">
+						<Button size="sm" variant="outline" className="h-8">
 							<PlusIcon className="mr-2 h-5 w-5" /> Add
 						</Button>
 					</DialogTrigger>
