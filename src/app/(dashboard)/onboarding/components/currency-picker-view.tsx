@@ -2,8 +2,8 @@ import { useState } from 'react'
 
 import { Currency } from '@/types/globals.types'
 
-import { useDatabase } from '@/store/UseStore'
 import { setPrimaryCurrency } from '@/store/store-helper'
+import { useDatabase } from '@/store/useStore'
 
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
