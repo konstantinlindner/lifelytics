@@ -28,7 +28,7 @@ export const screens = [
 	{
 		id: 1,
 		parent: null,
-		title: 'New record',
+		title: 'New transaction',
 		subtitle: 'Follow the prompts to add a new record.',
 		transactionCategoryId: null,
 		icon: null,
