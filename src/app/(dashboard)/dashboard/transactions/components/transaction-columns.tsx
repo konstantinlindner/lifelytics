@@ -1,5 +1,6 @@
 'use client'
 
+import { ColumnHeader } from '@/app/(dashboard)/dashboard/transactions/components/components/column-header'
 import { Transaction } from '@/store/useStore'
 import { ColumnDef } from '@tanstack/react-table'
 import dayjs from 'dayjs'
@@ -9,7 +10,6 @@ import { MoreHorizontalIcon } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
-import { DataTableColumnHeader } from '@/components/ui/data-table-column-header'
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -43,9 +43,7 @@ export const transactionColumns: ColumnDef<Transaction>[] = [
 	},
 	{
 		accessorKey: 'transactionDate',
-		header: ({ column }) => (
-			<DataTableColumnHeader column={column} title="Date" />
-		),
+		header: ({ column }) => <ColumnHeader column={column} title="Date" />,
 		cell: ({ row }) => {
 			const date = dayjs(row.getValue('transactionDate')).format(
 				'YYYY-MM-DD',
@@ -57,7 +55,7 @@ export const transactionColumns: ColumnDef<Transaction>[] = [
 	{
 		accessorKey: 'category',
 		header: ({ column }) => (
-			<DataTableColumnHeader column={column} title="Category" />
+			<ColumnHeader column={column} title="Category" />
 		),
 		cell: ({ row }) => {
 			const category = row.getValue('category') as Transaction['category']
@@ -67,14 +65,12 @@ export const transactionColumns: ColumnDef<Transaction>[] = [
 	},
 	{
 		accessorKey: 'item',
-		header: ({ column }) => (
-			<DataTableColumnHeader column={column} title="Item" />
-		),
+		header: ({ column }) => <ColumnHeader column={column} title="Item" />,
 	},
 	{
 		accessorKey: 'counterpart',
 		header: ({ column }) => (
-			<DataTableColumnHeader column={column} title="Counterpart" />
+			<ColumnHeader column={column} title="Counterpart" />
 		),
 		cell: ({ row }) => {
 			const counterpart = row.getValue(
@@ -86,9 +82,7 @@ export const transactionColumns: ColumnDef<Transaction>[] = [
 	},
 	{
 		accessorKey: 'amount',
-		header: ({ column }) => (
-			<DataTableColumnHeader column={column} title="Amount" />
-		),
+		header: ({ column }) => <ColumnHeader column={column} title="Amount" />,
 		cell: ({ row }) => {
 			const amount = parseFloat(row.getValue('amount'))
 			const currency = row.getValue('currency') as Transaction['currency']
@@ -103,9 +97,7 @@ export const transactionColumns: ColumnDef<Transaction>[] = [
 	},
 	{
 		accessorKey: 'city',
-		header: ({ column }) => (
-			<DataTableColumnHeader column={column} title="City" />
-		),
+		header: ({ column }) => <ColumnHeader column={column} title="City" />,
 		cell: ({ row }) => {
 			const cityName = (row.getValue('city') as Transaction['city'])
 				?.englishName
@@ -116,7 +108,7 @@ export const transactionColumns: ColumnDef<Transaction>[] = [
 	{
 		accessorKey: 'country',
 		header: ({ column }) => (
-			<DataTableColumnHeader column={column} title="Country" />
+			<ColumnHeader column={column} title="Country" />
 		),
 		cell: ({ row }) => {
 			const countryName = (
@@ -129,7 +121,7 @@ export const transactionColumns: ColumnDef<Transaction>[] = [
 	{
 		accessorKey: 'currency',
 		header: ({ column }) => (
-			<DataTableColumnHeader column={column} title="Currency" />
+			<ColumnHeader column={column} title="Currency" />
 		),
 		cell: ({ row }) => {
 			const currencyName = (

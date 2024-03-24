@@ -40,13 +40,13 @@ import {
 	PopoverTrigger,
 } from '@/components/ui/popover'
 
-interface DataTableFacetedFilterProps<TData, TValue> {
+interface CategoryFilterProps<TData, TValue> {
 	column?: Column<TData, TValue>
 }
 
 export function CategoryFilter<TData, TValue>({
 	column,
-}: DataTableFacetedFilterProps<TData, TValue>) {
+}: CategoryFilterProps<TData, TValue>) {
 	const transactionCategories = useDatabase(
 		(state) => state.transactionCategories,
 	)

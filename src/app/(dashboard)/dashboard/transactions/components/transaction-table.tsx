@@ -2,6 +2,8 @@
 
 import { useState } from 'react'
 
+import { Pagination } from '@/app/(dashboard)/dashboard/transactions/components/components/pagination'
+import { ViewOptions } from '@/app/(dashboard)/dashboard/transactions/components/components/view-options'
 import { useDatabase } from '@/store/useStore'
 import {
 	ColumnDef,
@@ -19,8 +21,6 @@ import {
 import { Settings2 } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
-import { DataTablePagination } from '@/components/ui/data-table-pagination'
-import { DataTableViewOptions } from '@/components/ui/data-table-view-options'
 import {
 	DropdownMenu,
 	DropdownMenuCheckboxItem,
@@ -79,7 +79,7 @@ export function TransactionTable<TData, TValue>({
 		<div className="flex flex-col gap-4">
 			<div className="flex justify-between gap-2">
 				<div className="flex flex-row gap-2">
-					<DataTableViewOptions table={table} />
+					<ViewOptions table={table} />
 
 					<Input
 						placeholder="Search"
@@ -153,7 +153,7 @@ export function TransactionTable<TData, TValue>({
 				</Table>
 			</div>
 
-			<DataTablePagination table={table} />
+			<Pagination table={table} />
 		</div>
 	)
 }
