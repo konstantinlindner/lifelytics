@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 
-import { useUser } from '@/store/UseStore'
 import {
 	setBirthDate,
 	setFirstName,
@@ -10,6 +9,7 @@ import {
 	setWebsite,
 	updateEmail,
 } from '@/store/store-helper'
+import { useUser } from '@/store/useStore'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
