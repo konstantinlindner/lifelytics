@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 
+import { useDatabase } from '@/store/useStore'
 import {
 	ColumnDef,
 	ColumnFiltersState,
@@ -18,6 +19,8 @@ import {
 import { Settings2 } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
+import { DataTablePagination } from '@/components/ui/data-table-pagination'
+import { DataTableViewOptions } from '@/components/ui/data-table-view-options'
 import {
 	DropdownMenu,
 	DropdownMenuCheckboxItem,
@@ -34,7 +37,8 @@ import {
 	TableRow,
 } from '@/components/ui/table'
 
-import AddTransactionDialog from './addTransaction/add-transaction-dialog'
+import AddTransactionDialog from './add-transaction/add-transaction-dialog'
+import { CategoryFilter } from './components/category-filter'
 
 interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[]
@@ -72,36 +76,11 @@ export function TransactionTable<TData, TValue>({
 	})
 
 	return (
-		<div>
-			<div className="flex justify-between gap-2 py-4">
+		<div className="flex flex-col gap-4">
+			<div className="flex justify-between gap-2">
 				<div className="flex flex-row gap-2">
-					<DropdownMenu>
-						<DropdownMenuTrigger asChild>
-							<Button variant="outline">
-								<Settings2 className="mr-2 h-5 w-5" />
-								View
-							</Button>
-						</DropdownMenuTrigger>
-						<DropdownMenuContent align="start">
-							{table
-								.getAllColumns()
-								.filter((column) => column.getCanHide())
-								.map((column) => {
-									return (
-										<DropdownMenuCheckboxItem
-											key={column.id}
-											className="capitalize"
-											checked={column.getIsVisible()}
-											onCheckedChange={(value) =>
-												column.toggleVisibility(!!value)
-											}
-										>
-											{column.id}
-										</DropdownMenuCheckboxItem>
-									)
-								})}
-						</DropdownMenuContent>
-					</DropdownMenu>
+					<DataTableViewOptions table={table} />
+
 					<Input
 						placeholder="Search"
 						value={
@@ -115,6 +94,8 @@ export function TransactionTable<TData, TValue>({
 								?.setFilterValue(event.target.value)
 						}
 					/>
+
+					<CategoryFilter column={table.getColumn('category')} />
 				</div>
 				<AddTransactionDialog showButton />
 			</div>
@@ -164,7 +145,7 @@ export function TransactionTable<TData, TValue>({
 									colSpan={columns.length}
 									className="h-24 text-center"
 								>
-									No transactions yet, add your first one now
+									No transactions found
 								</TableCell>
 							</TableRow>
 						)}
@@ -172,31 +153,7 @@ export function TransactionTable<TData, TValue>({
 				</Table>
 			</div>
 
-			<div className="flex items-center justify-end space-x-2 py-4">
-				{table.getFilteredSelectedRowModel().rows.length > 0 && (
-					<div className="flex-1 text-sm text-muted-foreground">
-						{table.getFilteredSelectedRowModel().rows.length} of{' '}
-						{table.getFilteredRowModel().rows.length} row(s)
-						selected.
-					</div>
-				)}
-				<Button
-					variant="outline"
-					size="sm"
-					onClick={() => table.previousPage()}
-					disabled={!table.getCanPreviousPage()}
-				>
-					Previous
-				</Button>
-				<Button
-					variant="outline"
-					size="sm"
-					onClick={() => table.nextPage()}
-					disabled={!table.getCanNextPage()}
-				>
-					Next
-				</Button>
-			</div>
+			<DataTablePagination table={table} />
 		</div>
 	)
 }
