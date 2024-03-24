@@ -2,26 +2,11 @@ import { TransactionCategory } from '@/types/globals.types'
 
 import { cn } from '@/lib/utils'
 
+import { getTransactionCategoryIcon } from '@/store/store-helper'
 import { useDatabase } from '@/store/useStore'
 import { Column } from '@tanstack/react-table'
 
-import {
-	CarIcon,
-	CheckIcon,
-	CircleDollarSignIcon,
-	CoinsIcon,
-	DramaIcon,
-	FilterIcon,
-	GiftIcon,
-	HeartIcon,
-	HomeIcon,
-	PercentIcon,
-	ReceiptIcon,
-	RotateCwIcon,
-	ShoppingBagIcon,
-	Undo2Icon,
-	UtensilsCrossedIcon,
-} from 'lucide-react'
+import { CheckIcon, FilterIcon } from 'lucide-react'
 
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -50,46 +35,6 @@ export function CategoryFilter<TData, TValue>({
 	const transactionCategories = useDatabase(
 		(state) => state.transactionCategories,
 	)
-
-	const getTransactionCategoryIcon = (
-		transactionCategory: TransactionCategory,
-		className?: string,
-	): JSX.Element | null => {
-		switch (transactionCategory.name) {
-			case 'Home':
-				return <HomeIcon className={className} />
-			case 'Food and drink':
-				return <UtensilsCrossedIcon className={className} />
-			case 'Transportation':
-				return <CarIcon className={className} />
-			case 'Entertainment':
-				return <DramaIcon className={className} />
-			case 'Health and wellness':
-				return <HeartIcon className={className} />
-			case 'Shopping':
-				return <ShoppingBagIcon className={className} />
-			case 'Savings and investments':
-				return <PercentIcon className={className} />
-			case 'Subscriptions':
-				return <RotateCwIcon className={className} />
-			case 'Other expenses':
-				return <CircleDollarSignIcon className={className} />
-			case 'Salary':
-				return <CoinsIcon className={className} />
-			case 'Sale':
-				return <ReceiptIcon className={className} />
-			case 'Gift':
-				return <GiftIcon className={className} />
-			case 'Tax return':
-				return <Undo2Icon className={className} />
-			case 'Realized investment':
-				return <PercentIcon className={className} />
-			case 'Other income':
-				return <CircleDollarSignIcon className={className} />
-			default:
-				return null
-		}
-	}
 
 	const facets = column?.getFacetedUniqueValues()
 	const selectedValues = new Set(column?.getFilterValue() as string[])
@@ -182,10 +127,11 @@ export function CategoryFilter<TData, TValue>({
 												className={cn('h-4 w-4')}
 											/>
 										</div>
-										{getTransactionCategoryIcon(
-											option,
-											'mr-2 h-4 w-4 text-muted-foreground',
-										)}
+										{getTransactionCategoryIcon({
+											transactionCategory: option,
+											className:
+												'mr-2 h-4 w-4 text-muted-foreground',
+										})}
 										<span>{option.name}</span>
 										{facets?.get(option.name) && (
 											<span className="ml-auto flex h-4 w-4 items-center justify-center font-mono text-xs">

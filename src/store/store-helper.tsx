@@ -8,6 +8,22 @@ import supabase from '@/lib/supabase'
 import { useDatabase, useUser } from '@/store/useStore'
 import dayjs from 'dayjs'
 
+import {
+	CarIcon,
+	CircleDollarSignIcon,
+	CoinsIcon,
+	DramaIcon,
+	GiftIcon,
+	HeartIcon,
+	HomeIcon,
+	PercentIcon,
+	ReceiptIcon,
+	RotateCwIcon,
+	ShoppingBagIcon,
+	Undo2Icon,
+	UtensilsCrossedIcon,
+} from 'lucide-react'
+
 type SignInProps = {
 	email: string
 	password: string
@@ -823,5 +839,50 @@ export async function addTransaction({
 		}
 	} catch (error) {
 		console.error('Error adding transaction to db:', error)
+	}
+}
+
+type GetTransactionCategoryIconProps = {
+	transactionCategory: TransactionCategory
+	className?: string
+}
+
+export function getTransactionCategoryIcon({
+	transactionCategory,
+	className,
+}: GetTransactionCategoryIconProps) {
+	switch (transactionCategory.name) {
+		case 'Home':
+			return <HomeIcon className={className} />
+		case 'Food and drink':
+			return <UtensilsCrossedIcon className={className} />
+		case 'Transportation':
+			return <CarIcon className={className} />
+		case 'Entertainment':
+			return <DramaIcon className={className} />
+		case 'Health and wellness':
+			return <HeartIcon className={className} />
+		case 'Shopping':
+			return <ShoppingBagIcon className={className} />
+		case 'Savings and investments':
+			return <PercentIcon className={className} />
+		case 'Subscriptions':
+			return <RotateCwIcon className={className} />
+		case 'Other expenses':
+			return <CircleDollarSignIcon className={className} />
+		case 'Salary':
+			return <CoinsIcon className={className} />
+		case 'Sale':
+			return <ReceiptIcon className={className} />
+		case 'Gift':
+			return <GiftIcon className={className} />
+		case 'Tax return':
+			return <Undo2Icon className={className} />
+		case 'Realized investment':
+			return <PercentIcon className={className} />
+		case 'Other income':
+			return <CircleDollarSignIcon className={className} />
+		default:
+			return null
 	}
 }
