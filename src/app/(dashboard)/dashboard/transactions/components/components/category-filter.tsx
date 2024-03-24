@@ -1,14 +1,11 @@
-import { TransactionCategory } from '@/types/globals.types'
-
 import { cn } from '@/lib/utils'
 
 import { getTransactionCategoryIcon } from '@/store/store-helper'
 import { useDatabase } from '@/store/useStore'
 import { Column } from '@tanstack/react-table'
 
-import { CheckIcon, FilterIcon } from 'lucide-react'
+import { CheckIcon, FilterIcon, FilterXIcon } from 'lucide-react'
 
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
 	Command,
@@ -42,47 +39,13 @@ export function CategoryFilter<TData, TValue>({
 	return (
 		<Popover>
 			<PopoverTrigger asChild>
-				<Button
-					variant="outline"
-					size="sm"
-					className="h-8 border-dashed"
-				>
-					<FilterIcon className="mr-2 h-4 w-4" />
-					Category
-					{selectedValues?.size > 0 && (
-						<>
-							<Badge
-								variant="secondary"
-								className="rounded-sm px-1 font-normal lg:hidden"
-							>
-								{selectedValues.size}
-							</Badge>
-							<div className="hidden space-x-1 lg:flex">
-								{selectedValues.size > 2 ? (
-									<Badge
-										variant="secondary"
-										className="rounded-sm px-1 font-normal"
-									>
-										{selectedValues.size} selected
-									</Badge>
-								) : (
-									transactionCategories
-										.filter((option) =>
-											selectedValues.has(option.name),
-										)
-										.map((option) => (
-											<Badge
-												variant="secondary"
-												key={option.id}
-												className="rounded-sm px-1 font-normal"
-											>
-												{option.name}
-											</Badge>
-										))
-								)}
-							</div>
-						</>
+				<Button variant="outline" className="border-dashed">
+					{selectedValues?.size ? (
+						<FilterXIcon className="mr-2 h-4 w-4" />
+					) : (
+						<FilterIcon className="mr-2 h-4 w-4" />
 					)}
+					Category
 				</Button>
 			</PopoverTrigger>
 			<PopoverContent className="w-[200px] p-0" align="start">
@@ -152,7 +115,7 @@ export function CategoryFilter<TData, TValue>({
 										}
 										className="justify-center text-center"
 									>
-										Clear filters
+										Clear filter
 									</CommandItem>
 								</CommandGroup>
 							</>
