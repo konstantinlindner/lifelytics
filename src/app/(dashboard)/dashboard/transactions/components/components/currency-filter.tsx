@@ -38,7 +38,11 @@ export function CurrencyFilter<TData, TValue>({
 	return (
 		<Popover>
 			<PopoverTrigger asChild>
-				<Button variant="outline" className="border-dashed">
+				<Button
+					size="sm"
+					variant="outline"
+					className="h-8 border-dashed"
+				>
 					{selectedValues.size > 0 ? (
 						<FilterXIcon className="mr-2 h-4 w-4" />
 					) : (
@@ -49,7 +53,7 @@ export function CurrencyFilter<TData, TValue>({
 			</PopoverTrigger>
 			<PopoverContent className="w-[200px] p-0" align="start">
 				<Command>
-					<CommandInput placeholder="Search category..." />
+					<CommandInput placeholder="Search currency..." />
 					<CommandList>
 						<CommandEmpty>No results found.</CommandEmpty>
 						<CommandGroup>
