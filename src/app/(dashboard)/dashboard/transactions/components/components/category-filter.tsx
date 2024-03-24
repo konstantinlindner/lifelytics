@@ -1,5 +1,5 @@
 import { getTransactionCategoryIcon } from '@/store/store-helper'
-import { useDatabase } from '@/store/useStore'
+import { useDatabase } from '@/store/use-store'
 
 import { cn } from '@/lib/utils'
 

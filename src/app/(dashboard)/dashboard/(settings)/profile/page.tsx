@@ -9,7 +9,8 @@ import {
 	setWebsite,
 	updateEmail,
 } from '@/store/store-helper'
-import { useUser } from '@/store/useStore'
+import { useUser } from '@/store/use-store'
+
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'

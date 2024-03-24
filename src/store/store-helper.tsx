@@ -3,9 +3,10 @@
 // todo check if works with server
 import { City, Currency, TransactionCategory } from '@/types/globals.types'
 
+import { useDatabase, useUser } from '@/store/use-store'
+
 import supabase from '@/lib/supabase'
 
-import { useDatabase, useUser } from '@/store/useStore'
 import dayjs from 'dayjs'
 
 import {

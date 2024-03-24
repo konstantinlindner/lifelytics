@@ -1,6 +1,6 @@
 'use client'
 
-import { Transaction } from '@/store/useStore'
+import { Transaction } from '@/store/use-store'
 
 import { ColumnHeader } from '@/app/(dashboard)/dashboard/transactions/components/components/column-header'
 import { ColumnDef } from '@tanstack/react-table'

@@ -1,4 +1,4 @@
-import { useDatabase } from '@/store/useStore'
+import { useDatabase } from '@/store/use-store'
 
 import { cn } from '@/lib/utils'
 

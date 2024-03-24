@@ -2,10 +2,10 @@
 
 import { ChangeEvent, useState } from 'react'
 
-import { CloudinaryBase64ImageUpload } from '@/actions'
-
 import { setAvatarUrl } from '@/store/store-helper'
-import { useUser } from '@/store/useStore'
+import { useUser } from '@/store/use-store'
+
+import { CloudinaryBase64ImageUpload } from '@/actions'
 
 import { PencilIcon } from 'lucide-react'
 

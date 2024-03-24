@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 
-import { useUser } from '@/store/useStore'
+import { useUser } from '@/store/use-store'
 
 import { BadgeCheckIcon } from 'lucide-react'
 
