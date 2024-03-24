@@ -1,6 +1,13 @@
 import Link from 'next/link'
 
-import { Coins, DollarSign, Dumbbell, Heart, Plane, Plus } from 'lucide-react'
+import {
+	CoinsIcon,
+	DollarSignIcon,
+	DumbbellIcon,
+	HeartIcon,
+	PlaneIcon,
+	PlusIcon,
+} from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 
@@ -61,7 +68,7 @@ export default function Home() {
 				<div className="mx-auto grid justify-center gap-4 sm:grid-cols-2 md:max-w-[64rem] md:grid-cols-3">
 					<div className="relative overflow-hidden rounded-lg border bg-background p-2">
 						<div className="flex h-[180px] flex-col justify-between rounded-md p-6">
-							<Plane className="h-12 w-12" />
+							<PlaneIcon className="h-12 w-12" />
 							<div className="space-y-2">
 								<h3 className="font-bold">Travel</h3>
 								<p className="text-sm text-muted-foreground">
@@ -73,7 +80,7 @@ export default function Home() {
 					</div>
 					<div className="relative overflow-hidden rounded-lg border bg-background p-2">
 						<div className="flex h-[180px] flex-col justify-between rounded-md p-6">
-							<Heart className="h-12 w-12" />
+							<HeartIcon className="h-12 w-12" />
 							<div className="space-y-2">
 								<h3 className="font-bold">Health</h3>
 								<p className="text-sm text-muted-foreground">
@@ -85,7 +92,7 @@ export default function Home() {
 					</div>
 					<div className="relative overflow-hidden rounded-lg border bg-background p-2">
 						<div className="flex h-[180px] flex-col justify-between rounded-md p-6">
-							<Dumbbell className="h-12 w-12" />
+							<DumbbellIcon className="h-12 w-12" />
 							<div className="space-y-2">
 								<h3 className="font-bold">Workouts</h3>
 								<p className="text-sm text-muted-foreground">
@@ -97,7 +104,7 @@ export default function Home() {
 					</div>
 					<div className="relative overflow-hidden rounded-lg border bg-background p-2">
 						<div className="flex h-[180px] flex-col justify-between rounded-md p-6">
-							<Coins className="h-12 w-12" />
+							<CoinsIcon className="h-12 w-12" />
 							<div className="space-y-2">
 								<h3 className="font-bold">Budget</h3>
 								<p className="text-sm text-muted-foreground">
@@ -109,7 +116,7 @@ export default function Home() {
 					</div>
 					<div className="relative overflow-hidden rounded-lg border bg-background p-2">
 						<div className="flex h-[180px] flex-col justify-between rounded-md p-6">
-							<DollarSign className="h-12 w-12" />
+							<DollarSignIcon className="h-12 w-12" />
 							<div className="space-y-2">
 								<h3 className="font-bold">Spending</h3>
 								<p className="text-sm text-muted-foreground">
@@ -121,7 +128,7 @@ export default function Home() {
 					</div>
 					<div className="relative overflow-hidden rounded-lg border bg-background p-2">
 						<div className="flex h-[180px] flex-col justify-between rounded-md p-6">
-							<Plus className="h-12 w-12" />
+							<PlusIcon className="h-12 w-12" />
 							<div className="space-y-2">
 								<h3 className="font-bold">And more</h3>
 								<p className="text-sm text-muted-foreground">
