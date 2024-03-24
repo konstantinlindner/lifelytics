@@ -1,4 +1,4 @@
-import { Loader2 } from 'lucide-react'
+import { Loader2Icon } from 'lucide-react'
 
 interface LoadingIndicatorProps {
 	text?: string
@@ -22,7 +22,7 @@ export default function LoadingIndicator({
 
 	return (
 		<div className="flex items-center gap-2">
-			<Loader2 className={`animate-spin h-${svgSize} w-${svgSize}`} />
+			<Loader2Icon className={`animate-spin size-${svgSize}`} />
 
 			{text && <p className={`text-${size}`}>{text}</p>}
 		</div>
