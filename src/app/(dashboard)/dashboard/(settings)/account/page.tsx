@@ -1,6 +1,6 @@
 'use client'
 
-import { useUser } from '@/store/UseStore'
+import { useUser } from '@/store/useStore'
 import dayjs from 'dayjs'
 import { toast } from 'sonner'
 
