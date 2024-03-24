@@ -2,8 +2,6 @@
 
 import { useState } from 'react'
 
-import { Pagination } from '@/app/(dashboard)/dashboard/transactions/components/components/pagination'
-import { ViewOptions } from '@/app/(dashboard)/dashboard/transactions/components/components/view-options'
 import {
 	ColumnDef,
 	ColumnFiltersState,
@@ -19,7 +17,6 @@ import {
 	useReactTable,
 } from '@tanstack/react-table'
 
-import { Input } from '@/components/ui/input'
 import {
 	Table,
 	TableBody,
@@ -34,6 +31,9 @@ import { CategoryFilter } from './components/category-filter'
 import { CityFilter } from './components/city-filter'
 import { CountryFilter } from './components/country-filter'
 import { CurrencyFilter } from './components/currency-filter'
+import { Pagination } from './components/pagination'
+import { Search } from './components/search'
+import { ViewOptions } from './components/view-options'
 
 interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[]
@@ -79,19 +79,7 @@ export function TransactionTable<TData, TValue>({
 				<div className="flex flex-row gap-2">
 					<ViewOptions table={table} />
 
-					<Input
-						placeholder="Search"
-						value={
-							(table
-								.getColumn('item')
-								?.getFilterValue() as string) ?? ''
-						}
-						onChange={(event) =>
-							table
-								.getColumn('item')
-								?.setFilterValue(event.target.value)
-						}
-					/>
+					<Search column={table.getColumn('item')} />
 
 					<CategoryFilter column={table.getColumn('category_name')} />
 					<CurrencyFilter column={table.getColumn('currency_code')} />
