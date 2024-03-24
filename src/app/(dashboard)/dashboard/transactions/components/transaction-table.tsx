@@ -4,7 +4,6 @@ import { useState } from 'react'
 
 import { Pagination } from '@/app/(dashboard)/dashboard/transactions/components/components/pagination'
 import { ViewOptions } from '@/app/(dashboard)/dashboard/transactions/components/components/view-options'
-import { useDatabase } from '@/store/useStore'
 import {
 	ColumnDef,
 	ColumnFiltersState,
@@ -12,21 +11,14 @@ import {
 	VisibilityState,
 	flexRender,
 	getCoreRowModel,
+	getFacetedRowModel,
+	getFacetedUniqueValues,
 	getFilteredRowModel,
 	getPaginationRowModel,
 	getSortedRowModel,
 	useReactTable,
 } from '@tanstack/react-table'
 
-import { Settings2 } from 'lucide-react'
-
-import { Button } from '@/components/ui/button'
-import {
-	DropdownMenu,
-	DropdownMenuCheckboxItem,
-	DropdownMenuContent,
-	DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
 import { Input } from '@/components/ui/input'
 import {
 	Table,
@@ -39,6 +31,9 @@ import {
 
 import AddTransactionDialog from './add-transaction/add-transaction-dialog'
 import { CategoryFilter } from './components/category-filter'
+import { CityFilter } from './components/city-filter'
+import { CountryFilter } from './components/country-filter'
+import { CurrencyFilter } from './components/currency-filter'
 
 interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[]
@@ -59,20 +54,23 @@ export function TransactionTable<TData, TValue>({
 	const table = useReactTable({
 		data,
 		columns,
-		getCoreRowModel: getCoreRowModel(),
-		getPaginationRowModel: getPaginationRowModel(),
-		onSortingChange: setSorting,
-		getSortedRowModel: getSortedRowModel(),
-		onColumnFiltersChange: setColumnFilters,
-		getFilteredRowModel: getFilteredRowModel(),
-		onColumnVisibilityChange: setColumnVisibility,
-		onRowSelectionChange: setRowSelection,
 		state: {
 			sorting,
 			columnFilters,
 			columnVisibility,
 			rowSelection,
 		},
+		enableRowSelection: true,
+		getCoreRowModel: getCoreRowModel(),
+		getPaginationRowModel: getPaginationRowModel(),
+		onSortingChange: setSorting,
+		getSortedRowModel: getSortedRowModel(),
+		onColumnFiltersChange: setColumnFilters,
+		getFilteredRowModel: getFilteredRowModel(),
+		getFacetedRowModel: getFacetedRowModel(),
+		getFacetedUniqueValues: getFacetedUniqueValues(),
+		onColumnVisibilityChange: setColumnVisibility,
+		onRowSelectionChange: setRowSelection,
 	})
 
 	return (
@@ -95,7 +93,10 @@ export function TransactionTable<TData, TValue>({
 						}
 					/>
 
-					<CategoryFilter column={table.getColumn('category')} />
+					<CategoryFilter column={table.getColumn('category_name')} />
+					<CurrencyFilter column={table.getColumn('currency_code')} />
+					<CityFilter column={table.getColumn('city_englishName')} />
+					<CountryFilter column={table.getColumn('country_name')} />
 				</div>
 				<AddTransactionDialog showButton />
 			</div>
