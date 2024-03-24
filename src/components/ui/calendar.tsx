@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils'
 
 import { DayPicker, DropdownProps } from 'react-day-picker'
 
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react'
 
 import { buttonVariants } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
@@ -114,9 +114,11 @@ export function Calendar({
 						</Select>
 					)
 				},
-				IconLeft: ({ ...props }) => <ChevronLeft className="h-4 w-4" />,
+				IconLeft: ({ ...props }) => (
+					<ChevronLeftIcon className="h-4 w-4" />
+				),
 				IconRight: ({ ...props }) => (
-					<ChevronRight className="h-4 w-4" />
+					<ChevronRightIcon className="h-4 w-4" />
 				),
 			}}
 			{...props}
