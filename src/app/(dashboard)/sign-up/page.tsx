@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-import { ChevronLeft } from 'lucide-react'
+import { ChevronLeftIcon } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 
@@ -13,7 +13,7 @@ export default async function SignUp() {
 		<div className="container flex h-screen w-screen flex-col items-center justify-center">
 			<Link href="/" className="absolute left-4 top-4 md:left-8 md:top-8">
 				<Button variant="ghost">
-					<ChevronLeft className="mr-2 h-5 w-5" />
+					<ChevronLeftIcon className="mr-2 h-5 w-5" />
 					Back
 				</Button>
 			</Link>
