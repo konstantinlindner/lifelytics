@@ -1,12 +1,15 @@
 'use client'
 
-import { Transaction } from '@/store/UseStore'
+import { Transaction } from '@/store/useStore'
 import { ColumnDef } from '@tanstack/react-table'
+import dayjs from 'dayjs'
 
-import { ArrowUpDown, MoreHorizontal } from 'lucide-react'
+import { MoreHorizontalIcon } from 'lucide-react'
 
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
+import { DataTableColumnHeader } from '@/components/ui/data-table-column-header'
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -40,48 +43,101 @@ export const transactionColumns: ColumnDef<Transaction>[] = [
 	},
 	{
 		accessorKey: 'transactionDate',
-		header: 'Date',
+		header: ({ column }) => (
+			<DataTableColumnHeader column={column} title="Date" />
+		),
+		cell: ({ row }) => {
+			const date = dayjs(row.getValue('transactionDate')).format(
+				'YYYY-MM-DD',
+			)
+
+			return <div>{date}</div>
+		},
+	},
+	{
+		accessorKey: 'category',
+		header: ({ column }) => (
+			<DataTableColumnHeader column={column} title="Category" />
+		),
+		cell: ({ row }) => {
+			const category = row.getValue('category') as Transaction['category']
+
+			return <Badge variant="outline">{category?.name}</Badge>
+		},
 	},
 	{
 		accessorKey: 'item',
-		header: ({ column }) => {
-			return (
-				<Button
-					variant="ghost"
-					onClick={() =>
-						column.toggleSorting(column.getIsSorted() === 'asc')
-					}
-				>
-					Item
-					<ArrowUpDown className="ml-2 h-4 w-4" />
-				</Button>
-			)
+		header: ({ column }) => (
+			<DataTableColumnHeader column={column} title="Item" />
+		),
+	},
+	{
+		accessorKey: 'counterpart',
+		header: ({ column }) => (
+			<DataTableColumnHeader column={column} title="Counterpart" />
+		),
+		cell: ({ row }) => {
+			const counterpart = row.getValue(
+				'counterpart',
+			) as Transaction['counterpart']
+
+			return <div>{counterpart?.name}</div>
 		},
 	},
 	{
 		accessorKey: 'amount',
-		header: () => 'Amount',
+		header: ({ column }) => (
+			<DataTableColumnHeader column={column} title="Amount" />
+		),
 		cell: ({ row }) => {
 			const amount = parseFloat(row.getValue('amount'))
-			const currency: string = row.getValue('currency')
+			const currency = row.getValue('currency') as Transaction['currency']
 
-			// todo
+			const formatted = new Intl.NumberFormat('en-US', {
+				style: 'currency',
+				currency: currency?.code,
+			}).format(amount)
 
-			// const formatted = new Intl.NumberFormat('en-US', {
-			// 	style: 'currency',
-			// 	currency: currency,
-			// }).format(amount)
+			return <div>{formatted}</div>
+		},
+	},
+	{
+		accessorKey: 'city',
+		header: ({ column }) => (
+			<DataTableColumnHeader column={column} title="City" />
+		),
+		cell: ({ row }) => {
+			const cityName = (row.getValue('city') as Transaction['city'])
+				?.englishName
 
-			return <div>{amount}</div>
+			return <div>{cityName}</div>
 		},
 	},
 	{
 		accessorKey: 'country',
-		header: 'Country',
+		header: ({ column }) => (
+			<DataTableColumnHeader column={column} title="Country" />
+		),
+		cell: ({ row }) => {
+			const countryName = (
+				row.getValue('country') as Transaction['country']
+			)?.name
+
+			return <div>{countryName}</div>
+		},
 	},
 	{
 		accessorKey: 'currency',
-		header: 'Currency',
+		header: ({ column }) => (
+			<DataTableColumnHeader column={column} title="Currency" />
+		),
+		cell: ({ row }) => {
+			const currencyName = (
+				row.getValue('currency') as Transaction['currency']
+			)?.name
+
+			return <div>{currencyName}</div>
+		},
 	},
 	{
 		id: 'actions',
@@ -95,13 +151,13 @@ export const transactionColumns: ColumnDef<Transaction>[] = [
 							variant="ghost"
 							className="flex h-8 w-8 p-0 data-[state=open]:bg-muted"
 						>
-							<MoreHorizontal className="h-4 w-4" />
+							<MoreHorizontalIcon className="h-4 w-4" />
 							<span className="sr-only">Open menu</span>
 						</Button>
 					</DropdownMenuTrigger>
 					<DropdownMenuContent align="end" className="w-[160px]">
 						<DropdownMenuItem>Edit</DropdownMenuItem>
-						<DropdownMenuItem>Make a copy</DropdownMenuItem>
+						<DropdownMenuItem>Duplicate</DropdownMenuItem>
 						<DropdownMenuSeparator />
 						<DropdownMenuItem>
 							Delete
