@@ -1,7 +1,8 @@
-import { cn } from '@/lib/utils'
-
 import { getTransactionCategoryIcon } from '@/store/store-helper'
 import { useDatabase } from '@/store/useStore'
+
+import { cn } from '@/lib/utils'
+
 import { Column } from '@tanstack/react-table'
 
 import { CheckIcon, FilterIcon, FilterXIcon } from 'lucide-react'
@@ -34,13 +35,14 @@ export function CategoryFilter<TData, TValue>({
 	)
 
 	const facets = column?.getFacetedUniqueValues()
+
 	const selectedValues = new Set(column?.getFilterValue() as string[])
 
 	return (
 		<Popover>
 			<PopoverTrigger asChild>
 				<Button variant="outline" className="border-dashed">
-					{selectedValues?.size ? (
+					{selectedValues.size > 0 ? (
 						<FilterXIcon className="mr-2 h-4 w-4" />
 					) : (
 						<FilterIcon className="mr-2 h-4 w-4" />
