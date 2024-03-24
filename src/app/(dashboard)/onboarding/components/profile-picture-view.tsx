@@ -4,8 +4,8 @@ import { useState } from 'react'
 
 import { useRouter } from 'next/navigation'
 
-import { useUser } from '@/store/UseStore'
 import { setIsOnboardingCompleted } from '@/store/store-helper'
+import { useUser } from '@/store/useStore'
 
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
