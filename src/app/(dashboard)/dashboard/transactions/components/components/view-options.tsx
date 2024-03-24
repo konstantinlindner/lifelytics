@@ -47,9 +47,7 @@ export function ViewOptions<TData>({ table }: ViewOptionsProps<TData>) {
 									column.toggleVisibility(!!value)
 								}
 							>
-								{column.id === 'transactionDate'
-									? 'Date'
-									: column.id}
+								{column.id}
 							</DropdownMenuCheckboxItem>
 						)
 					})}

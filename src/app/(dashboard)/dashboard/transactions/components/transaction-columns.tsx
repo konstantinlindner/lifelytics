@@ -43,6 +43,7 @@ export const transactionColumns: ColumnDef<Transaction>[] = [
 		enableHiding: false,
 	},
 	{
+		id: 'date',
 		accessorKey: 'transactionDate',
 		header: ({ column }) => <ColumnHeader column={column} title="Date" />,
 		cell: ({ row }) => {
@@ -54,6 +55,7 @@ export const transactionColumns: ColumnDef<Transaction>[] = [
 		},
 	},
 	{
+		id: 'category',
 		accessorKey: 'category.name',
 		header: ({ column }) => (
 			<ColumnHeader column={column} title="Category" />
@@ -68,21 +70,24 @@ export const transactionColumns: ColumnDef<Transaction>[] = [
 		},
 	},
 	{
+		id: 'item',
 		accessorKey: 'item',
 		header: ({ column }) => <ColumnHeader column={column} title="Item" />,
 	},
 	{
+		id: 'counterpart',
 		accessorKey: 'counterpart.name',
 		header: ({ column }) => (
 			<ColumnHeader column={column} title="Counterpart" />
 		),
 	},
 	{
+		id: 'amount',
 		accessorKey: 'amount',
 		header: ({ column }) => <ColumnHeader column={column} title="Amount" />,
 		cell: ({ row }) => {
 			const amount = parseFloat(row.getValue('amount'))
-			const currency = row.getValue('currency_code') as string
+			const currency = row.getValue('currency') as string
 
 			const formatted = new Intl.NumberFormat('en-US', {
 				style: 'currency',
@@ -93,6 +98,7 @@ export const transactionColumns: ColumnDef<Transaction>[] = [
 		},
 	},
 	{
+		id: 'city',
 		accessorKey: 'city.englishName',
 		header: ({ column }) => <ColumnHeader column={column} title="City" />,
 		filterFn: (row, id, value) => {
@@ -101,6 +107,7 @@ export const transactionColumns: ColumnDef<Transaction>[] = [
 	},
 
 	{
+		id: 'country',
 		accessorKey: 'country.name',
 		header: ({ column }) => (
 			<ColumnHeader column={column} title="Country" />
@@ -110,6 +117,7 @@ export const transactionColumns: ColumnDef<Transaction>[] = [
 		},
 	},
 	{
+		id: 'currency',
 		accessorKey: 'currency.code',
 		header: ({ column }) => (
 			<ColumnHeader column={column} title="Currency" />

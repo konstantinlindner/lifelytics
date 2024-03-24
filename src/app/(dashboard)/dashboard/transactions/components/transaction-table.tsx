@@ -81,10 +81,10 @@ export function TransactionTable<TData, TValue>({
 
 					<Search column={table.getColumn('item')} />
 
-					<CategoryFilter column={table.getColumn('category_name')} />
-					<CurrencyFilter column={table.getColumn('currency_code')} />
-					<CityFilter column={table.getColumn('city_englishName')} />
-					<CountryFilter column={table.getColumn('country_name')} />
+					<CategoryFilter column={table.getColumn('category')} />
+					<CurrencyFilter column={table.getColumn('currency')} />
+					<CityFilter column={table.getColumn('city')} />
+					<CountryFilter column={table.getColumn('country')} />
 				</div>
 				<AddTransactionDialog showButton />
 			</div>
