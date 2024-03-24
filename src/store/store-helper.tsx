@@ -5,7 +5,7 @@ import { City, Currency, TransactionCategory } from '@/types/globals.types'
 
 import supabase from '@/lib/supabase'
 
-import { useDatabase, useUser } from '@/store/UseStore'
+import { useDatabase, useUser } from '@/store/useStore'
 import dayjs from 'dayjs'
 
 type SignInProps = {
