@@ -61,9 +61,7 @@ export const transactionColumns: ColumnDef<Transaction>[] = [
 			<ColumnHeader column={column} title="Category" />
 		),
 		cell: ({ row }) => {
-			return (
-				<Badge variant="outline">{row.getValue('category_name')}</Badge>
-			)
+			return <Badge variant="outline">{row.getValue('category')}</Badge>
 		},
 		filterFn: (row, id, value) => {
 			return value.includes(row.getValue(id))
