@@ -1,7 +1,8 @@
 'use client'
 
-import { ColumnHeader } from '@/app/(dashboard)/dashboard/transactions/components/components/column-header'
 import { Transaction } from '@/store/useStore'
+
+import { ColumnHeader } from '@/app/(dashboard)/dashboard/transactions/components/components/column-header'
 import { ColumnDef } from '@tanstack/react-table'
 import dayjs from 'dayjs'
 
@@ -53,14 +54,17 @@ export const transactionColumns: ColumnDef<Transaction>[] = [
 		},
 	},
 	{
-		accessorKey: 'category',
+		accessorKey: 'category.name',
 		header: ({ column }) => (
 			<ColumnHeader column={column} title="Category" />
 		),
 		cell: ({ row }) => {
-			const category = row.getValue('category') as Transaction['category']
-
-			return <Badge variant="outline">{category?.name}</Badge>
+			return (
+				<Badge variant="outline">{row.getValue('category_name')}</Badge>
+			)
+		},
+		filterFn: (row, id, value) => {
+			return value.includes(row.getValue(id))
 		},
 	},
 	{
@@ -68,67 +72,50 @@ export const transactionColumns: ColumnDef<Transaction>[] = [
 		header: ({ column }) => <ColumnHeader column={column} title="Item" />,
 	},
 	{
-		accessorKey: 'counterpart',
+		accessorKey: 'counterpart.name',
 		header: ({ column }) => (
 			<ColumnHeader column={column} title="Counterpart" />
 		),
-		cell: ({ row }) => {
-			const counterpart = row.getValue(
-				'counterpart',
-			) as Transaction['counterpart']
-
-			return <div>{counterpart?.name}</div>
-		},
 	},
 	{
 		accessorKey: 'amount',
 		header: ({ column }) => <ColumnHeader column={column} title="Amount" />,
 		cell: ({ row }) => {
 			const amount = parseFloat(row.getValue('amount'))
-			const currency = row.getValue('currency') as Transaction['currency']
+			const currency = row.getValue('currency_code') as string
 
 			const formatted = new Intl.NumberFormat('en-US', {
 				style: 'currency',
-				currency: currency?.code,
+				currency: currency,
 			}).format(amount)
 
 			return <div>{formatted}</div>
 		},
 	},
 	{
-		accessorKey: 'city',
+		accessorKey: 'city.englishName',
 		header: ({ column }) => <ColumnHeader column={column} title="City" />,
-		cell: ({ row }) => {
-			const cityName = (row.getValue('city') as Transaction['city'])
-				?.englishName
-
-			return <div>{cityName}</div>
+		filterFn: (row, id, value) => {
+			return value.includes(row.getValue(id))
 		},
 	},
+
 	{
-		accessorKey: 'country',
+		accessorKey: 'country.name',
 		header: ({ column }) => (
 			<ColumnHeader column={column} title="Country" />
 		),
-		cell: ({ row }) => {
-			const countryName = (
-				row.getValue('country') as Transaction['country']
-			)?.name
-
-			return <div>{countryName}</div>
+		filterFn: (row, id, value) => {
+			return value.includes(row.getValue(id))
 		},
 	},
 	{
-		accessorKey: 'currency',
+		accessorKey: 'currency.code',
 		header: ({ column }) => (
 			<ColumnHeader column={column} title="Currency" />
 		),
-		cell: ({ row }) => {
-			const currencyName = (
-				row.getValue('currency') as Transaction['currency']
-			)?.name
-
-			return <div>{currencyName}</div>
+		filterFn: (row, id, value) => {
+			return value.includes(row.getValue(id))
 		},
 	},
 	{
