@@ -1,18 +1,18 @@
 import {
-	Car,
-	CircleDollarSign,
-	Coins,
-	Drama,
-	Gift,
-	Heart,
-	Home,
-	Landmark,
-	Percent,
-	Receipt,
-	RotateCw,
-	ShoppingBag,
-	Undo2,
-	UtensilsCrossed,
+	CarIcon,
+	CircleDollarSignIcon,
+	CoinsIcon,
+	DramaIcon,
+	GiftIcon,
+	HeartIcon,
+	HomeIcon,
+	LandmarkIcon,
+	PercentIcon,
+	ReceiptIcon,
+	RotateCwIcon,
+	ShoppingBagIcon,
+	Undo2Icon,
+	UtensilsCrossedIcon,
 } from 'lucide-react'
 
 export type Screen = {
@@ -39,7 +39,7 @@ export const screens = [
 		title: 'Income',
 		subtitle: 'What type of income is this transaction?',
 		transactionCategoryId: null,
-		icon: <Landmark />,
+		icon: <LandmarkIcon />,
 	},
 	{
 		id: 3,
@@ -47,7 +47,7 @@ export const screens = [
 		title: 'Expense',
 		subtitle: 'What type of expense is this transaction?',
 		transactionCategoryId: null,
-		icon: <CircleDollarSign />,
+		icon: <CircleDollarSignIcon />,
 	},
 	{
 		id: 4,
@@ -55,7 +55,7 @@ export const screens = [
 		title: 'Salary',
 		subtitle: 'Enter the details below.',
 		transactionCategoryId: 10,
-		icon: <Coins />,
+		icon: <CoinsIcon />,
 	},
 	{
 		id: 5,
@@ -63,7 +63,7 @@ export const screens = [
 		title: 'Sale',
 		subtitle: 'Enter the details below.',
 		transactionCategoryId: 11,
-		icon: <Receipt />,
+		icon: <ReceiptIcon />,
 	},
 	{
 		id: 6,
@@ -71,7 +71,7 @@ export const screens = [
 		title: 'Gift',
 		subtitle: 'Enter the details below.',
 		transactionCategoryId: 12,
-		icon: <Gift />,
+		icon: <GiftIcon />,
 	},
 	{
 		id: 7,
@@ -79,7 +79,7 @@ export const screens = [
 		title: 'Tax return',
 		subtitle: 'Enter the details below.',
 		transactionCategoryId: 13,
-		icon: <Undo2 />,
+		icon: <Undo2Icon />,
 	},
 	{
 		id: 8,
@@ -87,7 +87,7 @@ export const screens = [
 		title: 'Realized investment',
 		subtitle: 'Enter the details below.',
 		transactionCategoryId: 14,
-		icon: <Percent />,
+		icon: <PercentIcon />,
 	},
 	{
 		id: 9,
@@ -95,7 +95,7 @@ export const screens = [
 		title: 'Other income',
 		subtitle: 'Enter the details below.',
 		transactionCategoryId: 15,
-		icon: <CircleDollarSign />,
+		icon: <CircleDollarSignIcon />,
 	},
 	{
 		id: 10,
@@ -103,7 +103,7 @@ export const screens = [
 		title: 'Home',
 		subtitle: 'Enter the details below.',
 		transactionCategoryId: 1,
-		icon: <Home />,
+		icon: <HomeIcon />,
 	},
 	{
 		id: 11,
@@ -111,7 +111,7 @@ export const screens = [
 		title: 'Food and drink',
 		subtitle: 'Enter the details below.',
 		transactionCategoryId: 2,
-		icon: <UtensilsCrossed />,
+		icon: <UtensilsCrossedIcon />,
 	},
 	{
 		id: 12,
@@ -119,7 +119,7 @@ export const screens = [
 		title: 'Transportation',
 		subtitle: 'Enter the details below.',
 		transactionCategoryId: 3,
-		icon: <Car />,
+		icon: <CarIcon />,
 	},
 	{
 		id: 13,
@@ -127,7 +127,7 @@ export const screens = [
 		title: 'Entertainment',
 		subtitle: 'Enter the details below.',
 		transactionCategoryId: 4,
-		icon: <Drama />,
+		icon: <DramaIcon />,
 	},
 	{
 		id: 14,
@@ -135,7 +135,7 @@ export const screens = [
 		title: 'Health and wellness',
 		subtitle: 'Enter the details below.',
 		transactionCategoryId: 5,
-		icon: <Heart />,
+		icon: <HeartIcon />,
 	},
 	{
 		id: 15,
@@ -143,7 +143,7 @@ export const screens = [
 		title: 'Shopping',
 		subtitle: 'Enter the details below.',
 		transactionCategoryId: 6,
-		icon: <ShoppingBag />,
+		icon: <ShoppingBagIcon />,
 	},
 	{
 		id: 16,
@@ -151,7 +151,7 @@ export const screens = [
 		title: 'Savings and investments',
 		subtitle: 'Enter the details below.',
 		transactionCategoryId: 7,
-		icon: <Percent />,
+		icon: <PercentIcon />,
 	},
 	{
 		id: 17,
@@ -159,7 +159,7 @@ export const screens = [
 		title: 'Subscriptions',
 		subtitle: 'Enter the details below.',
 		transactionCategoryId: 8,
-		icon: <RotateCw />,
+		icon: <RotateCwIcon />,
 	},
 	{
 		id: 18,
@@ -167,6 +167,6 @@ export const screens = [
 		title: 'Other expenses',
 		subtitle: 'Enter the details below.',
 		transactionCategoryId: 9,
-		icon: <CircleDollarSign />,
+		icon: <CircleDollarSignIcon />,
 	},
 ] as Screen[]

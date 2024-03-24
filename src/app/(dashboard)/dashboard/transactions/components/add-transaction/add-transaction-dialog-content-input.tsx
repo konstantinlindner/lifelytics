@@ -2,16 +2,15 @@
 
 import { cn } from '@/lib/utils'
 
-import { useDatabase } from '@/store/UseStore'
 import { addTransaction } from '@/store/store-helper'
+import { useDatabase } from '@/store/useStore'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { format } from 'date-fns'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import * as z from 'zod'
 
-import { CalendarIcon } from 'lucide-react'
-import { Check, ChevronsUpDown } from 'lucide-react'
+import { CalendarIcon, CheckIcon, ChevronsUpDownIcon } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
@@ -165,7 +164,7 @@ export default function AddTransactionDialogContentInput({
 																field.value,
 													  )?.name
 													: 'Select category'}
-												<ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+												<ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
 											</Button>
 										</FormControl>
 									</PopoverTrigger>
@@ -190,7 +189,7 @@ export default function AddTransactionDialogContentInput({
 																)
 															}}
 														>
-															<Check
+															<CheckIcon
 																className={cn(
 																	'mr-2 h-4 w-4',
 																	category.id ===
@@ -322,7 +321,7 @@ export default function AddTransactionDialogContentInput({
 																field.value,
 													  )?.name
 													: 'Select currency'}
-												<ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+												<ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
 											</Button>
 										</FormControl>
 									</PopoverTrigger>
@@ -347,7 +346,7 @@ export default function AddTransactionDialogContentInput({
 															)
 														}}
 													>
-														<Check
+														<CheckIcon
 															className={cn(
 																'mr-2 h-4 w-4',
 																currency.id ===
@@ -430,7 +429,7 @@ export default function AddTransactionDialogContentInput({
 																field.value,
 													  )?.englishName
 													: 'Select city'}
-												<ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+												<ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
 											</Button>
 										</FormControl>
 									</PopoverTrigger>
@@ -455,7 +454,7 @@ export default function AddTransactionDialogContentInput({
 															)
 														}}
 													>
-														<Check
+														<CheckIcon
 															className={cn(
 																'mr-2 h-4 w-4',
 																city.id ===

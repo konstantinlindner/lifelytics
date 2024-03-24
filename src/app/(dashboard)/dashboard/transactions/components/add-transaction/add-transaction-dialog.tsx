@@ -2,9 +2,7 @@
 
 import { useState } from 'react'
 
-import { useRouter, useSearchParams } from 'next/navigation'
-
-import { Coins, Plus } from 'lucide-react'
+import { CoinsIcon, PlusIcon } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { CommandItem } from '@/components/ui/command'
@@ -32,7 +30,7 @@ export default function AddTransactionDialog({
 				{showButton && (
 					<DialogTrigger asChild>
 						<Button variant="outline">
-							<Plus className="mr-2 h-5 w-5" /> Add
+							<PlusIcon className="mr-2 h-5 w-5" /> Add
 						</Button>
 					</DialogTrigger>
 				)}
@@ -40,7 +38,7 @@ export default function AddTransactionDialog({
 					<DialogTrigger asChild>
 						<button className="w-full">
 							<CommandItem key="1" value="add-transaction">
-								<Coins className="mr-2 h-4 w-4" />
+								<CoinsIcon className="mr-2 h-4 w-4" />
 								<span>Add transaction</span>
 							</CommandItem>
 						</button>
