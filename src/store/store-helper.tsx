@@ -1,6 +1,3 @@
-'use client'
-
-// todo check if works with server
 import { City, Currency, TransactionCategory } from '@/types/globals.types'
 
 import { useDatabase, useUser } from '@/store/use-store'
@@ -840,6 +837,45 @@ export async function addTransaction({
 		}
 	} catch (error) {
 		console.error('Error adding transaction to db:', error)
+	}
+}
+
+type DeleteTransactionProps = {
+	transactionId: string
+}
+
+export async function deleteTransaction({
+	transactionId,
+}: DeleteTransactionProps) {
+	const setTransactions = useUser.getState().setTransactions
+
+	const existingTransactions = useUser.getState().transactions
+
+	const transaction = existingTransactions.find(
+		(transaction) => transaction.id === transactionId,
+	)
+
+	if (!transaction) {
+		console.error('Transaction not found')
+		return
+	}
+
+	try {
+		const { error } = await supabase
+			.from('transactions')
+			.delete()
+			.eq('id', transactionId)
+
+		if (error) throw error
+
+		setTransactions(
+			existingTransactions.filter(
+				(existingTransaction) =>
+					existingTransaction.id !== transaction.id,
+			),
+		)
+	} catch (error) {
+		console.error('Error deleting transaction:', error)
 	}
 }
 
