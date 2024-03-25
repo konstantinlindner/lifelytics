@@ -17,6 +17,9 @@ import {
 	useReactTable,
 } from '@tanstack/react-table'
 
+import { XIcon } from 'lucide-react'
+
+import { Button } from '@/components/ui/button'
 import {
 	Table,
 	TableBody,
@@ -32,6 +35,7 @@ import { CityFilter } from './components/city-filter'
 import { CountryFilter } from './components/country-filter'
 import { CurrencyFilter } from './components/currency-filter'
 import { Pagination } from './components/pagination'
+import { ResetFilter } from './components/reset-filter'
 import { Search } from './components/search'
 import { ViewOptions } from './components/view-options'
 
@@ -85,6 +89,8 @@ export function TransactionTable<TData, TValue>({
 					<CurrencyFilter column={table.getColumn('currency')} />
 					<CityFilter column={table.getColumn('city')} />
 					<CountryFilter column={table.getColumn('country')} />
+
+					<ResetFilter table={table} />
 				</div>
 				<AddTransactionDialog showButton />
 			</div>
