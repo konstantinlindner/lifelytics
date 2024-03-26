@@ -71,7 +71,7 @@ export const transactionColumns: ColumnDef<Transaction>[] = [
 		accessorKey: 'isIncome',
 		header: ({ column }) => <ColumnHeader column={column} title="Type" />,
 		cell: ({ row }) => {
-			const isIncome = row.getValue('type')
+			const isIncome: boolean | undefined = row.getValue('type')
 
 			return (
 				<Badge
@@ -93,7 +93,11 @@ export const transactionColumns: ColumnDef<Transaction>[] = [
 			<ColumnHeader column={column} title="Category" />
 		),
 		cell: ({ row }) => {
-			return <Badge variant="outline">{row.getValue('category')}</Badge>
+			return (
+				<Badge variant="outline" className="w-max">
+					{row.getValue('category')}
+				</Badge>
+			)
 		},
 		filterFn: (row, id, value) => {
 			return value.includes(row.getValue(id))
