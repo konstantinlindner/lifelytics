@@ -3,6 +3,8 @@
 import { deleteTransaction } from '@/store/store-helper'
 import { Transaction } from '@/store/use-store'
 
+import { cn } from '@/lib/utils'
+
 import { ColumnHeader } from '@/app/(dashboard)/dashboard/transactions/components/components/column-header'
 import { ColumnDef } from '@tanstack/react-table'
 import dayjs from 'dayjs'
@@ -59,11 +61,29 @@ export const transactionColumns: ColumnDef<Transaction>[] = [
 		accessorKey: 'transactionDate',
 		header: ({ column }) => <ColumnHeader column={column} title="Date" />,
 		cell: ({ row }) => {
-			const date = dayjs(row.getValue('transactionDate')).format(
-				'YYYY-MM-DD',
-			)
+			const date = dayjs(row.getValue('date')).format('YYYY-MM-DD')
 
 			return <div>{date}</div>
+		},
+	},
+	{
+		id: 'type',
+		accessorKey: 'isIncome',
+		header: ({ column }) => <ColumnHeader column={column} title="Type" />,
+		cell: ({ row }) => {
+			const isIncome = row.getValue('type')
+
+			return (
+				<Badge
+					variant="outline"
+					className={cn(isIncome ? 'bg-green-200' : 'bg-red-200')}
+				>
+					{isIncome ? 'Income' : 'Expense'}
+				</Badge>
+			)
+		},
+		filterFn: (row, id, value) => {
+			return value.includes(row.getValue(id))
 		},
 	},
 	{
