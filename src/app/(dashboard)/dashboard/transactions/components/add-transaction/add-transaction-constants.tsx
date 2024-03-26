@@ -1,4 +1,5 @@
 import {
+	BaggageClaimIcon,
 	BriefcaseBusinessIcon,
 	CarIcon,
 	CircleDollarSignIcon,
@@ -102,13 +103,21 @@ export const screens = [
 	{
 		id: 10,
 		parent: 2,
+		title: 'Insurance claim',
+		subtitle: 'Enter the details below.',
+		transactionCategoryId: 18,
+		icon: <BaggageClaimIcon />,
+	},
+	{
+		id: 11,
+		parent: 2,
 		title: 'Cashback',
 		subtitle: 'Enter the details below.',
 		transactionCategoryId: 17,
 		icon: <CreditCardIcon />,
 	},
 	{
-		id: 11,
+		id: 12,
 		parent: 2,
 		title: 'Other income',
 		subtitle: 'Enter the details below.',
@@ -117,7 +126,7 @@ export const screens = [
 	},
 	// expenses
 	{
-		id: 12,
+		id: 13,
 		parent: 3,
 		title: 'Home',
 		subtitle: 'Enter the details below.',
@@ -125,7 +134,7 @@ export const screens = [
 		icon: <HomeIcon />,
 	},
 	{
-		id: 13,
+		id: 14,
 		parent: 3,
 		title: 'Food and drink',
 		subtitle: 'Enter the details below.',
@@ -133,7 +142,7 @@ export const screens = [
 		icon: <UtensilsCrossedIcon />,
 	},
 	{
-		id: 14,
+		id: 15,
 		parent: 3,
 		title: 'Transportation',
 		subtitle: 'Enter the details below.',
@@ -141,7 +150,7 @@ export const screens = [
 		icon: <CarIcon />,
 	},
 	{
-		id: 15,
+		id: 16,
 		parent: 3,
 		title: 'Entertainment',
 		subtitle: 'Enter the details below.',
@@ -149,7 +158,7 @@ export const screens = [
 		icon: <DramaIcon />,
 	},
 	{
-		id: 16,
+		id: 17,
 		parent: 3,
 		title: 'Health and wellness',
 		subtitle: 'Enter the details below.',
@@ -157,7 +166,7 @@ export const screens = [
 		icon: <HeartIcon />,
 	},
 	{
-		id: 17,
+		id: 18,
 		parent: 3,
 		title: 'Shopping',
 		subtitle: 'Enter the details below.',
@@ -165,7 +174,7 @@ export const screens = [
 		icon: <ShoppingBagIcon />,
 	},
 	{
-		id: 18,
+		id: 19,
 		parent: 3,
 		title: 'Savings and investments',
 		subtitle: 'Enter the details below.',
@@ -173,7 +182,7 @@ export const screens = [
 		icon: <PercentIcon />,
 	},
 	{
-		id: 19,
+		id: 20,
 		parent: 3,
 		title: 'Subscriptions',
 		subtitle: 'Enter the details below.',
@@ -181,7 +190,7 @@ export const screens = [
 		icon: <RotateCwIcon />,
 	},
 	{
-		id: 20,
+		id: 21,
 		parent: 3,
 		title: 'Other expenses',
 		subtitle: 'Enter the details below.',
