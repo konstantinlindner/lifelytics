@@ -2,7 +2,7 @@ import { cn } from '@/lib/utils'
 
 import { Column } from '@tanstack/react-table'
 
-import { CheckIcon, FilterIcon, FilterXIcon } from 'lucide-react'
+import { CheckIcon, FilterIcon } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -29,11 +29,11 @@ export function TypeFilter<TData, TValue>({
 	const options = [
 		{
 			name: 'Income',
-			code: true,
+			value: true,
 		},
 		{
 			name: 'Expense',
-			code: false,
+			value: false,
 		},
 	]
 
@@ -47,13 +47,12 @@ export function TypeFilter<TData, TValue>({
 				<Button
 					size="sm"
 					variant="outline"
-					className="h-8 border-dashed"
-				>
-					{selectedValues.size > 0 ? (
-						<FilterXIcon className="mr-2 h-4 w-4" />
-					) : (
-						<FilterIcon className="mr-2 h-4 w-4" />
+					className={cn(
+						selectedValues.size > 0 && 'border-red-500',
+						'h-8 border-dashed',
 					)}
+				>
+					<FilterIcon className="mr-2 h-4 w-4" />
 					Type
 				</Button>
 			</PopoverTrigger>
@@ -64,7 +63,7 @@ export function TypeFilter<TData, TValue>({
 						<CommandGroup>
 							{options.map((option) => {
 								const isSelected = selectedValues.has(
-									option.code,
+									option.value,
 								)
 								return (
 									<CommandItem
@@ -72,10 +71,10 @@ export function TypeFilter<TData, TValue>({
 										onSelect={() => {
 											if (isSelected) {
 												selectedValues.delete(
-													option.code,
+													option.value,
 												)
 											} else {
-												selectedValues.add(option.code)
+												selectedValues.add(option.value)
 											}
 											const filterValues =
 												Array.from(selectedValues)
@@ -99,9 +98,9 @@ export function TypeFilter<TData, TValue>({
 											/>
 										</div>
 										<span>{option.name}</span>
-										{facets?.get(option.code) && (
+										{facets?.get(option.value) && (
 											<span className="ml-auto flex h-4 w-4 items-center justify-center font-mono text-xs">
-												{facets.get(option.code)}
+												{facets.get(option.value)}
 											</span>
 										)}
 									</CommandItem>

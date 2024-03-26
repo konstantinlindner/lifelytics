@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils'
 
 import { Column } from '@tanstack/react-table'
 
-import { CheckIcon, FilterIcon, FilterXIcon } from 'lucide-react'
+import { Building2Icon, CheckIcon } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -41,13 +41,12 @@ export function CityFilter<TData, TValue>({
 				<Button
 					size="sm"
 					variant="outline"
-					className="h-8 border-dashed"
-				>
-					{selectedValues.size > 0 ? (
-						<FilterXIcon className="mr-2 h-4 w-4" />
-					) : (
-						<FilterIcon className="mr-2 h-4 w-4" />
+					className={cn(
+						selectedValues.size > 0 && 'border-red-500',
+						'h-8 border-dashed',
 					)}
+				>
+					<Building2Icon className="mr-2 h-4 w-4" />
 					City
 				</Button>
 			</PopoverTrigger>
