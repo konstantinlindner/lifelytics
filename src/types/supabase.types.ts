@@ -11,33 +11,33 @@ export type Database = {
 		Tables: {
 			cities: {
 				Row: {
-					countryId: number
+					country: number
 					createdAt: string
-					englishName: string
 					id: number
 					localName: string
+					name: string
 					updatedAt: string
 				}
 				Insert: {
-					countryId: number
+					country: number
 					createdAt?: string
-					englishName: string
 					id?: number
 					localName: string
+					name: string
 					updatedAt?: string
 				}
 				Update: {
-					countryId?: number
+					country?: number
 					createdAt?: string
-					englishName?: string
 					id?: number
 					localName?: string
+					name?: string
 					updatedAt?: string
 				}
 				Relationships: [
 					{
 						foreignKeyName: 'public_cities2_countryId_fkey'
-						columns: ['countryId']
+						columns: ['country']
 						isOneToOne: false
 						referencedRelation: 'countries'
 						referencedColumns: ['id']
@@ -52,7 +52,7 @@ export type Database = {
 					isIncome: boolean
 					name: string | null
 					updatedAt: string | null
-					userId: string | null
+					user: string
 				}
 				Insert: {
 					createdAt?: string
@@ -61,7 +61,7 @@ export type Database = {
 					isIncome?: boolean
 					name?: string | null
 					updatedAt?: string | null
-					userId?: string | null
+					user: string
 				}
 				Update: {
 					createdAt?: string
@@ -70,12 +70,12 @@ export type Database = {
 					isIncome?: boolean
 					name?: string | null
 					updatedAt?: string | null
-					userId?: string | null
+					user?: string
 				}
 				Relationships: [
 					{
 						foreignKeyName: 'public_counterparts_userId_fkey'
-						columns: ['userId']
+						columns: ['user']
 						isOneToOne: false
 						referencedRelation: 'profiles'
 						referencedColumns: ['id']
@@ -85,7 +85,7 @@ export type Database = {
 			countries: {
 				Row: {
 					continent: Database['public']['Enums']['continents'] | null
-					currencyId: string | null
+					currency: string | null
 					id: number
 					iso2: string
 					iso3: string
@@ -94,7 +94,7 @@ export type Database = {
 				}
 				Insert: {
 					continent?: Database['public']['Enums']['continents'] | null
-					currencyId?: string | null
+					currency?: string | null
 					id?: number
 					iso2?: string
 					iso3?: string
@@ -103,7 +103,7 @@ export type Database = {
 				}
 				Update: {
 					continent?: Database['public']['Enums']['continents'] | null
-					currencyId?: string | null
+					currency?: string | null
 					id?: number
 					iso2?: string
 					iso3?: string
@@ -113,7 +113,7 @@ export type Database = {
 				Relationships: [
 					{
 						foreignKeyName: 'countries_currency_fkey'
-						columns: ['currencyId']
+						columns: ['currency']
 						isOneToOne: false
 						referencedRelation: 'currencies'
 						referencedColumns: ['id']
@@ -125,27 +125,21 @@ export type Database = {
 					code: string
 					createdAt: string
 					id: string
-					isSymbolPrefix: boolean
 					name: string
-					symbol: string
 					updatedAt: string
 				}
 				Insert: {
 					code?: string
 					createdAt?: string
 					id?: string
-					isSymbolPrefix?: boolean
 					name?: string
-					symbol?: string
 					updatedAt?: string
 				}
 				Update: {
 					code?: string
 					createdAt?: string
 					id?: string
-					isSymbolPrefix?: boolean
 					name?: string
-					symbol?: string
 					updatedAt?: string
 				}
 				Relationships: []
@@ -177,34 +171,65 @@ export type Database = {
 				}
 				Relationships: []
 			}
+			paymentMethodCategories: {
+				Row: {
+					createdAt: string
+					id: number
+					name: string
+					updatedAt: string
+				}
+				Insert: {
+					createdAt?: string
+					id?: number
+					name: string
+					updatedAt?: string
+				}
+				Update: {
+					createdAt?: string
+					id?: number
+					name?: string
+					updatedAt?: string
+				}
+				Relationships: []
+			}
 			paymentMethods: {
 				Row: {
 					createdAt: string
 					id: string
 					name: string
+					paymentMethodCategory: number
 					updatedAt: string
-					userId: string
+					user: string
 				}
 				Insert: {
 					createdAt?: string
 					id?: string
 					name?: string
+					paymentMethodCategory: number
 					updatedAt?: string
-					userId: string
+					user: string
 				}
 				Update: {
 					createdAt?: string
 					id?: string
 					name?: string
+					paymentMethodCategory?: number
 					updatedAt?: string
-					userId?: string
+					user?: string
 				}
 				Relationships: [
 					{
 						foreignKeyName: 'paymentMethods_userId_fkey'
-						columns: ['userId']
+						columns: ['user']
 						isOneToOne: false
 						referencedRelation: 'profiles'
+						referencedColumns: ['id']
+					},
+					{
+						foreignKeyName: 'public_paymentMethods_PaymentMethodCategory_fkey'
+						columns: ['paymentMethodCategory']
+						isOneToOne: false
+						referencedRelation: 'paymentMethodCategories'
 						referencedColumns: ['id']
 					},
 				]
@@ -213,39 +238,39 @@ export type Database = {
 				Row: {
 					avatarUrl: string | null
 					birthDate: string | null
+					city: number | null
 					createdAt: string
 					firstName: string | null
 					id: string
 					lastName: string | null
-					LocationCityId: number | null
 					onboardingCompletedDate: string | null
-					primaryCurrencyId: string | null
+					primaryCurrency: string | null
 					updatedAt: string
 					website: string | null
 				}
 				Insert: {
 					avatarUrl?: string | null
 					birthDate?: string | null
+					city?: number | null
 					createdAt?: string
 					firstName?: string | null
 					id: string
 					lastName?: string | null
-					LocationCityId?: number | null
 					onboardingCompletedDate?: string | null
-					primaryCurrencyId?: string | null
+					primaryCurrency?: string | null
 					updatedAt?: string
 					website?: string | null
 				}
 				Update: {
 					avatarUrl?: string | null
 					birthDate?: string | null
+					city?: number | null
 					createdAt?: string
 					firstName?: string | null
 					id?: string
 					lastName?: string | null
-					LocationCityId?: number | null
 					onboardingCompletedDate?: string | null
-					primaryCurrencyId?: string | null
+					primaryCurrency?: string | null
 					updatedAt?: string
 					website?: string | null
 				}
@@ -259,14 +284,14 @@ export type Database = {
 					},
 					{
 						foreignKeyName: 'profiles_primaryCurrency_fkey'
-						columns: ['primaryCurrencyId']
+						columns: ['primaryCurrency']
 						isOneToOne: false
 						referencedRelation: 'currencies'
 						referencedColumns: ['id']
 					},
 					{
 						foreignKeyName: 'public_profiles_cityId_fkey'
-						columns: ['LocationCityId']
+						columns: ['city']
 						isOneToOne: false
 						referencedRelation: 'cities'
 						referencedColumns: ['id']
@@ -300,78 +325,88 @@ export type Database = {
 			transactions: {
 				Row: {
 					amount: number
-					categoryId: number | null
-					cityId: number
-					counterpartId: string | null
+					category: number | null
+					city: number
+					counterpart: string | null
 					createdAt: string
-					currencyId: string
+					currency: string
 					description: string | null
 					id: string
 					item: string
+					paymentMethod: string
 					transactionDate: string
 					updatedAt: string
-					userId: string
+					user: string
 				}
 				Insert: {
 					amount: number
-					categoryId?: number | null
-					cityId: number
-					counterpartId?: string | null
+					category?: number | null
+					city: number
+					counterpart?: string | null
 					createdAt?: string
-					currencyId: string
+					currency: string
 					description?: string | null
 					id?: string
 					item?: string
+					paymentMethod: string
 					transactionDate: string
 					updatedAt?: string
-					userId: string
+					user: string
 				}
 				Update: {
 					amount?: number
-					categoryId?: number | null
-					cityId?: number
-					counterpartId?: string | null
+					category?: number | null
+					city?: number
+					counterpart?: string | null
 					createdAt?: string
-					currencyId?: string
+					currency?: string
 					description?: string | null
 					id?: string
 					item?: string
+					paymentMethod?: string
 					transactionDate?: string
 					updatedAt?: string
-					userId?: string
+					user?: string
 				}
 				Relationships: [
 					{
 						foreignKeyName: 'public_transactions_category_fkey'
-						columns: ['categoryId']
+						columns: ['category']
 						isOneToOne: false
 						referencedRelation: 'transactionCategories'
 						referencedColumns: ['id']
 					},
 					{
 						foreignKeyName: 'public_transactions_cityId_fkey'
-						columns: ['cityId']
+						columns: ['city']
 						isOneToOne: false
 						referencedRelation: 'cities'
 						referencedColumns: ['id']
 					},
 					{
 						foreignKeyName: 'public_transactions_counterpart_fkey'
-						columns: ['counterpartId']
+						columns: ['counterpart']
 						isOneToOne: false
 						referencedRelation: 'counterparts'
 						referencedColumns: ['id']
 					},
 					{
+						foreignKeyName: 'public_transactions_paymentMethod_fkey'
+						columns: ['paymentMethod']
+						isOneToOne: false
+						referencedRelation: 'paymentMethods'
+						referencedColumns: ['id']
+					},
+					{
 						foreignKeyName: 'transactions_currency_fkey'
-						columns: ['currencyId']
+						columns: ['currency']
 						isOneToOne: false
 						referencedRelation: 'currencies'
 						referencedColumns: ['id']
 					},
 					{
 						foreignKeyName: 'transactions_userId_fkey'
-						columns: ['userId']
+						columns: ['user']
 						isOneToOne: false
 						referencedRelation: 'profiles'
 						referencedColumns: ['id']
@@ -418,9 +453,11 @@ export type Database = {
 	}
 }
 
+type PublicSchema = Database[Extract<keyof Database, 'public'>]
+
 export type Tables<
 	PublicTableNameOrOptions extends
-		| keyof (Database['public']['Tables'] & Database['public']['Views'])
+		| keyof (PublicSchema['Tables'] & PublicSchema['Views'])
 		| { schema: keyof Database },
 	TableName extends PublicTableNameOrOptions extends {
 		schema: keyof Database
@@ -435,10 +472,10 @@ export type Tables<
 	  }
 		? R
 		: never
-	: PublicTableNameOrOptions extends keyof (Database['public']['Tables'] &
-			Database['public']['Views'])
-	? (Database['public']['Tables'] &
-			Database['public']['Views'])[PublicTableNameOrOptions] extends {
+	: PublicTableNameOrOptions extends keyof (PublicSchema['Tables'] &
+			PublicSchema['Views'])
+	? (PublicSchema['Tables'] &
+			PublicSchema['Views'])[PublicTableNameOrOptions] extends {
 			Row: infer R
 	  }
 		? R
@@ -447,7 +484,7 @@ export type Tables<
 
 export type TablesInsert<
 	PublicTableNameOrOptions extends
-		| keyof Database['public']['Tables']
+		| keyof PublicSchema['Tables']
 		| { schema: keyof Database },
 	TableName extends PublicTableNameOrOptions extends {
 		schema: keyof Database
@@ -460,8 +497,8 @@ export type TablesInsert<
 	  }
 		? I
 		: never
-	: PublicTableNameOrOptions extends keyof Database['public']['Tables']
-	? Database['public']['Tables'][PublicTableNameOrOptions] extends {
+	: PublicTableNameOrOptions extends keyof PublicSchema['Tables']
+	? PublicSchema['Tables'][PublicTableNameOrOptions] extends {
 			Insert: infer I
 	  }
 		? I
@@ -470,7 +507,7 @@ export type TablesInsert<
 
 export type TablesUpdate<
 	PublicTableNameOrOptions extends
-		| keyof Database['public']['Tables']
+		| keyof PublicSchema['Tables']
 		| { schema: keyof Database },
 	TableName extends PublicTableNameOrOptions extends {
 		schema: keyof Database
@@ -483,8 +520,8 @@ export type TablesUpdate<
 	  }
 		? U
 		: never
-	: PublicTableNameOrOptions extends keyof Database['public']['Tables']
-	? Database['public']['Tables'][PublicTableNameOrOptions] extends {
+	: PublicTableNameOrOptions extends keyof PublicSchema['Tables']
+	? PublicSchema['Tables'][PublicTableNameOrOptions] extends {
 			Update: infer U
 	  }
 		? U
@@ -493,13 +530,13 @@ export type TablesUpdate<
 
 export type Enums<
 	PublicEnumNameOrOptions extends
-		| keyof Database['public']['Enums']
+		| keyof PublicSchema['Enums']
 		| { schema: keyof Database },
 	EnumName extends PublicEnumNameOrOptions extends { schema: keyof Database }
 		? keyof Database[PublicEnumNameOrOptions['schema']]['Enums']
 		: never = never,
 > = PublicEnumNameOrOptions extends { schema: keyof Database }
 	? Database[PublicEnumNameOrOptions['schema']]['Enums'][EnumName]
-	: PublicEnumNameOrOptions extends keyof Database['public']['Enums']
-	? Database['public']['Enums'][PublicEnumNameOrOptions]
+	: PublicEnumNameOrOptions extends keyof PublicSchema['Enums']
+	? PublicSchema['Enums'][PublicEnumNameOrOptions]
 	: never
