@@ -65,6 +65,12 @@ export async function SignUp({
 	await setLastName({ lastName: lastName })
 }
 
+export async function SignOut() {
+	const { error } = await supabase.auth.signOut({})
+
+	if (error) return error
+}
+
 // setup the store
 export async function InitializeStore() {
 	// set database

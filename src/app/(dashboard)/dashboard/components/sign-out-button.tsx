@@ -2,9 +2,7 @@
 
 import { useRouter } from 'next/navigation'
 
-import { createBrowserClient } from '@supabase/ssr'
-
-import type { Database } from '@/types/supabase.types'
+import { SignOut } from '@/store/store-helper'
 
 import { toast } from 'sonner'
 
@@ -18,28 +16,19 @@ interface SignOutButtonProps {
 	isMenuItem?: boolean
 }
 
-export default function SignOutButton({
-	isMenuItem = false,
-}: SignOutButtonProps) {
+export default function SignOutButton({ isMenuItem }: SignOutButtonProps) {
 	const router = useRouter()
-	const supabase = createBrowserClient<Database>(
-		process.env.NEXT_PUBLIC_SUPABASE_URL!,
-		process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-	)
 
 	const handleSignOut = async () => {
-		try {
-			const { error } = await supabase.auth.signOut({})
+		const error = await SignOut()
 
-			if (error) {
-				console.log(error)
-				toast(error.message)
-			}
-
-			router.refresh()
-		} catch (error) {
-			console.log(error)
+		if (error) {
+			console.error(error)
+			toast(error.message)
+			return
 		}
+
+		router.refresh()
 	}
 
 	return isMenuItem ? (
