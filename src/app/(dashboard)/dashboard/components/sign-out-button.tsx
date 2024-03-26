@@ -23,7 +23,7 @@ export default function SignOutButton({ isMenuItem }: SignOutButtonProps) {
 		const error = await SignOut()
 
 		if (error) {
-			console.error(error)
+			console.error('Something went wrong signing out', error)
 			toast(error.message)
 			return
 		}
