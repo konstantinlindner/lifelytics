@@ -5,6 +5,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
 import { SignIn } from '@/store/store-helper'
+
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
@@ -46,7 +47,7 @@ export default function SignInForm() {
 		})
 
 		if (error) {
-			console.log(error)
+			console.error('Something went wrong signing in:', error)
 			toast(error.message)
 			setIsLoading(false)
 		}
