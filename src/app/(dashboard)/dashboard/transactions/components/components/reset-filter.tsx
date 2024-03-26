@@ -4,13 +4,11 @@ import { XIcon } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 
-interface ResetFilterProps<TData, TValue> {
+interface ResetFilterProps<TData> {
 	table: Table<TData>
 }
 
-export function ResetFilter<TData, TValue>({
-	table,
-}: ResetFilterProps<TData, TValue>) {
+export function ResetFilter<TData>({ table }: ResetFilterProps<TData>) {
 	const isFiltered = table.getState().columnFilters.length > 0
 
 	return (
