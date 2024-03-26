@@ -66,6 +66,7 @@ export type Transaction = {
 	transactionDate: Date
 	createdAt: string
 	updatedAt: string
+	isIncome: boolean | undefined
 	counterpart: Counterpart | undefined
 	currency: Currency | undefined
 	city: City | undefined
