@@ -878,7 +878,7 @@ export async function addTransaction({
 			])
 			.select()
 
-		if (error) throw error
+		if (error) return error
 
 		if (newTransaction) {
 			setTransactions([
