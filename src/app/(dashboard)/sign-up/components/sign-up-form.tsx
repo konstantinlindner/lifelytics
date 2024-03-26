@@ -5,6 +5,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
 import { SignUp } from '@/store/store-helper'
+
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
@@ -74,7 +75,7 @@ function SignUpForm() {
 		})
 
 		if (error) {
-			console.error(error)
+			console.error('Somethign went wrong signing up:', error)
 			toast(error.message)
 			setIsLoading(false)
 		}
