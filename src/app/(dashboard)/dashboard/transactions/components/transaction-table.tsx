@@ -85,9 +85,9 @@ export function TransactionTable<TData, TValue>({
 
 					<TypeFilter column={table.getColumn('type')} />
 					<CategoryFilter column={table.getColumn('category')} />
-					<CurrencyFilter column={table.getColumn('currency')} />
 					<CityFilter column={table.getColumn('city')} />
 					<CountryFilter column={table.getColumn('country')} />
+					<CurrencyFilter column={table.getColumn('currency')} />
 
 					<ResetFilter table={table} />
 				</div>
