@@ -32,6 +32,7 @@ import { CityFilter } from './components/city-filter'
 import { CountryFilter } from './components/country-filter'
 import { CurrencyFilter } from './components/currency-filter'
 import { Pagination } from './components/pagination'
+import { PaymentMethodFilter } from './components/payment-method-filter'
 import { ResetFilter } from './components/reset-filter'
 import { Search } from './components/search'
 import { TypeFilter } from './components/type-filter'
@@ -85,6 +86,7 @@ export function TransactionTable<TData, TValue>({
 
 					<TypeFilter column={table.getColumn('type')} />
 					<CategoryFilter column={table.getColumn('category')} />
+					<PaymentMethodFilter column={table.getColumn('payment')} />
 					<CityFilter column={table.getColumn('city')} />
 					<CountryFilter column={table.getColumn('country')} />
 					<CurrencyFilter column={table.getColumn('currency')} />
