@@ -108,7 +108,7 @@ export default function Profile() {
 				? toast('Please check your inbox to confirm change of email')
 				: toast('Successfully saved changes')
 		} catch (error) {
-			console.log(error)
+			console.error('Something went wrong saving the changes', error)
 			toast('Something went wrong saving the changes')
 		}
 
