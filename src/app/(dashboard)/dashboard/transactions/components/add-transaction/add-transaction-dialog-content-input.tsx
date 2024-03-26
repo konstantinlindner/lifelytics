@@ -66,7 +66,6 @@ const FormSchema = z.object({
 	paymentMethod: z.string({
 		required_error: 'Please select a payment method',
 	}),
-	worked: z.boolean().default(false),
 	city: z.coerce.number({
 		required_error: 'Please select a city',
 	}),
@@ -96,10 +95,7 @@ export default function AddTransactionDialogContentInput({
 		},
 	})
 
-	function onSubmit(data: z.infer<typeof FormSchema>) {
-		// TODO change toast
-		toast(JSON.stringify(data, null, 2))
-
+	async function onSubmit(data: z.infer<typeof FormSchema>) {
 		const category = transactionCategories?.find(
 			(category) => category.id === data.category,
 		)
@@ -134,7 +130,7 @@ export default function AddTransactionDialogContentInput({
 			return
 		}
 
-		addTransaction({
+		const error = await addTransaction({
 			date: data.transactionDate,
 			item: data.item,
 			amount: data.amount,
@@ -145,6 +141,13 @@ export default function AddTransactionDialogContentInput({
 			category: category,
 			description: data.description,
 		})
+
+		if (error) {
+			toast(error.message)
+			return
+		}
+
+		toast('Transaction added successfully')
 	}
 
 	return (
@@ -432,7 +435,7 @@ export default function AddTransactionDialogContentInput({
 									</PopoverTrigger>
 									<PopoverContent className="w-[200px] p-0">
 										<Command>
-											<CommandInput placeholder="Search currency..." />
+											<CommandInput placeholder="Search..." />
 											<CommandEmpty>
 												No payment method found.
 											</CommandEmpty>
@@ -440,16 +443,16 @@ export default function AddTransactionDialogContentInput({
 												{paymentMethods?.map(
 													(paymentMethod) => (
 														<CommandItem
+															key={
+																paymentMethod.id
+															}
 															value={
 																paymentMethod.name ??
 																''
 															}
-															key={
-																paymentMethod.id
-															}
 															onSelect={() => {
 																form.setValue(
-																	'currency',
+																	'paymentMethod',
 																	paymentMethod.id ??
 																		'',
 																)
@@ -473,24 +476,6 @@ export default function AddTransactionDialogContentInput({
 									</PopoverContent>
 								</Popover>
 								<FormMessage />
-							</FormItem>
-						)}
-					/>
-
-					<FormField
-						control={form.control}
-						name="worked"
-						render={({ field }) => (
-							<FormItem className="flex flex-row items-start space-x-3 space-y-0">
-								<FormControl>
-									<Checkbox
-										checked={field.value}
-										onCheckedChange={field.onChange}
-									/>
-								</FormControl>
-								<div className="space-y-1 leading-none">
-									<FormLabel>Worked</FormLabel>
-								</div>
 							</FormItem>
 						)}
 					/>
