@@ -128,8 +128,18 @@ export const transactionColumns: ColumnDef<Transaction>[] = [
 		},
 	},
 	{
+		id: 'payment',
+		accessorKey: 'paymentMethod.name',
+		header: ({ column }) => (
+			<ColumnHeader column={column} title="Payment" />
+		),
+		filterFn: (row, id, value) => {
+			return value.includes(row.getValue(id))
+		},
+	},
+	{
 		id: 'city',
-		accessorKey: 'city.englishName',
+		accessorKey: 'city.name',
 		header: ({ column }) => <ColumnHeader column={column} title="City" />,
 		filterFn: (row, id, value) => {
 			return value.includes(row.getValue(id))
