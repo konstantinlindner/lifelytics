@@ -1,4 +1,9 @@
-import { City, Currency, TransactionCategory } from '@/types/globals.types'
+import {
+	City,
+	Currency,
+	PaymentMethod,
+	TransactionCategory,
+} from '@/types/globals.types'
 
 import { useDatabase, useUser } from '@/store/use-store'
 
@@ -108,6 +113,7 @@ export async function InitializeStore() {
 	const setPrimaryCurrency = useUser.getState().setPrimaryCurrency
 	const setTransactions = useUser.getState().setTransactions
 	const setCounterparts = useUser.getState().setCounterparts
+	const setPaymentMethods = useUser.getState().setPaymentMethods
 
 	const session = await fetchSession()
 
@@ -129,16 +135,14 @@ export async function InitializeStore() {
 		setWebsite(profile.website)
 		setCreatedAt(profile.createdAt)
 		setUpdatedAt(profile.updatedAt)
-		const userCity = cities?.find(
-			(city) => city.id === profile.LocationCityId,
-		)
+		const userCity = cities?.find((city) => city.id === profile.city)
 		setCity(userCity)
 		setCountry(
-			countries?.find((country) => country.id === userCity?.countryId),
+			countries?.find((country) => country.id === userCity?.country),
 		)
 		setPrimaryCurrency(
 			currencies?.find(
-				(currency) => currency.id === profile.primaryCurrencyId,
+				(currency) => currency.id === profile.primaryCurrency,
 			),
 		)
 	}
@@ -147,6 +151,10 @@ export async function InitializeStore() {
 
 	if (counterparts) setCounterparts(counterparts)
 
+	const paymentMethods = await fetchPaymentMethods()
+
+	if (paymentMethods) setPaymentMethods(paymentMethods)
+
 	const transactions = await fetchTransactions()
 
 	if (transactions) {
@@ -154,24 +162,29 @@ export async function InitializeStore() {
 			const counterpart = useUser
 				.getState()
 				.counterparts?.find(
-					(counterpart) =>
-						counterpart.id === transaction.counterpartId,
+					(counterpart) => counterpart.id === transaction.counterpart,
 				)
 			const currency = useDatabase
 				.getState()
 				.currencies?.find(
-					(currency) => currency.id === transaction.currencyId,
+					(currency) => currency.id === transaction.currency,
 				)
 			const city = useDatabase
 				.getState()
-				.cities?.find((city) => city.id === transaction.cityId)
+				.cities?.find((city) => city.id === transaction.city)
 			const country = useDatabase
 				.getState()
-				.countries?.find((country) => country.id === city?.countryId)
+				.countries?.find((country) => country.id === city?.country)
 			const category = useDatabase
 				.getState()
 				.transactionCategories?.find(
-					(category) => category.id === transaction.categoryId,
+					(category) => category.id === transaction.category,
+				)
+			const paymentMethod = useUser
+				.getState()
+				.paymentMethods?.find(
+					(paymentMethod) =>
+						paymentMethod.id === transaction.paymentMethod,
 				)
 
 			return {
@@ -188,6 +201,7 @@ export async function InitializeStore() {
 				city: city,
 				country: country,
 				category: category,
+				paymentMethod: paymentMethod,
 			}
 		})
 		setTransactions(formattedTransactions)
@@ -264,6 +278,25 @@ async function fetchCounterparts() {
 		return counterparts
 	} catch (error) {
 		console.error('Error fetching counterparts:', error)
+	}
+}
+
+async function fetchPaymentMethods() {
+	try {
+		const { data: paymentMethods, error } = await supabase
+			.from('paymentMethods')
+			.select()
+
+		if (error) throw error
+
+		if (!paymentMethods) {
+			console.error('No counterparts found')
+			return
+		}
+
+		return paymentMethods
+	} catch (error) {
+		console.error('Error fetching payment methods:', error)
 	}
 }
 
@@ -668,7 +701,7 @@ export async function setPrimaryCurrency({
 
 		const { error } = await supabase
 			.from('profiles')
-			.update({ primaryCurrencyId: primaryCurrency.id })
+			.update({ primaryCurrency: primaryCurrency.id })
 			.eq('id', userId)
 
 		if (error) throw error
@@ -691,6 +724,13 @@ async function addCounterpart({
 	isIncome,
 	isExpense,
 }: AddCounterpartProps) {
+	const user = useUser.getState().id
+
+	if (!user) {
+		console.error('No user ID found')
+		return
+	}
+
 	const setCounterparts = useUser.getState().setCounterparts
 
 	const existingCounterparts = useUser.getState().counterparts
@@ -705,7 +745,7 @@ async function addCounterpart({
 				.from('counterparts')
 				.insert([
 					{
-						userId: useUser.getState().id,
+						user: user,
 						name: name,
 						isIncome: isIncome,
 						isExpense: isExpense,
@@ -729,13 +769,20 @@ async function addCounterpart({
 		existingMatchingCounterpart.isIncome !== isIncome ||
 		existingMatchingCounterpart.isExpense !== isExpense
 	) {
+		const updateData: { isIncome?: boolean; isExpense?: boolean } = {}
+
+		if (existingMatchingCounterpart.isIncome !== isIncome) {
+			updateData.isIncome = isIncome
+		}
+
+		if (existingMatchingCounterpart.isExpense !== isExpense) {
+			updateData.isExpense = isExpense
+		}
+
 		try {
 			const { data: updatedCounterpart, error } = await supabase
 				.from('counterparts')
-				.update({
-					isIncome: isIncome,
-					isExpense: isExpense,
-				})
+				.update(updateData)
 				.eq('id', existingMatchingCounterpart.id)
 				.select()
 
@@ -767,6 +814,7 @@ type AddTransactionProps = {
 	currency: Currency
 	city: City
 	category: TransactionCategory
+	paymentMethod: PaymentMethod
 }
 
 export async function addTransaction({
@@ -778,13 +826,21 @@ export async function addTransaction({
 	currency,
 	city,
 	category,
+	paymentMethod,
 }: AddTransactionProps) {
+	const user = useUser.getState().id
+
+	if (!user) {
+		console.error('No user ID found')
+		return
+	}
+
 	const setTransactions = useUser.getState().setTransactions
 
 	const existingTransactions = useUser.getState().transactions
 	const country = useDatabase
 		.getState()
-		.countries?.find((country) => country.id === city.countryId)
+		.countries?.find((country) => country.id === city.country)
 
 	await addCounterpart({
 		name: counterpartName,
@@ -808,15 +864,16 @@ export async function addTransaction({
 			.from('transactions')
 			.insert([
 				{
-					userId: useUser.getState().id ?? '',
+					user: user,
 					item: item,
 					amount: amount,
-					cityId: city.id,
-					currencyId: currency.id,
+					city: city.id,
+					currency: currency.id,
 					transactionDate: dayjs(date).format('YYYY-MM-DD'),
 					description: description,
-					counterpartId: counterpart.id,
-					categoryId: category.id,
+					counterpart: counterpart.id,
+					category: category.id,
+					paymentMethod: paymentMethod.id,
 				},
 			])
 			.select()
@@ -840,6 +897,7 @@ export async function addTransaction({
 					city: city,
 					country: country,
 					category: category,
+					paymentMethod: paymentMethod,
 				},
 			])
 		}
