@@ -3,6 +3,7 @@ import {
 	Counterpart,
 	Country,
 	Currency,
+	PaymentMethod,
 	TransactionCategory,
 } from '@/types/globals.types'
 
@@ -56,6 +57,8 @@ type User = {
 	setCounterparts: (counterparts: Counterpart[]) => void
 	transactions: Transaction[]
 	setTransactions: (transactions: Transaction[]) => void
+	paymentMethods: PaymentMethod[]
+	setPaymentMethods: (paymentMethods: PaymentMethod[]) => void
 }
 
 export type Transaction = {
@@ -72,6 +75,7 @@ export type Transaction = {
 	city: City | undefined
 	country: Country | undefined
 	category: TransactionCategory | undefined
+	paymentMethod: PaymentMethod | undefined
 }
 
 export const useDatabase = create<Database>()((set) => ({
@@ -163,5 +167,9 @@ export const useUser = create<User>((set) => ({
 	transactions: [],
 	setTransactions: (transactions: Transaction[]) => {
 		set({ transactions })
+	},
+	paymentMethods: [],
+	setPaymentMethods: (paymentMethods: PaymentMethod[]) => {
+		set({ paymentMethods })
 	},
 }))
