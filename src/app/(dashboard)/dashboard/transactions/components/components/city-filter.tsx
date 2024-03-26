@@ -58,7 +58,7 @@ export function CityFilter<TData, TValue>({
 						<CommandGroup>
 							{cities.map((option) => {
 								const isSelected = selectedValues.has(
-									option.englishName,
+									option.name,
 								)
 								return (
 									<CommandItem
@@ -66,12 +66,10 @@ export function CityFilter<TData, TValue>({
 										onSelect={() => {
 											if (isSelected) {
 												selectedValues.delete(
-													option.englishName,
+													option.name,
 												)
 											} else {
-												selectedValues.add(
-													option.englishName,
-												)
+												selectedValues.add(option.name)
 											}
 											const filterValues =
 												Array.from(selectedValues)
@@ -94,10 +92,10 @@ export function CityFilter<TData, TValue>({
 												className={cn('h-4 w-4')}
 											/>
 										</div>
-										<span>{option.englishName}</span>
-										{facets?.get(option.englishName) && (
+										<span>{option.name}</span>
+										{facets?.get(option.name) && (
 											<span className="ml-auto flex h-4 w-4 items-center justify-center font-mono text-xs">
-												{facets.get(option.englishName)}
+												{facets.get(option.name)}
 											</span>
 										)}
 									</CommandItem>
