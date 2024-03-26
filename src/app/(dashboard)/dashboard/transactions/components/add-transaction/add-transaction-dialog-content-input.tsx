@@ -1,7 +1,7 @@
 'use client'
 
 import { addTransaction } from '@/store/store-helper'
-import { useDatabase } from '@/store/use-store'
+import { useDatabase, useUser } from '@/store/use-store'
 
 import { cn } from '@/lib/utils'
 
@@ -63,6 +63,9 @@ const FormSchema = z.object({
 	currency: z.string({
 		required_error: 'Please select a currency',
 	}),
+	paymentMethod: z.string({
+		required_error: 'Please select a payment method',
+	}),
 	worked: z.boolean().default(false),
 	city: z.coerce.number({
 		required_error: 'Please select a city',
@@ -82,6 +85,7 @@ export default function AddTransactionDialogContentInput({
 	const transactionCategories = useDatabase(
 		(state) => state.transactionCategories,
 	)
+	const paymentMethods = useUser((state) => state.paymentMethods)
 
 	const form = useForm<z.infer<typeof FormSchema>>({
 		resolver: zodResolver(FormSchema),
@@ -106,6 +110,10 @@ export default function AddTransactionDialogContentInput({
 
 		const city = cities?.find((city) => city.id === data.city)
 
+		const paymentMethod = paymentMethods?.find(
+			(paymentMethod) => paymentMethod.id === data.paymentMethod,
+		)
+
 		if (!category) {
 			toast('Error applying transaction category')
 			return
@@ -121,12 +129,18 @@ export default function AddTransactionDialogContentInput({
 			return
 		}
 
+		if (!paymentMethod) {
+			toast('Error applying payment method')
+			return
+		}
+
 		addTransaction({
 			date: data.transactionDate,
 			item: data.item,
 			amount: data.amount,
 			counterpartName: data.counterpart,
 			currency: currency,
+			paymentMethod: paymentMethod,
 			city: city,
 			category: category,
 			description: data.description,
@@ -389,6 +403,82 @@ export default function AddTransactionDialogContentInput({
 
 					<FormField
 						control={form.control}
+						name="paymentMethod"
+						render={({ field }) => (
+							<FormItem className="flex flex-col">
+								<FormLabel>Payment method</FormLabel>
+								<Popover>
+									<PopoverTrigger asChild>
+										<FormControl>
+											<Button
+												variant="outline"
+												role="combobox"
+												className={cn(
+													'w-[200px] justify-between',
+													!field.value &&
+														'text-muted-foreground',
+												)}
+											>
+												{field.value
+													? paymentMethods?.find(
+															(paymentMethod) =>
+																paymentMethod.id ===
+																field.value,
+													  )?.name
+													: 'Select one'}
+												<ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+											</Button>
+										</FormControl>
+									</PopoverTrigger>
+									<PopoverContent className="w-[200px] p-0">
+										<Command>
+											<CommandInput placeholder="Search currency..." />
+											<CommandEmpty>
+												No payment method found.
+											</CommandEmpty>
+											<CommandGroup className="max-h-[20rem] overflow-y-auto">
+												{paymentMethods?.map(
+													(paymentMethod) => (
+														<CommandItem
+															value={
+																paymentMethod.name ??
+																''
+															}
+															key={
+																paymentMethod.id
+															}
+															onSelect={() => {
+																form.setValue(
+																	'currency',
+																	paymentMethod.id ??
+																		'',
+																)
+															}}
+														>
+															<CheckIcon
+																className={cn(
+																	'mr-2 h-4 w-4',
+																	paymentMethod.id ===
+																		field.value
+																		? 'opacity-100'
+																		: 'opacity-0',
+																)}
+															/>
+															{paymentMethod.name}
+														</CommandItem>
+													),
+												)}
+											</CommandGroup>
+										</Command>
+									</PopoverContent>
+								</Popover>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+
+					<FormField
+						control={form.control}
 						name="worked"
 						render={({ field }) => (
 							<FormItem className="flex flex-row items-start space-x-3 space-y-0">
@@ -428,7 +518,7 @@ export default function AddTransactionDialogContentInput({
 															(city) =>
 																city.id ===
 																field.value,
-													  )?.englishName
+													  )?.name
 													: 'Select city'}
 												<ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
 											</Button>
@@ -443,10 +533,7 @@ export default function AddTransactionDialogContentInput({
 											<CommandGroup className="max-h-[20rem] overflow-y-auto">
 												{cities?.map((city) => (
 													<CommandItem
-														value={
-															city.englishName ??
-															''
-														}
+														value={city.name ?? ''}
 														key={city.id}
 														onSelect={() => {
 															form.setValue(
@@ -464,7 +551,7 @@ export default function AddTransactionDialogContentInput({
 																	: 'opacity-0',
 															)}
 														/>
-														{city.englishName}
+														{city.name}
 													</CommandItem>
 												))}
 											</CommandGroup>
