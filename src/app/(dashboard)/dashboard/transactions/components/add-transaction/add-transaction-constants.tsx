@@ -1,7 +1,9 @@
 import {
+	BriefcaseBusinessIcon,
 	CarIcon,
 	CircleDollarSignIcon,
 	CoinsIcon,
+	CreditCardIcon,
 	DramaIcon,
 	GiftIcon,
 	HeartIcon,
@@ -60,13 +62,21 @@ export const screens = [
 	{
 		id: 5,
 		parent: 2,
+		title: 'Consulting',
+		subtitle: 'Enter the details below.',
+		transactionCategoryId: 16,
+		icon: <BriefcaseBusinessIcon />,
+	},
+	{
+		id: 6,
+		parent: 2,
 		title: 'Sale',
 		subtitle: 'Enter the details below.',
 		transactionCategoryId: 11,
 		icon: <ReceiptIcon />,
 	},
 	{
-		id: 6,
+		id: 7,
 		parent: 2,
 		title: 'Gift',
 		subtitle: 'Enter the details below.',
@@ -74,7 +84,7 @@ export const screens = [
 		icon: <GiftIcon />,
 	},
 	{
-		id: 7,
+		id: 8,
 		parent: 2,
 		title: 'Tax return',
 		subtitle: 'Enter the details below.',
@@ -82,7 +92,7 @@ export const screens = [
 		icon: <Undo2Icon />,
 	},
 	{
-		id: 8,
+		id: 9,
 		parent: 2,
 		title: 'Realized investment',
 		subtitle: 'Enter the details below.',
@@ -90,15 +100,24 @@ export const screens = [
 		icon: <PercentIcon />,
 	},
 	{
-		id: 9,
+		id: 10,
+		parent: 2,
+		title: 'Cashback',
+		subtitle: 'Enter the details below.',
+		transactionCategoryId: 17,
+		icon: <CreditCardIcon />,
+	},
+	{
+		id: 11,
 		parent: 2,
 		title: 'Other income',
 		subtitle: 'Enter the details below.',
 		transactionCategoryId: 15,
 		icon: <CircleDollarSignIcon />,
 	},
+	// expenses
 	{
-		id: 10,
+		id: 12,
 		parent: 3,
 		title: 'Home',
 		subtitle: 'Enter the details below.',
@@ -106,7 +125,7 @@ export const screens = [
 		icon: <HomeIcon />,
 	},
 	{
-		id: 11,
+		id: 13,
 		parent: 3,
 		title: 'Food and drink',
 		subtitle: 'Enter the details below.',
@@ -114,7 +133,7 @@ export const screens = [
 		icon: <UtensilsCrossedIcon />,
 	},
 	{
-		id: 12,
+		id: 14,
 		parent: 3,
 		title: 'Transportation',
 		subtitle: 'Enter the details below.',
@@ -122,7 +141,7 @@ export const screens = [
 		icon: <CarIcon />,
 	},
 	{
-		id: 13,
+		id: 15,
 		parent: 3,
 		title: 'Entertainment',
 		subtitle: 'Enter the details below.',
@@ -130,7 +149,7 @@ export const screens = [
 		icon: <DramaIcon />,
 	},
 	{
-		id: 14,
+		id: 16,
 		parent: 3,
 		title: 'Health and wellness',
 		subtitle: 'Enter the details below.',
@@ -138,7 +157,7 @@ export const screens = [
 		icon: <HeartIcon />,
 	},
 	{
-		id: 15,
+		id: 17,
 		parent: 3,
 		title: 'Shopping',
 		subtitle: 'Enter the details below.',
@@ -146,7 +165,7 @@ export const screens = [
 		icon: <ShoppingBagIcon />,
 	},
 	{
-		id: 16,
+		id: 18,
 		parent: 3,
 		title: 'Savings and investments',
 		subtitle: 'Enter the details below.',
@@ -154,7 +173,7 @@ export const screens = [
 		icon: <PercentIcon />,
 	},
 	{
-		id: 17,
+		id: 19,
 		parent: 3,
 		title: 'Subscriptions',
 		subtitle: 'Enter the details below.',
@@ -162,7 +181,7 @@ export const screens = [
 		icon: <RotateCwIcon />,
 	},
 	{
-		id: 18,
+		id: 20,
 		parent: 3,
 		title: 'Other expenses',
 		subtitle: 'Enter the details below.',
