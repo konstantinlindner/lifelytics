@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils'
 
 import { Column } from '@tanstack/react-table'
 
-import { BadgeDollarSignIcon, CheckIcon } from 'lucide-react'
+import { CheckIcon, CircleDollarSignIcon } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -46,7 +46,7 @@ export function CurrencyFilter<TData, TValue>({
 						'h-8 border-dashed',
 					)}
 				>
-					<BadgeDollarSignIcon className="mr-2 h-4 w-4" />
+					<CircleDollarSignIcon className="mr-2 h-4 w-4" />
 					Currency
 				</Button>
 			</PopoverTrigger>
