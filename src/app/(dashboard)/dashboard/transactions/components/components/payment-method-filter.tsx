@@ -65,7 +65,9 @@ export function PaymentMethodFilter<TData, TValue>({
 										key={option.id}
 										onSelect={() => {
 											if (isSelected) {
-												selectedValues.delete(option.id)
+												selectedValues.delete(
+													option.name,
+												)
 											} else {
 												selectedValues.add(option.name)
 											}
