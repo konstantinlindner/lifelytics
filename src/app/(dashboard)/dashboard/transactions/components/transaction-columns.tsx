@@ -9,7 +9,11 @@ import { ColumnHeader } from '@/app/(dashboard)/dashboard/transactions/component
 import { ColumnDef } from '@tanstack/react-table'
 import dayjs from 'dayjs'
 
-import { MoreHorizontalIcon } from 'lucide-react'
+import {
+	ChevronDownIcon,
+	ChevronUpIcon,
+	MoreHorizontalIcon,
+} from 'lucide-react'
 
 import {
 	AlertDialog,
@@ -168,6 +172,26 @@ export const transactionColumns: ColumnDef<Transaction>[] = [
 		),
 		filterFn: (row, id, value) => {
 			return value.includes(row.getValue(id))
+		},
+	},
+	{
+		id: 'expand',
+		cell: ({ row }) => {
+			return (
+				<Button
+					onClick={() => row.toggleExpanded()}
+					variant="ghost"
+					className="flex h-8 w-8 p-0 data-[state=open]:bg-muted"
+				>
+					{row.getIsExpanded() ? (
+						<ChevronUpIcon className="h-4 w-4" />
+					) : (
+						<ChevronDownIcon className="h-4 w-4" />
+					)}
+
+					<span className="sr-only">Expand row</span>
+				</Button>
+			)
 		},
 	},
 	{
