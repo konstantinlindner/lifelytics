@@ -5,6 +5,8 @@ import { useState } from 'react'
 import {
 	ColumnDef,
 	ColumnFiltersState,
+	ExpandedState,
+	RowSelectionState,
 	SortingState,
 	VisibilityState,
 	flexRender,
@@ -49,10 +51,12 @@ export function TransactionTable<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
 	const [sorting, setSorting] = useState<SortingState>([])
 	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
-	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
-		{},
-	)
-	const [rowSelection, setRowSelection] = useState({})
+	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
+		country: false,
+		currency: false,
+	})
+	const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
+	const [expanded, setExpanded] = useState<ExpandedState>({})
 
 	const table = useReactTable({
 		data,
@@ -62,8 +66,10 @@ export function TransactionTable<TData, TValue>({
 			columnFilters,
 			columnVisibility,
 			rowSelection,
+			expanded,
 		},
 		enableRowSelection: true,
+		onExpandedChange: setExpanded,
 		getCoreRowModel: getCoreRowModel(),
 		getPaginationRowModel: getPaginationRowModel(),
 		onSortingChange: setSorting,
@@ -119,21 +125,59 @@ export function TransactionTable<TData, TValue>({
 					<TableBody>
 						{table.getRowModel().rows?.length ? (
 							table.getRowModel().rows.map((row) => (
-								<TableRow
-									key={row.id}
-									data-state={
-										row.getIsSelected() && 'selected'
-									}
-								>
-									{row.getVisibleCells().map((cell) => (
-										<TableCell key={cell.id}>
-											{flexRender(
-												cell.column.columnDef.cell,
-												cell.getContext(),
-											)}
-										</TableCell>
-									))}
-								</TableRow>
+								<>
+									<TableRow
+										key={row.id}
+										data-state={
+											row.getIsSelected() && 'selected'
+										}
+									>
+										{row.getVisibleCells().map((cell) => (
+											<TableCell key={cell.id}>
+												{flexRender(
+													cell.column.columnDef.cell,
+													cell.getContext(),
+												)}
+											</TableCell>
+										))}
+									</TableRow>
+
+									{typeof expanded === 'object' &&
+										expanded?.[row.id] === true && (
+											<TableRow>
+												<TableCell
+													colSpan={columns.length}
+													className="p-10"
+												>
+													<p className="mb-4">
+														Currency:{' '}
+														<span className="font-bold">
+															{row.getValue(
+																'currency',
+															)}
+														</span>
+													</p>
+
+													<p className="mb-2">
+														Location:{' '}
+														<span className="font-bold">
+															{row.getValue(
+																'city',
+															) === 'Online'
+																? row.getValue(
+																		'city',
+																  )
+																: `${row.getValue(
+																		'city',
+																  )}, ${row.getValue(
+																		'country',
+																  )}`}
+														</span>
+													</p>
+												</TableCell>
+											</TableRow>
+										)}
+								</>
 							))
 						) : (
 							<TableRow>
