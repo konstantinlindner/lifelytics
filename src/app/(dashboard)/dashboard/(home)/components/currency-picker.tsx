@@ -61,7 +61,7 @@ export default function CurrencyPicker() {
 						{currencies?.map((currency) => (
 							<CommandItem
 								key={currency.id}
-								value={currency.name ?? ''}
+								value={currency.name}
 								onSelect={() => {
 									setSelectedCurrency(currency.id)
 								}}
