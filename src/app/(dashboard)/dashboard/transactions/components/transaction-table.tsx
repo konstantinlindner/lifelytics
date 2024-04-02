@@ -99,7 +99,7 @@ export function TransactionTable<TData, TValue>({
 
 					<ResetFilter table={table} />
 				</div>
-				<AddTransactionDialog showButton />
+				<AddTransactionDialog button />
 			</div>
 			<div className="rounded-md border">
 				<Table>

@@ -61,7 +61,7 @@ export default function CommandModal() {
 				<CommandList>
 					<CommandEmpty>No results found.</CommandEmpty>
 					<CommandGroup heading="Suggestions">
-						<AddTransactionDialog showCommandItem />
+						<AddTransactionDialog commandItem />
 						<CommandItem>
 							<CalendarIcon className="mr-2 h-4 w-4" />
 							<span>Calendar</span>
