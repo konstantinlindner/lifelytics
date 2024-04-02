@@ -80,7 +80,10 @@ export const transactionColumns: ColumnDef<Transaction>[] = [
 			return (
 				<Badge
 					variant="outline"
-					className={cn(isIncome ? 'bg-green-100' : 'bg-red-100')}
+					className={cn(
+						'text-black',
+						isIncome ? 'bg-green-100' : 'bg-red-100',
+					)}
 				>
 					{isIncome ? 'Income' : 'Expense'}
 				</Badge>
