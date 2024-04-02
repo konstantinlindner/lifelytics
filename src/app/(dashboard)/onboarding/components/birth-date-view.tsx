@@ -2,6 +2,8 @@ import { useState } from 'react'
 
 import { setBirthDate } from '@/store/store-helper'
 
+import dayjs from 'dayjs'
+
 import { Button } from '@/components/ui/button'
 
 import DatePicker from '@/components/date-picker'
@@ -38,7 +40,7 @@ export default function BirthDateView({
 		<section className="flex w-full flex-col items-center space-y-10">
 			<DatePicker
 				fromYear={1900}
-				toYear={2024}
+				toYear={dayjs().year()}
 				handleDateChange={setSelectedBirthDate}
 			/>
 
