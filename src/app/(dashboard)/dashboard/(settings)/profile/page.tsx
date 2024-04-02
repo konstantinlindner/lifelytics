@@ -325,8 +325,7 @@ export default function Profile() {
 														(currency) => (
 															<CommandItem
 																value={
-																	currency.name ??
-																	''
+																	currency.name
 																}
 																key={
 																	currency.id
@@ -348,7 +347,7 @@ export default function Profile() {
 																			: 'opacity-0',
 																	)}
 																/>
-																{currency.code}
+																{currency.name}
 															</CommandItem>
 														),
 													)}
