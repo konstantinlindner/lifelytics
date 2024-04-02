@@ -713,6 +713,51 @@ export async function setPrimaryCurrency({
 	}
 }
 
+type SetLocationProps = {
+	city: City
+}
+
+export async function setLocation({ city }: SetLocationProps) {
+	const userId = useUser.getState().id
+
+	if (!userId) {
+		console.error('No user ID found')
+		return
+	}
+
+	const setCity = useUser.getState().setCity
+	const setCountry = useUser.getState().setCountry
+
+	const previousCity = useUser.getState().city
+	const previousCountry = useUser.getState().country
+	const newCountry = useDatabase
+		.getState()
+		.countries?.find((country) => country.id === city.country)
+
+	// optimistically set the state
+	setCity(city)
+	setCountry(newCountry)
+
+	try {
+		if (city === previousCity) {
+			throw new Error('The new city is the same as the current one.')
+		}
+
+		const { error } = await supabase
+			.from('profiles')
+			.update({ city: city.id })
+			.eq('id', userId)
+
+		if (error) throw error
+	} catch (error) {
+		// if there's an error, revert to previous state
+		setCity(previousCity)
+		setCountry(previousCountry)
+
+		console.error('Error updating location:', error)
+	}
+}
+
 type AddCounterpartProps = {
 	name: string
 	isIncome: boolean
