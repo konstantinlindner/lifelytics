@@ -22,7 +22,7 @@ export default function LoadingIndicator({
 
 	return (
 		<div className="flex items-center gap-2">
-			<Loader2Icon className={`animate-spin size-${svgSize}`} />
+			<Loader2Icon className={`animate-spin w-${svgSize} h-${svgSize}`} />
 
 			{text && <p className={`text-${size}`}>{text}</p>}
 		</div>
