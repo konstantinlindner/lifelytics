@@ -6,16 +6,14 @@ import { useDatabase, useUser } from '@/store/use-store'
 import { cn } from '@/lib/utils'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { format } from 'date-fns'
+import dayjs from 'dayjs'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import * as z from 'zod'
 
-import { CalendarIcon, CheckIcon, ChevronsUpDownIcon } from 'lucide-react'
+import { CheckIcon, ChevronsUpDownIcon } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
-import { Calendar } from '@/components/ui/calendar'
-import { Checkbox } from '@/components/ui/checkbox'
 import {
 	Command,
 	CommandEmpty,
@@ -240,7 +238,7 @@ export default function AddTransactionDialogContentInput({
 								<DatePicker
 									initialDate={new Date()}
 									fromYear={1900}
-									toYear={2024}
+									toYear={dayjs().year()}
 									handleDateChange={(date) => {
 										field.onChange(date)
 									}}
