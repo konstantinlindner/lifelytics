@@ -144,29 +144,118 @@ export type Database = {
 				}
 				Relationships: []
 			}
-			food: {
+			foodPlaceCategories: {
 				Row: {
 					createdAt: string
-					foodPlaceCategory: Database['public']['Enums']['foodPlaceCategories']
-					foodTypeCategory: Database['public']['Enums']['foodTypeCategories']
-					id: string
-					place: string
+					id: number
+					name: string
 					updatedAt: string
 				}
 				Insert: {
 					createdAt?: string
-					foodPlaceCategory: Database['public']['Enums']['foodPlaceCategories']
-					foodTypeCategory: Database['public']['Enums']['foodTypeCategories']
-					id?: string
-					place?: string
+					id?: number
+					name: string
 					updatedAt?: string
 				}
 				Update: {
 					createdAt?: string
-					foodPlaceCategory?: Database['public']['Enums']['foodPlaceCategories']
-					foodTypeCategory?: Database['public']['Enums']['foodTypeCategories']
+					id?: number
+					name?: string
+					updatedAt?: string
+				}
+				Relationships: []
+			}
+			foodTransactions: {
+				Row: {
+					createdAt: string
+					foodPlaceCategory: number
+					foodTypeCategory: number
+					id: string
+					isDelivery: boolean | null
+					isEatIn: boolean | null
+					isLeftovers: boolean | null
+					isTakeAway: boolean | null
+					isWorked: boolean | null
+					transaction: string
+					updatedAt: string
+					user: string
+				}
+				Insert: {
+					createdAt?: string
+					foodPlaceCategory: number
+					foodTypeCategory: number
 					id?: string
-					place?: string
+					isDelivery?: boolean | null
+					isEatIn?: boolean | null
+					isLeftovers?: boolean | null
+					isTakeAway?: boolean | null
+					isWorked?: boolean | null
+					transaction: string
+					updatedAt?: string
+					user: string
+				}
+				Update: {
+					createdAt?: string
+					foodPlaceCategory?: number
+					foodTypeCategory?: number
+					id?: string
+					isDelivery?: boolean | null
+					isEatIn?: boolean | null
+					isLeftovers?: boolean | null
+					isTakeAway?: boolean | null
+					isWorked?: boolean | null
+					transaction?: string
+					updatedAt?: string
+					user?: string
+				}
+				Relationships: [
+					{
+						foreignKeyName: 'public_food_transaction_fkey'
+						columns: ['transaction']
+						isOneToOne: false
+						referencedRelation: 'transactions'
+						referencedColumns: ['id']
+					},
+					{
+						foreignKeyName: 'public_foodTransactions_foodPlaceCategory_fkey'
+						columns: ['foodPlaceCategory']
+						isOneToOne: false
+						referencedRelation: 'foodPlaceCategories'
+						referencedColumns: ['id']
+					},
+					{
+						foreignKeyName: 'public_foodTransactions_foodTypeCategory_fkey'
+						columns: ['foodTypeCategory']
+						isOneToOne: false
+						referencedRelation: 'foodTypeCategories'
+						referencedColumns: ['id']
+					},
+					{
+						foreignKeyName: 'public_foodTransactions_user_fkey'
+						columns: ['user']
+						isOneToOne: false
+						referencedRelation: 'profiles'
+						referencedColumns: ['id']
+					},
+				]
+			}
+			foodTypeCategories: {
+				Row: {
+					createdAt: string
+					id: number
+					name: string
+					updatedAt: string
+				}
+				Insert: {
+					createdAt?: string
+					id?: number
+					name: string
+					updatedAt?: string
+				}
+				Update: {
+					createdAt?: string
+					id?: number
+					name?: string
 					updatedAt?: string
 				}
 				Relationships: []
@@ -334,6 +423,7 @@ export type Database = {
 					id: string
 					item: string
 					paymentMethod: string
+					tipAmount: number | null
 					transactionDate: string
 					updatedAt: string
 					user: string
@@ -349,6 +439,7 @@ export type Database = {
 					id?: string
 					item?: string
 					paymentMethod: string
+					tipAmount?: number | null
 					transactionDate: string
 					updatedAt?: string
 					user: string
@@ -364,6 +455,7 @@ export type Database = {
 					id?: string
 					item?: string
 					paymentMethod?: string
+					tipAmount?: number | null
 					transactionDate?: string
 					updatedAt?: string
 					user?: string
@@ -429,23 +521,6 @@ export type Database = {
 				| 'Oceania'
 				| 'North America'
 				| 'South America'
-			foodPlaceCategories:
-				| 'Grocery store'
-				| 'Convenience store'
-				| 'Restaurant'
-				| 'Café'
-				| 'Food stand or truck'
-				| 'Vending machine'
-			foodTypeCategories:
-				| 'Groceries'
-				| 'Breakfast'
-				| 'Lunch'
-				| 'Dinner'
-				| 'Coffee'
-				| 'Ice cream'
-				| 'Snacks and beverages'
-				| 'Drinks out'
-				| 'Alcohol'
 		}
 		CompositeTypes: {
 			[_ in never]: never
