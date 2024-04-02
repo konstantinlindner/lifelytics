@@ -79,6 +79,8 @@ type AddTransactionDialogContentInputsProps = {
 export default function AddTransactionDialogContentInput({
 	screen,
 }: AddTransactionDialogContentInputsProps) {
+	const defaultCurrency = useUser((state) => state.primaryCurrency)
+
 	const cities = useDatabase((state) => state.cities)
 	const currencies = useDatabase((state) => state.currencies)
 	const transactionCategories = useDatabase(
@@ -92,6 +94,7 @@ export default function AddTransactionDialogContentInput({
 			category: !screen.transactionCategoryId
 				? undefined
 				: screen.transactionCategoryId,
+			currency: defaultCurrency?.id,
 		},
 	})
 
@@ -308,7 +311,7 @@ export default function AddTransactionDialogContentInput({
 															(currency) =>
 																currency.id ===
 																field.value,
-													  )?.name
+													  )?.code
 													: 'Select currency'}
 												<ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
 											</Button>
@@ -323,9 +326,7 @@ export default function AddTransactionDialogContentInput({
 											<CommandGroup className="max-h-[20rem] overflow-y-auto">
 												{currencies?.map((currency) => (
 													<CommandItem
-														value={
-															currency.name ?? ''
-														}
+														value={currency.name}
 														key={currency.id}
 														onSelect={() => {
 															form.setValue(
@@ -344,7 +345,7 @@ export default function AddTransactionDialogContentInput({
 																	: 'opacity-0',
 															)}
 														/>
-														{currency.code}
+														{currency.name}
 													</CommandItem>
 												))}
 											</CommandGroup>
