@@ -9,16 +9,13 @@ export default function LoadingIndicator({
 	text,
 	size = 'base',
 }: LoadingIndicatorProps) {
-	const svgSize = (() => {
-		switch (size) {
-			case 'sm':
-				return 6
-			case 'base':
-				return 8
-			case 'lg':
-				return 12
-		}
-	})()
+	const sizeMap = {
+		sm: 6,
+		base: 8,
+		lg: 12,
+	}
+
+	const svgSize = sizeMap[size]
 
 	return (
 		<div className="flex items-center gap-2">
