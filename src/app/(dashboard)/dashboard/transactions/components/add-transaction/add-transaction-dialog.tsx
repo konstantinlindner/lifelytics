@@ -22,11 +22,12 @@ export default function AddTransactionDialog({
 	showButton,
 	showCommandItem,
 }: addTransactionDialogProps) {
+	const [open, setOpen] = useState(false)
 	const [screen, setScreen] = useState<Screen>(openingScreen ?? screens[0])
 
 	return (
 		<main>
-			<Dialog>
+			<Dialog open={open} onOpenChange={setOpen}>
 				{showButton && (
 					<DialogTrigger asChild>
 						<Button size="sm" variant="outline" className="h-8">
@@ -35,14 +36,14 @@ export default function AddTransactionDialog({
 					</DialogTrigger>
 				)}
 				{showCommandItem && (
-					<DialogTrigger asChild>
-						<button className="w-full">
-							<CommandItem key="1" value="add-transaction">
-								<CoinsIcon className="mr-2 h-4 w-4" />
-								<span>Add transaction</span>
-							</CommandItem>
-						</button>
-					</DialogTrigger>
+					<CommandItem
+						onSelect={() => {
+							setOpen(true)
+						}}
+					>
+						<CoinsIcon className="mr-2 h-4 w-4" />
+						<span>Add transaction</span>
+					</CommandItem>
 				)}
 
 				<AddTransactionDialogContent
