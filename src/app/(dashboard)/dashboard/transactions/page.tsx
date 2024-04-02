@@ -2,8 +2,6 @@
 
 import { useUser } from '@/store/use-store'
 
-import dayjs from 'dayjs'
-
 import { transactionColumns } from './components/transaction-columns'
 import { TransactionTable } from './components/transaction-table'
 
