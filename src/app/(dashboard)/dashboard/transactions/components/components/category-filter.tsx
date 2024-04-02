@@ -23,7 +23,7 @@ import {
 	PopoverTrigger,
 } from '@/components/ui/popover'
 
-interface CategoryFilterProps<TData, TValue> {
+type CategoryFilterProps<TData, TValue> = {
 	column?: Column<TData, TValue>
 }
 

@@ -13,7 +13,7 @@ import { Card } from '@/components/ui/card'
 import LoadingIndicator from '@/components/loading-indicator'
 import ProfilePictureUpload from '@/components/profile-picture-picker'
 
-interface ProfilePictureViewProps {
+type ProfilePictureViewProps = {
 	currentViewIndex: number
 	setCurrentViewIndex: (view: number) => void
 }

@@ -4,7 +4,7 @@ import { XIcon } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 
-interface ResetFilterProps<TData> {
+type ResetFilterProps<TData> = {
 	table: Table<TData>
 }
 

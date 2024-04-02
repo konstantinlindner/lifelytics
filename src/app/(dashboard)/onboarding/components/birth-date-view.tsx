@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 import DatePicker from '@/components/date-picker'
 import LoadingIndicator from '@/components/loading-indicator'
 
-interface ProfilePictureViewProps {
+type ProfilePictureViewProps = {
 	currentViewIndex: number
 	setCurrentViewIndex: (view: number) => void
 }

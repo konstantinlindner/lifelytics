@@ -11,7 +11,7 @@ import { Card } from '@/components/ui/card'
 
 import LoadingIndicator from '@/components/loading-indicator'
 
-interface CurrencyPickerViewProps {
+type CurrencyPickerViewProps = {
 	currentViewIndex: number
 	setCurrentViewIndex: (view: number) => void
 }

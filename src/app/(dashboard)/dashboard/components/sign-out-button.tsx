@@ -12,7 +12,7 @@ import {
 	DropdownMenuShortcut,
 } from '@/components/ui/dropdown-menu'
 
-interface SignOutButtonProps {
+type SignOutButtonProps = {
 	isMenuItem?: boolean
 }
 

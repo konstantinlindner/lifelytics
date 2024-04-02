@@ -22,7 +22,7 @@ import {
 	PopoverTrigger,
 } from '@/components/ui/popover'
 
-interface PaymentMethodFilterProps<TData, TValue> {
+type PaymentMethodFilterProps<TData, TValue> = {
 	column?: Column<TData, TValue>
 }
 

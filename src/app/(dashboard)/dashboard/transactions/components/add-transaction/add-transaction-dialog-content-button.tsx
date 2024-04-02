@@ -2,7 +2,7 @@ import { ReactNode } from 'react'
 
 import { Screen, screens } from './add-transaction-constants'
 
-interface AddTransactionDialogContentButtonProps {
+type AddTransactionDialogContentButtonProps = {
 	screen: Screen
 	keyboardShortcut: string
 	setScreen: (newScreen: Screen) => void

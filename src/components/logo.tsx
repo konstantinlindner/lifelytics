@@ -2,7 +2,7 @@ import Link from 'next/link'
 
 import { ActivityIcon } from 'lucide-react'
 
-interface LogoProps {
+type LogoProps = {
 	hideText?: boolean
 	isDashboard?: boolean
 }

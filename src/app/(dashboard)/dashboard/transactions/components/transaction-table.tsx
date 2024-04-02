@@ -40,7 +40,7 @@ import { Search } from './components/search'
 import { TypeFilter } from './components/type-filter'
 import { ViewOptions } from './components/view-options'
 
-interface DataTableProps<TData, TValue> {
+type DataTableProps<TData, TValue> = {
 	columns: ColumnDef<TData, TValue>[]
 	data: TData[]
 }

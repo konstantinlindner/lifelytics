@@ -9,7 +9,7 @@ import { Screen, screens } from './add-transaction-constants'
 import AddTransactionDialogContentButton from './add-transaction-dialog-content-button'
 import AddTransactionDialogContentInput from './add-transaction-dialog-content-input'
 
-interface AddTransactionDialogContentProps {
+type AddTransactionDialogContentProps = {
 	screen: Screen
 	setScreen: (newScreen: Screen) => void
 }

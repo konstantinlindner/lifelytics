@@ -14,7 +14,7 @@ import {
 	DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu'
 
-interface ViewOptionsProps<TData> {
+type ViewOptionsProps<TData> = {
 	table: Table<TData>
 }
 

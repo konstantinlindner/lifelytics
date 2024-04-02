@@ -74,7 +74,7 @@ const FormSchema = z.object({
 	description: z.string().optional(),
 })
 
-interface AddTransactionDialogContentInputsProps {
+type AddTransactionDialogContentInputsProps = {
 	screen: Screen
 }
 

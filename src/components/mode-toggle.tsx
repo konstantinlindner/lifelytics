@@ -6,7 +6,7 @@ import { MoonIcon, SunMediumIcon } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 
-interface ModeToggleProps {
+type ModeToggleProps = {
 	isRound?: boolean
 }
 

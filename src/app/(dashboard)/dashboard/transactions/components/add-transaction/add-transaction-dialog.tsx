@@ -11,7 +11,7 @@ import { Dialog, DialogTrigger } from '@/components/ui/dialog'
 import { Screen, screens } from './add-transaction-constants'
 import AddTransactionDialogContent from './add-transaction-dialog-content'
 
-interface addTransactionDialogProps {
+type addTransactionDialogProps = {
 	openingScreen?: Screen
 	showButton?: boolean
 	showCommandItem?: boolean

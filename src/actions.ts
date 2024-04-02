@@ -2,7 +2,7 @@
 
 import cloudinary from '@/lib/cloudinary'
 
-interface CloudinaryBase64ImageUploadProps {
+type CloudinaryBase64ImageUploadProps = {
 	image: string
 	folder: string
 	publicId: string

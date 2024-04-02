@@ -1,6 +1,6 @@
 import { Loader2Icon } from 'lucide-react'
 
-interface LoadingIndicatorProps {
+type LoadingIndicatorProps = {
 	text?: string
 	size?: 'sm' | 'base' | 'lg'
 }

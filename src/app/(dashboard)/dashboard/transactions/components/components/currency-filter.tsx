@@ -22,7 +22,7 @@ import {
 	PopoverTrigger,
 } from '@/components/ui/popover'
 
-interface CurrencyFilterProps<TData, TValue> {
+type CurrencyFilterProps<TData, TValue> = {
 	column?: Column<TData, TValue>
 }
 

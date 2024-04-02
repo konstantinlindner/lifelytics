@@ -18,8 +18,7 @@ import {
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 
-interface ColumnHeaderProps<TData, TValue>
-	extends React.HTMLAttributes<HTMLDivElement> {
+type ColumnHeaderProps<TData, TValue> = React.HTMLAttributes<HTMLDivElement> & {
 	column: Column<TData, TValue>
 	title: string
 }
