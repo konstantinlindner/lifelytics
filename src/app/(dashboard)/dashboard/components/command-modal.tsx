@@ -1,8 +1,8 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
-import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
 import {
 	CalculatorIcon,
@@ -26,7 +26,14 @@ import {
 import AddTransactionDialog from '../transactions/components/add-transaction/add-transaction-dialog'
 
 export default function CommandModal() {
+	const router = useRouter()
+
 	const [open, setOpen] = useState(false)
+
+	const runCommand = useCallback((command: () => unknown) => {
+		setOpen(false)
+		command()
+	}, [])
 
 	useEffect(() => {
 		const down = (e: KeyboardEvent) => {
@@ -66,12 +73,24 @@ export default function CommandModal() {
 					</CommandGroup>
 					<CommandSeparator />
 					<CommandGroup heading="Settings">
-						<CommandItem>
+						<CommandItem
+							onSelect={() => {
+								runCommand(() =>
+									router.push('/dashboard/profile'),
+								)
+							}}
+						>
 							<UserIcon className="mr-2 h-4 w-4" />
 							<span>Profile</span>
 							<CommandShortcut>⇧⌘P</CommandShortcut>
 						</CommandItem>
-						<CommandItem>
+						<CommandItem
+							onSelect={() => {
+								runCommand(() =>
+									router.push('/dashboard/account'),
+								)
+							}}
+						>
 							<SettingsIcon className="mr-2 h-4 w-4" />
 							<span>Account</span>
 							<CommandShortcut>⇧⌘A</CommandShortcut>
