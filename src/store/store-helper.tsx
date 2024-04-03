@@ -5,7 +5,7 @@ import {
 	TransactionCategory,
 } from '@/types/globals.types'
 
-import { useDatabase, useUser } from '@/store/use-store'
+import { Transaction, useDatabase, useUser } from '@/store/use-store'
 
 import supabase from '@/lib/supabase'
 
@@ -79,21 +79,73 @@ export async function SignOut() {
 // setup the store
 export async function InitializeStore() {
 	// set database
-	const setCurrencies = useDatabase.getState().setCurrencies
 	const setCities = useDatabase.getState().setCities
 	const setCountries = useDatabase.getState().setCountries
+	const setCurrencies = useDatabase.getState().setCurrencies
+	const setAirports = useDatabase.getState().setAirports
+	const setAirlines = useDatabase.getState().setAirlines
+	const setAirlineAlliances = useDatabase.getState().setAirlineAlliances
+	const setFlightClasses = useDatabase.getState().setFlightClasses
+	const setFlightLuggageCategories =
+		useDatabase.getState().setFlightLuggageCategories
+	const setFlightSeatCategories =
+		useDatabase.getState().setFlightSeatCategories
+	const setLoyaltyPrograms = useDatabase.getState().setLoyaltyPrograms
+	const setPaymentMethodCategories =
+		useDatabase.getState().setPaymentMethodCategories
 	const setTransactionCategories =
 		useDatabase.getState().setTransactionCategories
+	const setFoodPlaceCategories = useDatabase.getState().setFoodPlaceCategories
+	const setFoodTypeCategories = useDatabase.getState().setFoodTypeCategories
 
-	const currencies = await fetchCurrencies()
-	const cities = await fetchCities()
-	const countries = await fetchCountries()
-	const transactionCategories = await fetchTransactionCategories()
+	const [
+		cities,
+		countries,
+		currencies,
+		airports,
+		airlines,
+		airlineAlliances,
+		flightClasses,
+		flightLuggageCategories,
+		flightSeatCategories,
+		loyaltyPrograms,
+		paymentMethodCategories,
+		transactionCategories,
+		foodPlaceCategories,
+		foodTypeCategories,
+	] = await Promise.all([
+		fetchCities(),
+		fetchCountries(),
+		fetchCurrencies(),
+		fetchAirports(),
+		fetchAirlines(),
+		fetchAirlineAlliances(),
+		fetchFlightClasses(),
+		fetchFlightLuggageCategories(),
+		fetchFlightSeatCategories(),
+		fetchLoyaltyPrograms(),
+		fetchPaymentMethodCategories(),
+		fetchTransactionCategories(),
+		fetchFoodPlaceCategories(),
+		fetchFoodTypeCategories(),
+	])
 
-	if (currencies) setCurrencies(currencies)
 	if (cities) setCities(cities)
 	if (countries) setCountries(countries)
+	if (currencies) setCurrencies(currencies)
+	if (airports) setAirports(airports)
+	if (airlines) setAirlines(airlines)
+	if (airlineAlliances) setAirlineAlliances(airlineAlliances)
+	if (flightClasses) setFlightClasses(flightClasses)
+	if (flightLuggageCategories)
+		setFlightLuggageCategories(flightLuggageCategories)
+	if (flightSeatCategories) setFlightSeatCategories(flightSeatCategories)
+	if (loyaltyPrograms) setLoyaltyPrograms(loyaltyPrograms)
+	if (paymentMethodCategories)
+		setPaymentMethodCategories(paymentMethodCategories)
 	if (transactionCategories) setTransactionCategories(transactionCategories)
+	if (foodPlaceCategories) setFoodPlaceCategories(foodPlaceCategories)
+	if (foodTypeCategories) setFoodTypeCategories(foodTypeCategories)
 
 	// set user
 	const setId = useUser.getState().setId
@@ -115,12 +167,27 @@ export async function InitializeStore() {
 	const setCounterparts = useUser.getState().setCounterparts
 	const setPaymentMethods = useUser.getState().setPaymentMethods
 
-	const session = await fetchSession()
+	const [
+		session,
+		profile,
+		counterparts,
+		paymentMethods,
+		transactions,
+		foodTransactions,
+		flightTransactions,
+		flightTransactionSegments,
+	] = await Promise.all([
+		fetchSession(),
+		fetchProfile(),
+		fetchCounterparts(),
+		fetchPaymentMethods(),
+		fetchTransactions(),
+		fetchFoodTransactions(),
+		fetchFlights(),
+		fetchFlightSegments(),
+	])
 
 	if (session) setEmail(session.user.email)
-
-	const profile = await fetchProfile()
-
 	if (profile) {
 		setId(profile.id)
 		setFirstName(profile.firstName)
@@ -146,64 +213,169 @@ export async function InitializeStore() {
 			),
 		)
 	}
-
-	const counterparts = await fetchCounterparts()
-
 	if (counterparts) setCounterparts(counterparts)
-
-	const paymentMethods = await fetchPaymentMethods()
-
 	if (paymentMethods) setPaymentMethods(paymentMethods)
-
-	const transactions = await fetchTransactions()
-
 	if (transactions) {
-		const formattedTransactions = transactions.map((transaction) => {
-			const counterpart = useUser
-				.getState()
-				.counterparts?.find(
-					(counterpart) => counterpart.id === transaction.counterpart,
-				)
-			const currency = useDatabase
-				.getState()
-				.currencies?.find(
-					(currency) => currency.id === transaction.currency,
-				)
-			const city = useDatabase
-				.getState()
-				.cities?.find((city) => city.id === transaction.city)
-			const country = useDatabase
-				.getState()
-				.countries?.find((country) => country.id === city?.country)
-			const category = useDatabase
-				.getState()
-				.transactionCategories?.find(
-					(category) => category.id === transaction.category,
-				)
-			const paymentMethod = useUser
-				.getState()
-				.paymentMethods?.find(
-					(paymentMethod) =>
-						paymentMethod.id === transaction.paymentMethod,
+		const formattedTransactions = transactions
+			.map((transaction) => {
+				const food = foodTransactions?.find(
+					(food) => food.transaction === transaction.id,
 				)
 
-			return {
-				id: transaction.id,
-				item: transaction.item,
-				description: transaction.description,
-				amount: transaction.amount,
-				isIncome: category?.isIncome,
-				transactionDate: dayjs(transaction.transactionDate).toDate(),
-				createdAt: transaction.createdAt,
-				updatedAt: transaction.updatedAt,
-				counterpart: counterpart,
-				currency: currency,
-				city: city,
-				country: country,
-				category: category,
-				paymentMethod: paymentMethod,
-			}
-		})
+				const formattedFood = (() => {
+					if (food) {
+						return {
+							id: food.id,
+							placeCategory: useDatabase
+								.getState()
+								.foodPlaceCategories?.find(
+									(category) =>
+										category.id === food.foodPlaceCategory,
+								),
+							typeCategory: useDatabase
+								.getState()
+								.foodTypeCategories?.find(
+									(category) =>
+										category.id === food?.foodTypeCategory,
+								),
+							isEatIn: food.isEatIn,
+							isTakeAway: food.isTakeAway,
+							isLeftovers: food.isLeftovers,
+							isDelivery: food.isDelivery,
+							isWorked: food.isWorked,
+							createdAt: food.createdAt,
+							updatedAt: food.updatedAt,
+						}
+					}
+				})()
+
+				const flight = flightTransactions?.find(
+					(flight) => flight.transaction === transaction.id,
+				)
+				const flightSegments = flightTransactionSegments?.filter(
+					(segment) => segment.parentFlight === flight?.id,
+				)
+
+				const formattedFlight = (() => {
+					if (flight && flightSegments) {
+						return {
+							id: flight.id,
+							luggageCategory: useDatabase
+								.getState()
+								.flightLuggageCategories?.find(
+									(category) =>
+										category.id === flight.luggageCategory,
+								),
+							segments: flightSegments.map((segment) => ({
+								id: segment.id,
+								departureAirport: useDatabase
+									.getState()
+									.airports?.find(
+										(airport) =>
+											airport.id ===
+											segment.departureAirport,
+									),
+								arrivalAirport: useDatabase
+									.getState()
+									.airports?.find(
+										(airport) =>
+											airport.id ===
+											segment.arrivalAirport,
+									),
+								airline: useDatabase
+									.getState()
+									.airlines?.find(
+										(airline) =>
+											airline.id === segment.airline,
+									),
+								class: useDatabase
+									.getState()
+									.flightClasses?.find(
+										(flightClass) =>
+											flightClass.id === segment.class,
+									),
+								seatCategory: useDatabase
+									.getState()
+									.flightSeatCategories?.find(
+										(seatCategory) =>
+											seatCategory.id ===
+											segment.seatCategory,
+									),
+								createdAt: segment.createdAt,
+								updatedAt: segment.updatedAt,
+							})),
+							createdAt: flight.createdAt,
+							updatedAt: flight.updatedAt,
+						}
+					}
+				})()
+
+				const category = useDatabase
+					.getState()
+					.transactionCategories?.find(
+						(category) => category.id === transaction.category,
+					)
+				const isIncome = category?.isIncome
+				const counterpart = useUser
+					.getState()
+					.counterparts?.find(
+						(counterpart) =>
+							counterpart.id === transaction.counterpart,
+					)
+				const currency = useDatabase
+					.getState()
+					.currencies?.find(
+						(currency) => currency.id === transaction.currency,
+					)
+				const city = useDatabase
+					.getState()
+					.cities?.find((city) => city.id === transaction.city)
+				const country = useDatabase
+					.getState()
+					.countries?.find((country) => country.id === city?.country)
+
+				if (
+					!category ||
+					!counterpart ||
+					!currency ||
+					!city ||
+					!country ||
+					isIncome === undefined
+				) {
+					console.error('Transaction data is incomplete')
+					return
+				}
+
+				return {
+					id: transaction.id,
+					item: transaction.item,
+					description: transaction.description,
+					amount: transaction.amount,
+					isIncome: isIncome,
+					transactionDate: dayjs(
+						transaction.transactionDate,
+					).toDate(),
+					counterpart: counterpart,
+					currency: currency,
+					city: city,
+					country: country,
+					category: category,
+					paymentMethod: useUser
+						.getState()
+						.paymentMethods?.find(
+							(paymentMethod) =>
+								paymentMethod.id === transaction.paymentMethod,
+						),
+					food: formattedFood ?? null,
+					flight: formattedFlight ?? null,
+					createdAt: transaction.createdAt,
+					updatedAt: transaction.updatedAt,
+				}
+			})
+			.filter((transaction): transaction is Transaction =>
+				Boolean(transaction),
+			)
+
 		setTransactions(formattedTransactions)
 	}
 }
@@ -262,6 +434,61 @@ async function fetchTransactions() {
 	}
 }
 
+async function fetchFoodTransactions() {
+	try {
+		const { data: foodTransactions, error } = await supabase
+			.from('foodTransactions')
+			.select()
+
+		if (error) throw error
+
+		if (!foodTransactions) {
+			console.error('No food transactions found')
+			return
+		}
+
+		return foodTransactions
+	} catch (error) {
+		console.error('Error fetching food transactions:', error)
+	}
+}
+
+async function fetchFlights() {
+	try {
+		const { data: flights, error } = await supabase.from('flights').select()
+
+		if (error) throw error
+
+		if (!flights) {
+			console.error('No flights found')
+			return
+		}
+
+		return flights
+	} catch (error) {
+		console.error('Error fetching flights:', error)
+	}
+}
+
+async function fetchFlightSegments() {
+	try {
+		const { data: flightSegments, error } = await supabase
+			.from('flightSegments')
+			.select()
+
+		if (error) throw error
+
+		if (!flightSegments) {
+			console.error('No flight segments found')
+			return
+		}
+
+		return flightSegments
+	} catch (error) {
+		console.error('Error fetching flight segments:', error)
+	}
+}
+
 async function fetchCounterparts() {
 	try {
 		const { data: counterparts, error } = await supabase
@@ -297,25 +524,6 @@ async function fetchPaymentMethods() {
 		return paymentMethods
 	} catch (error) {
 		console.error('Error fetching payment methods:', error)
-	}
-}
-
-async function fetchCurrencies() {
-	try {
-		const { data: currencies, error } = await supabase
-			.from('currencies')
-			.select()
-
-		if (error) throw error
-
-		if (!currencies) {
-			console.error('No currencies found')
-			return
-		}
-
-		return currencies
-	} catch (error) {
-		console.error('Error fetching currencies:', error)
 	}
 }
 
@@ -355,6 +563,177 @@ async function fetchCountries() {
 	}
 }
 
+async function fetchCurrencies() {
+	try {
+		const { data: currencies, error } = await supabase
+			.from('currencies')
+			.select()
+
+		if (error) throw error
+
+		if (!currencies) {
+			console.error('No currencies found')
+			return
+		}
+
+		return currencies
+	} catch (error) {
+		console.error('Error fetching currencies:', error)
+	}
+}
+
+async function fetchAirports() {
+	try {
+		const { data: airports, error } = await supabase
+			.from('airports')
+			.select()
+
+		if (error) throw error
+
+		if (!airports) {
+			console.error('No airports found')
+			return
+		}
+
+		return airports
+	} catch (error) {
+		console.error('Error fetching airports:', error)
+	}
+}
+
+async function fetchAirlines() {
+	try {
+		const { data: airlines, error } = await supabase
+			.from('airlines')
+			.select()
+
+		if (error) throw error
+
+		if (!airlines) {
+			console.error('No airlines found')
+			return
+		}
+
+		return airlines
+	} catch (error) {
+		console.error('Error fetching airlines:', error)
+	}
+}
+
+async function fetchAirlineAlliances() {
+	try {
+		const { data: airlineAlliances, error } = await supabase
+			.from('airlineAlliances')
+			.select()
+
+		if (error) throw error
+
+		if (!airlineAlliances) {
+			console.error('No airline alliances found')
+			return
+		}
+
+		return airlineAlliances
+	} catch (error) {
+		console.error('Error fetching airline alliances:', error)
+	}
+}
+
+async function fetchFlightClasses() {
+	try {
+		const { data: flightClasses, error } = await supabase
+			.from('flightClasses')
+			.select()
+
+		if (error) throw error
+
+		if (!flightClasses) {
+			console.error('No flight classes found')
+			return
+		}
+
+		return flightClasses
+	} catch (error) {
+		console.error('Error fetching flight classes:', error)
+	}
+}
+
+async function fetchFlightLuggageCategories() {
+	try {
+		const { data: flightLuggageCategories, error } = await supabase
+			.from('flightLuggageCategories')
+			.select()
+
+		if (error) throw error
+
+		if (!flightLuggageCategories) {
+			console.error('No flight luggage categories found')
+			return
+		}
+
+		return flightLuggageCategories
+	} catch (error) {
+		console.error('Error fetching flight luggage categories:', error)
+	}
+}
+
+async function fetchFlightSeatCategories() {
+	try {
+		const { data: flightSeatCategories, error } = await supabase
+			.from('flightSeatCategories')
+			.select()
+
+		if (error) throw error
+
+		if (!flightSeatCategories) {
+			console.error('No flight seat categories found')
+			return
+		}
+
+		return flightSeatCategories
+	} catch (error) {
+		console.error('Error fetching flight seat categories:', error)
+	}
+}
+
+async function fetchLoyaltyPrograms() {
+	try {
+		const { data: loyaltyPrograms, error } = await supabase
+			.from('loyaltyPrograms')
+			.select()
+
+		if (error) throw error
+
+		if (!loyaltyPrograms) {
+			console.error('No loyalty programs found')
+			return
+		}
+
+		return loyaltyPrograms
+	} catch (error) {
+		console.error('Error fetching loyalty programs:', error)
+	}
+}
+
+async function fetchPaymentMethodCategories() {
+	try {
+		const { data: paymentMethodCategories, error } = await supabase
+			.from('paymentMethodCategories')
+			.select()
+
+		if (error) throw error
+
+		if (!paymentMethodCategories) {
+			console.error('No payment method categories found')
+			return
+		}
+
+		return paymentMethodCategories
+	} catch (error) {
+		console.error('Error fetching payment method categories:', error)
+	}
+}
+
 async function fetchTransactionCategories() {
 	try {
 		const { data: transactionCategories, error } = await supabase
@@ -371,6 +750,44 @@ async function fetchTransactionCategories() {
 		return transactionCategories
 	} catch (error) {
 		console.error('Error fetching transaction categories:', error)
+	}
+}
+
+async function fetchFoodPlaceCategories() {
+	try {
+		const { data: foodPlaceCategories, error } = await supabase
+			.from('foodPlaceCategories')
+			.select()
+
+		if (error) throw error
+
+		if (!foodPlaceCategories) {
+			console.error('No food place categories found')
+			return
+		}
+
+		return foodPlaceCategories
+	} catch (error) {
+		console.error('Error fetching food place categories:', error)
+	}
+}
+
+async function fetchFoodTypeCategories() {
+	try {
+		const { data: foodTypeCategories, error } = await supabase
+			.from('foodTypeCategories')
+			.select()
+
+		if (error) throw error
+
+		if (!foodTypeCategories) {
+			console.error('No food type categories found')
+			return
+		}
+
+		return foodTypeCategories
+	} catch (error) {
+		console.error('Error fetching food type categories:', error)
 	}
 }
 
@@ -855,7 +1272,7 @@ type AddTransactionProps = {
 	item: string
 	amount: number
 	counterpartName: string
-	description?: string | null
+	description: string | null
 	currency: Currency
 	city: City
 	category: TransactionCategory
@@ -886,6 +1303,11 @@ export async function addTransaction({
 	const country = useDatabase
 		.getState()
 		.countries?.find((country) => country.id === city.country)
+
+	if (!country) {
+		console.error('Country not found')
+		return
+	}
 
 	await addCounterpart({
 		name: counterpartName,
@@ -935,14 +1357,17 @@ export async function addTransaction({
 					amount: amount,
 					isIncome: category?.isIncome,
 					transactionDate: date,
-					createdAt: newTransaction[0].createdAt,
-					updatedAt: newTransaction[0].updatedAt,
+
 					counterpart: counterpart,
 					currency: currency,
 					city: city,
 					country: country,
 					category: category,
 					paymentMethod: paymentMethod,
+					food: null,
+					flight: null,
+					createdAt: newTransaction[0].createdAt,
+					updatedAt: newTransaction[0].updatedAt,
 				},
 			])
 		}
