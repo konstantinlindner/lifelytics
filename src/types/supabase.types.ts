@@ -488,7 +488,6 @@ export type Database = {
 					isWorked: boolean | null
 					transaction: string
 					updatedAt: string
-					user: string
 				}
 				Insert: {
 					createdAt?: string
@@ -502,7 +501,6 @@ export type Database = {
 					isWorked?: boolean | null
 					transaction: string
 					updatedAt?: string
-					user: string
 				}
 				Update: {
 					createdAt?: string
@@ -516,7 +514,6 @@ export type Database = {
 					isWorked?: boolean | null
 					transaction?: string
 					updatedAt?: string
-					user?: string
 				}
 				Relationships: [
 					{
@@ -538,13 +535,6 @@ export type Database = {
 						columns: ['foodTypeCategory']
 						isOneToOne: false
 						referencedRelation: 'foodTypeCategories'
-						referencedColumns: ['id']
-					},
-					{
-						foreignKeyName: 'public_foodTransactions_user_fkey'
-						columns: ['user']
-						isOneToOne: false
-						referencedRelation: 'profiles'
 						referencedColumns: ['id']
 					},
 				]
@@ -617,29 +607,29 @@ export type Database = {
 			}
 			paymentMethods: {
 				Row: {
+					category: number
 					createdAt: string
 					id: string
 					loyaltyProgram: number | null
 					name: string
-					paymentMethodCategory: number
 					updatedAt: string
 					user: string
 				}
 				Insert: {
+					category: number
 					createdAt?: string
 					id?: string
 					loyaltyProgram?: number | null
 					name?: string
-					paymentMethodCategory: number
 					updatedAt?: string
 					user: string
 				}
 				Update: {
+					category?: number
 					createdAt?: string
 					id?: string
 					loyaltyProgram?: number | null
 					name?: string
-					paymentMethodCategory?: number
 					updatedAt?: string
 					user?: string
 				}
@@ -660,7 +650,7 @@ export type Database = {
 					},
 					{
 						foreignKeyName: 'public_paymentMethods_PaymentMethodCategory_fkey'
-						columns: ['paymentMethodCategory']
+						columns: ['category']
 						isOneToOne: false
 						referencedRelation: 'paymentMethodCategories'
 						referencedColumns: ['id']
