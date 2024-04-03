@@ -1,25 +1,61 @@
 import {
+	Airline,
+	AirlineAlliance,
+	Airport,
 	City,
 	Counterpart,
 	Country,
 	Currency,
+	FlightClass,
+	FlightLuggageCategory,
+	FlightSeatCategory,
+	FoodPlaceCategory,
+	FoodTypeCategory,
+	LoyaltyProgram,
 	PaymentMethod,
+	PaymentMethodCategory,
 	TransactionCategory,
 } from '@/types/globals.types'
 
 import { create } from 'zustand'
 
 type Database = {
-	currencies: Currency[]
-	setCurrencies: (currencies: Currency[]) => void
 	cities: City[]
 	setCities: (cities: City[]) => void
 	countries: Country[]
 	setCountries: (countries: Country[]) => void
+	currencies: Currency[]
+	setCurrencies: (currencies: Currency[]) => void
+	airports: Airport[]
+	setAirports: (airports: Airport[]) => void
+	airlines: Airline[]
+	setAirlines: (airlines: Airline[]) => void
+	airlineAlliances: AirlineAlliance[]
+	setAirlineAlliances: (airlineAlliances: AirlineAlliance[]) => void
+	flightClasses: FlightClass[]
+	setFlightClasses: (flightClasses: FlightClass[]) => void
+	flightLuggageCategories: FlightLuggageCategory[]
+	setFlightLuggageCategories: (
+		flightLuggageCategories: FlightLuggageCategory[],
+	) => void
+	flightSeatCategories: FlightSeatCategory[]
+	setFlightSeatCategories: (
+		flightSeatCategories: FlightSeatCategory[],
+	) => void
+	loyaltyPrograms: LoyaltyProgram[]
+	setLoyaltyPrograms: (loyaltyPrograms: LoyaltyProgram[]) => void
+	paymentMethodCategories: PaymentMethodCategory[]
+	setPaymentMethodCategories: (
+		paymentMethodCategories: PaymentMethodCategory[],
+	) => void
 	transactionCategories: TransactionCategory[]
 	setTransactionCategories: (
 		transactionCategories: TransactionCategory[],
 	) => void
+	foodPlaceCategories: FoodPlaceCategory[]
+	setFoodPlaceCategories: (foodPlaceCategories: FoodPlaceCategory[]) => void
+	foodTypeCategories: FoodPlaceCategory[]
+	setFoodTypeCategories: (foodTypeCategories: FoodPlaceCategory[]) => void
 }
 
 type User = {
@@ -53,36 +89,66 @@ type User = {
 	setCountry: (country: Country | undefined | null) => void
 	primaryCurrency: Currency | undefined | null
 	setPrimaryCurrency: (currency: Currency | undefined | null) => void
+	paymentMethods: PaymentMethod[]
+	setPaymentMethods: (paymentMethods: PaymentMethod[]) => void
 	counterparts: Counterpart[]
 	setCounterparts: (counterparts: Counterpart[]) => void
 	transactions: Transaction[]
 	setTransactions: (transactions: Transaction[]) => void
-	paymentMethods: PaymentMethod[]
-	setPaymentMethods: (paymentMethods: PaymentMethod[]) => void
 }
 
 export type Transaction = {
 	id: string
 	item: string
-	description: string | undefined | null
+	description: string | null
 	amount: number
-	isIncome: boolean | undefined
+	isIncome: boolean
 	transactionDate: Date
+	counterpart: Counterpart
+	currency: Currency
+	city: City
+	country: Country
+	category: TransactionCategory
+	paymentMethod: PaymentMethod
+	food: Food | null
+	flight: Flight | null
 	createdAt: string
 	updatedAt: string
-	counterpart: Counterpart | undefined
-	currency: Currency | undefined
-	city: City | undefined
-	country: Country | undefined
-	category: TransactionCategory | undefined
-	paymentMethod: PaymentMethod | undefined
+}
+
+type Food = {
+	id: string
+	placeCategory: FoodPlaceCategory
+	typeCategory: FoodTypeCategory
+	isEatIn: boolean | null
+	isTakeAway: boolean | null
+	isLeftovers: boolean | null
+	isDelivery: boolean | null
+	isWorked: boolean | null
+	createdAt: string
+	updatedAt: string
+}
+
+type Flight = {
+	id: string
+	luggageCategory: FlightLuggageCategory
+	segments: FlightSegment[]
+	createdAt: string
+	updatedAt: string
+}
+
+type FlightSegment = {
+	id: string
+	departureAirport: Airport
+	arrivalAirport: Airport
+	airline: Airline
+	class: FlightClass
+	seatCategory: FlightSeatCategory
+	createdAt: string
+	updatedAt: string
 }
 
 export const useDatabase = create<Database>()((set) => ({
-	currencies: [],
-	setCurrencies: (currencies: Currency[]) => {
-		set({ currencies })
-	},
 	cities: [],
 	setCities: (cities: City[]) => {
 		set({ cities })
@@ -91,11 +157,59 @@ export const useDatabase = create<Database>()((set) => ({
 	setCountries: (countries: Country[]) => {
 		set({ countries })
 	},
+	currencies: [],
+	setCurrencies: (currencies: Currency[]) => {
+		set({ currencies })
+	},
+	airports: [],
+	setAirports: (airports: Airport[]) => {
+		set({ airports })
+	},
+	airlines: [],
+	setAirlines: (airlines: Airline[]) => {
+		set({ airlines })
+	},
+	airlineAlliances: [],
+	setAirlineAlliances: (airlineAlliances: AirlineAlliance[]) => {
+		set({ airlineAlliances })
+	},
+	flightClasses: [],
+	setFlightClasses: (flightClasses: FlightClass[]) => {
+		set({ flightClasses })
+	},
+	flightLuggageCategories: [],
+	setFlightLuggageCategories: (
+		flightLuggageCategories: FlightLuggageCategory[],
+	) => {
+		set({ flightLuggageCategories })
+	},
+	flightSeatCategories: [],
+	setFlightSeatCategories: (flightSeatCategories: FlightSeatCategory[]) => {
+		set({ flightSeatCategories })
+	},
+	loyaltyPrograms: [],
+	setLoyaltyPrograms: (loyaltyPrograms: LoyaltyProgram[]) => {
+		set({ loyaltyPrograms })
+	},
+	paymentMethodCategories: [],
+	setPaymentMethodCategories: (
+		paymentMethodCategories: PaymentMethodCategory[],
+	) => {
+		set({ paymentMethodCategories })
+	},
 	transactionCategories: [],
 	setTransactionCategories: (
 		transactionCategories: TransactionCategory[],
 	) => {
 		set({ transactionCategories })
+	},
+	foodPlaceCategories: [],
+	setFoodPlaceCategories: (foodPlaceCategories: FoodPlaceCategory[]) => {
+		set({ foodPlaceCategories })
+	},
+	foodTypeCategories: [],
+	setFoodTypeCategories: (foodTypeCategories: FoodTypeCategory[]) => {
+		set({ foodTypeCategories })
 	},
 }))
 
