@@ -10,7 +10,11 @@ export type Counterpart = Database['public']['Tables']['counterparts']['Row']
 export type Country = Database['public']['Tables']['countries']['Row']
 export type Currency = Database['public']['Tables']['currencies']['Row']
 export type FlightClass = Database['public']['Tables']['flightClasses']['Row']
+export type FlightLuggageCategory =
+	Database['public']['Tables']['flightLuggageCategories']['Row']
 export type Flight = Database['public']['Tables']['flights']['Row']
+export type FlightSeatCategory =
+	Database['public']['Tables']['flightSeatCategories']['Row']
 export type FlightSegment =
 	Database['public']['Tables']['flightSegments']['Row']
 export type FoodPlaceCategory =
@@ -19,10 +23,9 @@ export type FoodTransaction =
 	Database['public']['Tables']['foodTransactions']['Row']
 export type FoodTypeCategory =
 	Database['public']['Tables']['foodTypeCategories']['Row']
-export type loyaltyProgram =
+export type LoyaltyProgram =
 	Database['public']['Tables']['loyaltyPrograms']['Row']
-
-export type paymentMethodCategory =
+export type PaymentMethodCategory =
 	Database['public']['Tables']['paymentMethodCategories']['Row']
 export type PaymentMethod =
 	Database['public']['Tables']['paymentMethods']['Row']
