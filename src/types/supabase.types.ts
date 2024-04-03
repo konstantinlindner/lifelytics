@@ -9,6 +9,132 @@ export type Json =
 export type Database = {
 	public: {
 		Tables: {
+			airlineAlliances: {
+				Row: {
+					createdAt: string
+					id: number
+					imageUrl: string
+					name: string
+					updatedAt: string
+				}
+				Insert: {
+					createdAt?: string
+					id?: number
+					imageUrl: string
+					name: string
+					updatedAt?: string
+				}
+				Update: {
+					createdAt?: string
+					id?: number
+					imageUrl?: string
+					name?: string
+					updatedAt?: string
+				}
+				Relationships: []
+			}
+			airlines: {
+				Row: {
+					alliance: number | null
+					callsign: string
+					country: number
+					createdAt: string
+					IATA: string
+					ICAO: string
+					id: number
+					imageUrl: string
+					loyaltyProgram: number | null
+					name: string
+					updatedAt: string
+				}
+				Insert: {
+					alliance?: number | null
+					callsign: string
+					country: number
+					createdAt?: string
+					IATA: string
+					ICAO: string
+					id?: number
+					imageUrl: string
+					loyaltyProgram?: number | null
+					name: string
+					updatedAt?: string
+				}
+				Update: {
+					alliance?: number | null
+					callsign?: string
+					country?: number
+					createdAt?: string
+					IATA?: string
+					ICAO?: string
+					id?: number
+					imageUrl?: string
+					loyaltyProgram?: number | null
+					name?: string
+					updatedAt?: string
+				}
+				Relationships: [
+					{
+						foreignKeyName: 'public_airlines_airlineAlliance_fkey'
+						columns: ['alliance']
+						isOneToOne: false
+						referencedRelation: 'airlineAlliances'
+						referencedColumns: ['id']
+					},
+					{
+						foreignKeyName: 'public_airlines_country_fkey'
+						columns: ['country']
+						isOneToOne: false
+						referencedRelation: 'countries'
+						referencedColumns: ['id']
+					},
+					{
+						foreignKeyName: 'public_airlines_loyaltyProgram_fkey'
+						columns: ['loyaltyProgram']
+						isOneToOne: false
+						referencedRelation: 'loyaltyPrograms'
+						referencedColumns: ['id']
+					},
+				]
+			}
+			airports: {
+				Row: {
+					city: number
+					createdAt: string
+					IATA: string
+					ICAO: string
+					id: number
+					name: string
+					updatedAt: string
+				}
+				Insert: {
+					city: number
+					createdAt?: string
+					IATA: string
+					ICAO: string
+					id?: number
+					name: string
+					updatedAt?: string
+				}
+				Update: {
+					city?: number
+					createdAt?: string
+					IATA?: string
+					ICAO?: string
+					id?: number
+					name?: string
+					updatedAt?: string
+				}
+				Relationships: [
+					{
+						foreignKeyName: 'public_airports_city_fkey'
+						columns: ['city']
+						isOneToOne: false
+						referencedRelation: 'cities'
+						referencedColumns: ['id']
+					},
+				]
+			}
 			cities: {
 				Row: {
 					country: number
@@ -144,6 +270,84 @@ export type Database = {
 				}
 				Relationships: []
 			}
+			flightClasses: {
+				Row: {
+					createdAt: string
+					id: number
+					name: string
+					updatedAt: string
+				}
+				Insert: {
+					createdAt?: string
+					id?: number
+					name: string
+					updatedAt?: string
+				}
+				Update: {
+					createdAt?: string
+					id?: number
+					name?: string
+					updatedAt?: string
+				}
+				Relationships: []
+			}
+			flights: {
+				Row: {
+					class: number
+					createdAt: string
+					id: string
+					transaction: string
+					updatedAt: string
+				}
+				Insert: {
+					class: number
+					createdAt?: string
+					id?: string
+					transaction: string
+					updatedAt?: string
+				}
+				Update: {
+					class?: number
+					createdAt?: string
+					id?: string
+					transaction?: string
+					updatedAt?: string
+				}
+				Relationships: [
+					{
+						foreignKeyName: 'public_flights_class_fkey'
+						columns: ['class']
+						isOneToOne: false
+						referencedRelation: 'flightClasses'
+						referencedColumns: ['id']
+					},
+					{
+						foreignKeyName: 'public_flights_transaction_fkey'
+						columns: ['transaction']
+						isOneToOne: false
+						referencedRelation: 'transactions'
+						referencedColumns: ['id']
+					},
+				]
+			}
+			flightSegments: {
+				Row: {
+					createdAt: string
+					id: string
+					updatedAt: string
+				}
+				Insert: {
+					createdAt?: string
+					id?: string
+					updatedAt?: string
+				}
+				Update: {
+					createdAt?: string
+					id?: string
+					updatedAt?: string
+				}
+				Relationships: []
+			}
 			foodPlaceCategories: {
 				Row: {
 					createdAt: string
@@ -260,6 +464,30 @@ export type Database = {
 				}
 				Relationships: []
 			}
+			loyaltyPrograms: {
+				Row: {
+					createdAt: string
+					id: number
+					name: string
+					pointCurrency: string
+					updatedAt: string
+				}
+				Insert: {
+					createdAt?: string
+					id?: number
+					name: string
+					pointCurrency: string
+					updatedAt?: string
+				}
+				Update: {
+					createdAt?: string
+					id?: number
+					name?: string
+					pointCurrency?: string
+					updatedAt?: string
+				}
+				Relationships: []
+			}
 			paymentMethodCategories: {
 				Row: {
 					createdAt: string
@@ -285,6 +513,7 @@ export type Database = {
 				Row: {
 					createdAt: string
 					id: string
+					loyaltyProgram: number | null
 					name: string
 					paymentMethodCategory: number
 					updatedAt: string
@@ -293,6 +522,7 @@ export type Database = {
 				Insert: {
 					createdAt?: string
 					id?: string
+					loyaltyProgram?: number | null
 					name?: string
 					paymentMethodCategory: number
 					updatedAt?: string
@@ -301,6 +531,7 @@ export type Database = {
 				Update: {
 					createdAt?: string
 					id?: string
+					loyaltyProgram?: number | null
 					name?: string
 					paymentMethodCategory?: number
 					updatedAt?: string
@@ -312,6 +543,13 @@ export type Database = {
 						columns: ['user']
 						isOneToOne: false
 						referencedRelation: 'profiles'
+						referencedColumns: ['id']
+					},
+					{
+						foreignKeyName: 'public_paymentMethods_loyaltyProgram_fkey'
+						columns: ['loyaltyProgram']
+						isOneToOne: false
+						referencedRelation: 'loyaltyPrograms'
 						referencedColumns: ['id']
 					},
 					{
