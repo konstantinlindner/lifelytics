@@ -142,7 +142,7 @@ export default function AddTransactionDialogContentInput({
 			paymentMethod: paymentMethod,
 			city: city,
 			category: category,
-			description: data.description,
+			description: data.description ?? null,
 		})
 
 		if (error) {
