@@ -12,6 +12,7 @@ import {
 	UserIcon,
 } from 'lucide-react'
 
+import { Button } from '@/components/ui/button'
 import {
 	CommandDialog,
 	CommandEmpty,
@@ -37,7 +38,7 @@ export default function CommandModal() {
 
 	useEffect(() => {
 		const down = (e: KeyboardEvent) => {
-			if (e.key === 'j' && (e.metaKey || e.ctrlKey)) {
+			if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
 				e.preventDefault()
 				setOpen((open) => !open)
 			}
@@ -49,13 +50,17 @@ export default function CommandModal() {
 
 	return (
 		<>
-			<p className="text-sm text-muted-foreground">
-				Press{' '}
-				<kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
-					<span className="text-xs">⌘</span>J
-				</kbd>{' '}
-				to open command bar
-			</p>
+			<Button
+				variant="outline"
+				className="lg:w-50 relative h-8 w-full justify-start rounded-[0.5rem] bg-background text-sm font-normal text-muted-foreground shadow-none sm:pr-12 md:w-52"
+				onClick={() => setOpen(true)}
+			>
+				<span>Search...</span>
+				<kbd className="pointer-events-none absolute right-[0.3rem] top-[0.3rem] hidden h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex">
+					<span className="text-xs">⌘</span>
+					<span>K</span>
+				</kbd>
+			</Button>
 			<CommandDialog open={open} onOpenChange={setOpen}>
 				<CommandInput placeholder="Type a command or search..." />
 				<CommandList>
