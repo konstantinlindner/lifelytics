@@ -291,34 +291,55 @@ export type Database = {
 				}
 				Relationships: []
 			}
+			flightLuggageCategories: {
+				Row: {
+					createdAt: string
+					id: number
+					name: string
+					updatedAt: string
+				}
+				Insert: {
+					createdAt?: string
+					id?: number
+					name: string
+					updatedAt?: string
+				}
+				Update: {
+					createdAt?: string
+					id?: number
+					name?: string
+					updatedAt?: string
+				}
+				Relationships: []
+			}
 			flights: {
 				Row: {
-					class: number
 					createdAt: string
 					id: string
+					luggageCategory: number
 					transaction: string
 					updatedAt: string
 				}
 				Insert: {
-					class: number
 					createdAt?: string
 					id?: string
+					luggageCategory: number
 					transaction: string
 					updatedAt?: string
 				}
 				Update: {
-					class?: number
 					createdAt?: string
 					id?: string
+					luggageCategory?: number
 					transaction?: string
 					updatedAt?: string
 				}
 				Relationships: [
 					{
-						foreignKeyName: 'public_flights_class_fkey'
-						columns: ['class']
+						foreignKeyName: 'public_flights_luggageCategory_fkey'
+						columns: ['luggageCategory']
 						isOneToOne: false
-						referencedRelation: 'flightClasses'
+						referencedRelation: 'flightLuggageCategories'
 						referencedColumns: ['id']
 					},
 					{
@@ -330,23 +351,108 @@ export type Database = {
 					},
 				]
 			}
-			flightSegments: {
+			flightSeatCategories: {
 				Row: {
 					createdAt: string
-					id: string
+					id: number
+					name: string
 					updatedAt: string
 				}
 				Insert: {
 					createdAt?: string
-					id?: string
+					id?: number
+					name: string
 					updatedAt?: string
 				}
 				Update: {
 					createdAt?: string
-					id?: string
+					id?: number
+					name?: string
 					updatedAt?: string
 				}
 				Relationships: []
+			}
+			flightSegments: {
+				Row: {
+					airline: number
+					arrivalAirport: number
+					class: number
+					createdAt: string
+					departureAirport: number
+					id: string
+					order: number
+					parentFlight: string
+					seatCategory: number
+					updatedAt: string
+				}
+				Insert: {
+					airline: number
+					arrivalAirport: number
+					class: number
+					createdAt?: string
+					departureAirport: number
+					id?: string
+					order: number
+					parentFlight: string
+					seatCategory: number
+					updatedAt?: string
+				}
+				Update: {
+					airline?: number
+					arrivalAirport?: number
+					class?: number
+					createdAt?: string
+					departureAirport?: number
+					id?: string
+					order?: number
+					parentFlight?: string
+					seatCategory?: number
+					updatedAt?: string
+				}
+				Relationships: [
+					{
+						foreignKeyName: 'public_flightSegments_airline_fkey'
+						columns: ['airline']
+						isOneToOne: false
+						referencedRelation: 'airlines'
+						referencedColumns: ['id']
+					},
+					{
+						foreignKeyName: 'public_flightSegments_class_fkey'
+						columns: ['class']
+						isOneToOne: false
+						referencedRelation: 'flightClasses'
+						referencedColumns: ['id']
+					},
+					{
+						foreignKeyName: 'public_flightSegments_flight_fkey'
+						columns: ['parentFlight']
+						isOneToOne: false
+						referencedRelation: 'flights'
+						referencedColumns: ['id']
+					},
+					{
+						foreignKeyName: 'public_flightSegments_flightSeatCategory_fkey'
+						columns: ['seatCategory']
+						isOneToOne: false
+						referencedRelation: 'flightSeatCategories'
+						referencedColumns: ['id']
+					},
+					{
+						foreignKeyName: 'public_flightSegments_fromAirport_fkey'
+						columns: ['departureAirport']
+						isOneToOne: false
+						referencedRelation: 'airports'
+						referencedColumns: ['id']
+					},
+					{
+						foreignKeyName: 'public_flightSegments_toAirport_fkey'
+						columns: ['arrivalAirport']
+						isOneToOne: false
+						referencedRelation: 'airports'
+						referencedColumns: ['id']
+					},
+				]
 			}
 			foodPlaceCategories: {
 				Row: {
