@@ -21,6 +21,11 @@ export const SidebarItems = [
 	// { title: "Other", href: "/dashboard/other" },
 	// { title: "Subscriptions", href: "/dashboard/subscriptions" },
 	// { title: "Income", href: "/dashboard/income" },
+	{
+		title: 'Payment methods',
+		href: '/dashboard/payment-methods',
+		header: 'Payment methods',
+	},
 ]
 
 export default function Sidebar() {
