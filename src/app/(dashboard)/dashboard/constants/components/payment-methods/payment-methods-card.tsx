@@ -13,8 +13,8 @@ import {
 	CardTitle,
 } from '@/components/ui/card'
 
+import ConstantsTable from '../constants-table'
 import { paymentMethodColumns } from './payment-methods-columns'
-import PaymentMethodsTable from './payment-methods-table'
 
 export default function PaymentMethodsCard() {
 	const paymentMethods = useUser((state) => state.paymentMethods)
@@ -33,7 +33,7 @@ export default function PaymentMethodsCard() {
 				</Button>
 			</div>
 			<CardContent>
-				<PaymentMethodsTable
+				<ConstantsTable
 					columns={paymentMethodColumns}
 					data={paymentMethods}
 				/>

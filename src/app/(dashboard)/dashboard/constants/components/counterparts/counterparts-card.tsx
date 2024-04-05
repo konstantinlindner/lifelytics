@@ -10,8 +10,8 @@ import {
 	CardTitle,
 } from '@/components/ui/card'
 
+import ConstantsTable from '../constants-table'
 import { counterpartsColumns } from './counterparts-columns'
-import CounterpartsTable from './counterparts-table'
 
 export default function CounterpartsCard() {
 	const counterparts = useUser((state) => state.counterparts)
@@ -25,7 +25,7 @@ export default function CounterpartsCard() {
 				</CardDescription>
 			</CardHeader>
 			<CardContent>
-				<CounterpartsTable
+				<ConstantsTable
 					columns={counterpartsColumns}
 					data={counterparts}
 				/>
