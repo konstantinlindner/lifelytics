@@ -12,7 +12,6 @@ import {
 	FoodPlaceCategory,
 	FoodTypeCategory,
 	LoyaltyProgram,
-	PaymentMethod,
 	PaymentMethodCategory,
 	TransactionCategory,
 } from '@/types/globals.types'
@@ -146,6 +145,15 @@ type FlightSegment = {
 	airline: Airline
 	class: FlightClass
 	seatCategory: FlightSeatCategory
+	createdAt: string
+	updatedAt: string
+}
+
+export type PaymentMethod = {
+	id: string
+	name: string
+	category: PaymentMethodCategory
+	loyaltyProgram: LoyaltyProgram | null
 	createdAt: string
 	updatedAt: string
 }
