@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils'
 
 import { Button } from '@/components/ui/button'
 
-export const SettingsTopbarItems = [
+export const settingsTopbarItems = [
 	{ title: 'Profile', href: '/dashboard/profile', header: 'Settings' },
 	{
 		title: 'Account',
@@ -21,7 +21,7 @@ export function SettingsTopbar() {
 
 	return (
 		<nav className="flex max-w-max flex-row space-x-1 rounded-lg bg-muted p-1">
-			{SettingsTopbarItems.map((item) => (
+			{settingsTopbarItems.map((item) => (
 				<Link key={item.href} href={item.href}>
 					<Button
 						variant="ghost"
