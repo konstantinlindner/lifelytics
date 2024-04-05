@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 
 import Logo from '@/components/logo'
 
-export const SidebarItems = [
+export const sidebarItems = [
 	{ title: 'Dashboard', href: '/dashboard', header: 'Dashboard' },
 	{
 		title: 'All transactions',
@@ -22,9 +22,17 @@ export const SidebarItems = [
 	// { title: "Subscriptions", href: "/dashboard/subscriptions" },
 	// { title: "Income", href: "/dashboard/income" },
 	{
-		title: 'Payment methods',
-		href: '/dashboard/payment-methods',
-		header: 'Payment methods',
+		title: 'Constants',
+		href: '/dashboard/constants',
+		header: 'Constants',
+	},
+]
+
+export const adminSidebarItems = [
+	{
+		title: 'Database',
+		href: '/dashboard/database',
+		header: 'Database',
 	},
 ]
 
@@ -37,7 +45,26 @@ export default function Sidebar() {
 				<Logo isDashboard />
 			</div>
 
-			{SidebarItems.map((item) => (
+			{sidebarItems.map((item) => (
+				<Link
+					className="w-44 justify-start"
+					key={item.href}
+					href={item.href}
+				>
+					<Button
+						variant="ghost"
+						className={
+							pathname === item.href
+								? 'w-44 justify-start bg-muted hover:bg-muted'
+								: 'w-44 justify-start hover:bg-transparent hover:underline'
+						}
+					>
+						{item.title}
+					</Button>
+				</Link>
+			))}
+
+			{adminSidebarItems.map((item) => (
 				<Link
 					className="w-44 justify-start"
 					key={item.href}
