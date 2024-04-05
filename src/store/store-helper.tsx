@@ -1,11 +1,11 @@
-import {
-	City,
-	Currency,
-	PaymentMethod,
-	TransactionCategory,
-} from '@/types/globals.types'
+import { City, Currency, TransactionCategory } from '@/types/globals.types'
 
-import { Transaction, useDatabase, useUser } from '@/store/use-store'
+import {
+	PaymentMethod,
+	Transaction,
+	useDatabase,
+	useUser,
+} from '@/store/use-store'
 
 import supabase from '@/lib/supabase'
 
@@ -216,7 +216,42 @@ export async function InitializeStore() {
 		)
 	}
 	if (counterparts) setCounterparts(counterparts)
-	if (paymentMethods) setPaymentMethods(paymentMethods)
+
+	if (paymentMethods) {
+		const formattedPaymentMethods = paymentMethods
+			.map((paymentMethod) => {
+				const category = paymentMethodCategories?.find(
+					(category) => category.id === paymentMethod.category,
+				)
+
+				if (!category) {
+					console.error(
+						`Error: Payment method with id: ${paymentMethod.id} does not have a category`,
+					)
+					return
+				}
+
+				const loyaltyProgram = loyaltyPrograms?.find(
+					(loyaltyProgram) =>
+						loyaltyProgram.id === paymentMethod.loyaltyProgram,
+				)
+
+				return {
+					id: paymentMethod.id,
+					name: paymentMethod.name,
+					category: category,
+					loyaltyProgram: loyaltyProgram ?? null,
+					createdAt: paymentMethod.createdAt,
+					updatedAt: paymentMethod.updatedAt,
+				}
+			})
+			.filter((paymentMethod): paymentMethod is PaymentMethod =>
+				Boolean(paymentMethod),
+			)
+
+		setPaymentMethods(formattedPaymentMethods)
+	}
+
 	if (transactions) {
 		const formattedTransactions = transactions
 			.map((transaction) => {
@@ -389,7 +424,10 @@ async function fetchSession() {
 
 		if (error) throw error
 
-		if (!data) return
+		if (!data) {
+			console.error('No data for session returned')
+			return
+		}
 
 		return data.session
 	} catch (error) {
