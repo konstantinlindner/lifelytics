@@ -40,7 +40,7 @@ import { Search } from './components/search'
 import { TypeFilter } from './components/type-filter'
 import { ViewOptions } from './components/view-options'
 
-type DataTableProps<TData, TValue> = {
+type TransactionTableProps<TData, TValue> = {
 	columns: ColumnDef<TData, TValue>[]
 	data: TData[]
 }
@@ -48,7 +48,7 @@ type DataTableProps<TData, TValue> = {
 export function TransactionTable<TData, TValue>({
 	columns,
 	data,
-}: DataTableProps<TData, TValue>) {
+}: TransactionTableProps<TData, TValue>) {
 	const [sorting, setSorting] = useState<SortingState>([])
 	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
 	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
