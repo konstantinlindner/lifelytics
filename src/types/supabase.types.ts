@@ -665,6 +665,7 @@ export type Database = {
 					createdAt: string
 					firstName: string | null
 					id: string
+					isAdmin: boolean
 					lastName: string | null
 					onboardingCompletedDate: string | null
 					primaryCurrency: string | null
@@ -678,6 +679,7 @@ export type Database = {
 					createdAt?: string
 					firstName?: string | null
 					id: string
+					isAdmin?: boolean
 					lastName?: string | null
 					onboardingCompletedDate?: string | null
 					primaryCurrency?: string | null
@@ -691,6 +693,7 @@ export type Database = {
 					createdAt?: string
 					firstName?: string | null
 					id?: string
+					isAdmin?: boolean
 					lastName?: string | null
 					onboardingCompletedDate?: string | null
 					primaryCurrency?: string | null
