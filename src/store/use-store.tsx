@@ -63,6 +63,8 @@ type User = {
 	setId: (id: string) => void
 	email: string | undefined
 	setEmail: (email: string | undefined) => void
+	isAdmin: boolean | undefined
+	setIsAdmin: (isAdmin: boolean | undefined) => void
 	firstName: string | undefined | null
 	setFirstName: (firstName: string | undefined | null) => void
 	lastName: string | undefined | null
@@ -221,6 +223,10 @@ export const useUser = create<User>((set) => ({
 	email: undefined,
 	setEmail: (email: string | undefined) => {
 		set({ email })
+	},
+	isAdmin: undefined,
+	setIsAdmin: (isAdmin: boolean | undefined) => {
+		set({ isAdmin })
 	},
 	firstName: undefined,
 	setFirstName: (firstName: string | undefined | null) => {
