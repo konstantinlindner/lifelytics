@@ -150,6 +150,7 @@ export async function InitializeStore() {
 	// set user
 	const setId = useUser.getState().setId
 	const setEmail = useUser.getState().setEmail
+	const setIsAdmin = useUser.getState().setIsAdmin
 	const setFirstName = useUser.getState().setFirstName
 	const setLastName = useUser.getState().setLastName
 	const setFullName = useUser.getState().setFullName
@@ -190,6 +191,7 @@ export async function InitializeStore() {
 	if (session) setEmail(session.user.email)
 	if (profile) {
 		setId(profile.id)
+		setIsAdmin(profile.isAdmin)
 		setFirstName(profile.firstName)
 		setLastName(profile.lastName)
 		setFullName(`${profile.firstName} ${profile.lastName}`)
