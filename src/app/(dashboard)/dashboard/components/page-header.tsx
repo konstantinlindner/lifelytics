@@ -2,10 +2,14 @@
 
 import { usePathname } from 'next/navigation'
 
-import { SettingsTopbarItems } from '../(settings)/components/settings-topbar'
-import { SidebarItems } from './sidebar'
+import { settingsTopbarItems } from '../(settings)/components/settings-topbar'
+import { adminSidebarItems, sidebarItems } from './sidebar'
 
-const allSidebarItems = [...SidebarItems, ...SettingsTopbarItems]
+const allSidebarItems = [
+	...sidebarItems,
+	...adminSidebarItems,
+	...settingsTopbarItems,
+]
 
 export default function PageHeader() {
 	const pathname = usePathname()
