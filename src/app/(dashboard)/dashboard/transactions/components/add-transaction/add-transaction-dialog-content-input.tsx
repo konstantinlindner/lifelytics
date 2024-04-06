@@ -93,9 +93,7 @@ export default function AddTransactionDialogContentInput({
 		resolver: zodResolver(FormSchema),
 		defaultValues: {
 			transactionDate: new Date(),
-			category: !screen.transactionCategoryId
-				? undefined
-				: screen.transactionCategoryId,
+			category: screen.transactionCategoryId ?? undefined,
 			currency: defaultCurrency?.id,
 		},
 	})
