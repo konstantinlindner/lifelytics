@@ -92,6 +92,7 @@ export default function AddTransactionDialogContentInput({
 	const form = useForm<z.infer<typeof FormSchema>>({
 		resolver: zodResolver(FormSchema),
 		defaultValues: {
+			transactionDate: new Date(),
 			category: !screen.transactionCategoryId
 				? undefined
 				: screen.transactionCategoryId,
