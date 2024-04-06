@@ -101,7 +101,7 @@ export default function ConstantsTable<TData, TValue>({
 								colSpan={columns.length}
 								className="h-24 text-center"
 							>
-								No data
+								No entries
 							</TableCell>
 						</TableRow>
 					)}
