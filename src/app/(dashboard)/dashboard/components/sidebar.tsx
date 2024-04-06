@@ -10,7 +10,7 @@ import Logo from '@/components/logo'
 export const sidebarItems = [
 	{ title: 'Dashboard', href: '/dashboard', header: 'Dashboard' },
 	{
-		title: 'All transactions',
+		title: 'Transactions',
 		href: '/dashboard/transactions',
 		header: 'Transactions',
 	},
