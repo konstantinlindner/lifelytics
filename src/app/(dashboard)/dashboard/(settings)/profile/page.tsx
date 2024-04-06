@@ -7,7 +7,6 @@ import {
 	setFirstName,
 	setLastName,
 	setLocation,
-	setPrimaryCurrency,
 	setWebsite,
 	updateEmail,
 } from '@/store/store-helper'
@@ -24,6 +23,7 @@ import * as z from 'zod'
 import { CheckIcon, ChevronsUpDownIcon } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
 import {
 	Command,
 	CommandEmpty,
@@ -74,9 +74,6 @@ const formSchema = z.object({
 		.email(),
 	birthDate: z.date().optional(),
 	website: z.string().trim().optional(),
-	currency: z.string({
-		required_error: 'Please select a currency',
-	}),
 	city: z.coerce.number({
 		required_error: 'Please select a city',
 	}),
@@ -85,7 +82,6 @@ const formSchema = z.object({
 export default function Profile() {
 	const [isLoading, setIsLoading] = useState(false)
 
-	const currencies = useDatabase((state) => state.currencies)
 	const cities = useDatabase((state) => state.cities)
 
 	const firstName = useUser((state) => state.firstName)
@@ -93,7 +89,6 @@ export default function Profile() {
 	const email = useUser((state) => state.email)
 	const birthDate = useUser((state) => state.birthDate)
 	const website = useUser((state) => state.website)
-	const currency = useUser((state) => state.primaryCurrency)
 	const city = useUser((state) => state.city)
 
 	const form = useForm<z.infer<typeof formSchema>>({
@@ -103,7 +98,6 @@ export default function Profile() {
 			email: email,
 			birthDate: birthDate ?? undefined,
 			website: website ?? undefined,
-			currency: currency?.id ?? undefined,
 			city: city?.id ?? undefined,
 		},
 		resolver: zodResolver(formSchema),
@@ -133,17 +127,6 @@ export default function Profile() {
 				await setWebsite({ website: values.website })
 			}
 
-			const primaryCurrency = currencies.find(
-				(currency) => currency.id === values.currency,
-			)
-			if (
-				primaryCurrency &&
-				values.currency &&
-				values.currency !== currency?.id
-			) {
-				await setPrimaryCurrency({ primaryCurrency })
-			}
-
 			const location = cities.find((city) => city.id === values.city)
 
 			if (location && values.city && values.city !== city?.id) {
@@ -164,57 +147,61 @@ export default function Profile() {
 
 	return (
 		<main>
-			<div className="flex flex-col content-start space-y-4">
-				<ProfilePictureUpload />
+			<Card className="flex max-w-sm flex-col gap-4 p-6">
+				<div className="mx-auto">
+					<ProfilePictureUpload />
+				</div>
 
 				<Form {...form}>
 					<form
 						onSubmit={form.handleSubmit(handleSave)}
-						className="max-w-xs space-y-2"
+						className="space-y-2"
 					>
-						<FormField
-							control={form.control}
-							name="firstName"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>First name</FormLabel>
-									<FormControl>
-										<Input
-											id="firstName"
-											defaultValue={firstName ?? ''}
-											type="text"
-											autoCapitalize="words"
-											autoComplete="given-name"
-											autoCorrect="on"
-											{...field}
-										/>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
+						<div className="flex gap-2">
+							<FormField
+								control={form.control}
+								name="firstName"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>First</FormLabel>
+										<FormControl>
+											<Input
+												id="firstName"
+												defaultValue={firstName ?? ''}
+												type="text"
+												autoCapitalize="words"
+												autoComplete="given-name"
+												autoCorrect="on"
+												{...field}
+											/>
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
 
-						<FormField
-							control={form.control}
-							name="lastName"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Last name</FormLabel>
-									<FormControl>
-										<Input
-											id="lastName"
-											defaultValue={lastName ?? ''}
-											type="text"
-											autoCapitalize="words"
-											autoComplete="family-name"
-											autoCorrect="on"
-											{...field}
-										/>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
+							<FormField
+								control={form.control}
+								name="lastName"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Last</FormLabel>
+										<FormControl>
+											<Input
+												id="lastName"
+												defaultValue={lastName ?? ''}
+												type="text"
+												autoCapitalize="words"
+												autoComplete="family-name"
+												autoCorrect="on"
+												{...field}
+											/>
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+						</div>
 
 						<FormField
 							control={form.control}
@@ -280,81 +267,6 @@ export default function Profile() {
 											{...field}
 										/>
 									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-
-						<FormField
-							control={form.control}
-							name="currency"
-							render={({ field }) => (
-								<FormItem className="flex flex-col">
-									<FormLabel>Default currency</FormLabel>
-									<Popover>
-										<PopoverTrigger asChild>
-											<FormControl>
-												<Button
-													variant="outline"
-													role="combobox"
-													className={cn(
-														'w-[200px] justify-between',
-														!field.value &&
-															'text-muted-foreground',
-													)}
-												>
-													{field.value
-														? currencies?.find(
-																(currency) =>
-																	currency.id ===
-																	field.value,
-														  )?.code
-														: 'Select currency'}
-													<ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-												</Button>
-											</FormControl>
-										</PopoverTrigger>
-										<PopoverContent className="w-[200px] p-0">
-											<Command>
-												<CommandInput placeholder="Search currency..." />
-												<CommandEmpty>
-													No currency found.
-												</CommandEmpty>
-												<CommandGroup className="max-h-[20rem] overflow-y-auto">
-													{currencies?.map(
-														(currency) => (
-															<CommandItem
-																value={
-																	currency.name
-																}
-																key={
-																	currency.id
-																}
-																onSelect={() => {
-																	form.setValue(
-																		'currency',
-																		currency.id ??
-																			'',
-																	)
-																}}
-															>
-																<CheckIcon
-																	className={cn(
-																		'mr-2 h-4 w-4',
-																		currency.id ===
-																			field.value
-																			? 'opacity-100'
-																			: 'opacity-0',
-																	)}
-																/>
-																{currency.name}
-															</CommandItem>
-														),
-													)}
-												</CommandGroup>
-											</Command>
-										</PopoverContent>
-									</Popover>
 									<FormMessage />
 								</FormItem>
 							)}
@@ -435,13 +347,13 @@ export default function Profile() {
 								{isLoading ? (
 									<LoadingIndicator size="sm" />
 								) : (
-									'Save'
+									'Save changes'
 								)}
 							</Button>
 						</div>
 					</form>
 				</Form>
-			</div>
+			</Card>
 		</main>
 	)
 }
