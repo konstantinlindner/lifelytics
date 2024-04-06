@@ -178,6 +178,13 @@ export const transactionColumns: ColumnDef<Transaction>[] = [
 		},
 	},
 	{
+		id: 'description',
+		accessorKey: 'description',
+		header: ({ column }) => (
+			<ColumnHeader column={column} title="Description" />
+		),
+	},
+	{
 		id: 'expand',
 		cell: ({ row }) => {
 			return (
