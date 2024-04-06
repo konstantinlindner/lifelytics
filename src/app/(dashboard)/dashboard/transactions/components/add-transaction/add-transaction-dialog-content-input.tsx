@@ -56,8 +56,8 @@ const FormSchema = z.object({
 	}),
 	amount: z.coerce
 		.number({
-			required_error: 'Please specify the amount of the transaction',
-			invalid_type_error: 'Please specify the amount of the transaction',
+			required_error: 'Please specify the amount',
+			invalid_type_error: 'Please specify the amount',
 		})
 		.positive(),
 	currency: z.string({
@@ -68,6 +68,7 @@ const FormSchema = z.object({
 	}),
 	city: z.coerce.number({
 		required_error: 'Please select a city',
+		invalid_type_error: 'Please select a city',
 	}),
 	description: z.string().optional(),
 })
