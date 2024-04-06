@@ -54,6 +54,7 @@ export function TransactionTable<TData, TValue>({
 	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
 		country: false,
 		currency: false,
+		description: false,
 	})
 	const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
 	const [expanded, setExpanded] = useState<ExpandedState>({})
@@ -172,6 +173,15 @@ export function TransactionTable<TData, TValue>({
 																  )}, ${row.getValue(
 																		'country',
 																  )}`}
+														</span>
+													</p>
+
+													<p>
+														Description:{' '}
+														<span className="font-bold">
+															{row.getValue(
+																'description',
+															)}
 														</span>
 													</p>
 												</TableCell>
