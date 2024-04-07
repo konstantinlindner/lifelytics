@@ -9,6 +9,108 @@ export type Json =
 export type Database = {
 	public: {
 		Tables: {
+			accommodationCategories: {
+				Row: {
+					createdAt: string
+					id: number
+					name: string
+					type: number
+					updatedAt: string
+				}
+				Insert: {
+					createdAt?: string
+					id?: number
+					name: string
+					type: number
+					updatedAt?: string
+				}
+				Update: {
+					createdAt?: string
+					id?: number
+					name?: string
+					type?: number
+					updatedAt?: string
+				}
+				Relationships: [
+					{
+						foreignKeyName: 'public_accommodationCategories_type_fkey'
+						columns: ['type']
+						isOneToOne: false
+						referencedRelation: 'accommodationTypes'
+						referencedColumns: ['id']
+					},
+				]
+			}
+			accommodationTransactions: {
+				Row: {
+					category: number
+					createdAt: string
+					homeTransaction: string
+					id: string
+					type: number
+					updatedAt: string
+				}
+				Insert: {
+					category: number
+					createdAt?: string
+					homeTransaction: string
+					id?: string
+					type: number
+					updatedAt?: string
+				}
+				Update: {
+					category?: number
+					createdAt?: string
+					homeTransaction?: string
+					id?: string
+					type?: number
+					updatedAt?: string
+				}
+				Relationships: [
+					{
+						foreignKeyName: 'public_accommodationTransactions_category_fkey'
+						columns: ['category']
+						isOneToOne: false
+						referencedRelation: 'accommodationCategories'
+						referencedColumns: ['id']
+					},
+					{
+						foreignKeyName: 'public_accommodationTransactions_homeTransaction_fkey'
+						columns: ['homeTransaction']
+						isOneToOne: false
+						referencedRelation: 'homeTransactions'
+						referencedColumns: ['id']
+					},
+					{
+						foreignKeyName: 'public_accommodationTransactions_type_fkey'
+						columns: ['type']
+						isOneToOne: false
+						referencedRelation: 'accommodationTypes'
+						referencedColumns: ['id']
+					},
+				]
+			}
+			accommodationTypes: {
+				Row: {
+					createdAt: string
+					id: number
+					name: string
+					updatedAt: string
+				}
+				Insert: {
+					createdAt?: string
+					id?: number
+					name: string
+					updatedAt?: string
+				}
+				Update: {
+					createdAt?: string
+					id?: number
+					name?: string
+					updatedAt?: string
+				}
+				Relationships: []
+			}
 			airlineAlliances: {
 				Row: {
 					createdAt: string
@@ -131,6 +233,66 @@ export type Database = {
 						columns: ['city']
 						isOneToOne: false
 						referencedRelation: 'cities'
+						referencedColumns: ['id']
+					},
+				]
+			}
+			carCategories: {
+				Row: {
+					createdAt: string
+					id: number
+					name: string
+					updatedAt: string
+				}
+				Insert: {
+					createdAt?: string
+					id?: number
+					name: string
+					updatedAt?: string
+				}
+				Update: {
+					createdAt?: string
+					id?: number
+					name?: string
+					updatedAt?: string
+				}
+				Relationships: []
+			}
+			carTransactions: {
+				Row: {
+					category: number
+					createdAt: string
+					id: string
+					transportationTransaction: string
+					updatedAt: string
+				}
+				Insert: {
+					category: number
+					createdAt?: string
+					id?: string
+					transportationTransaction: string
+					updatedAt?: string
+				}
+				Update: {
+					category?: number
+					createdAt?: string
+					id?: string
+					transportationTransaction?: string
+					updatedAt?: string
+				}
+				Relationships: [
+					{
+						foreignKeyName: 'public_carTransactions_category_fkey'
+						columns: ['category']
+						isOneToOne: false
+						referencedRelation: 'carCategories'
+						referencedColumns: ['id']
+					},
+					{
+						foreignKeyName: 'public_carTransactions_transportationTransaction_fkey'
+						columns: ['transportationTransaction']
+						isOneToOne: false
+						referencedRelation: 'transportationTransactions'
 						referencedColumns: ['id']
 					},
 				]
@@ -312,7 +474,110 @@ export type Database = {
 				}
 				Relationships: []
 			}
-			flights: {
+			flightSeatCategories: {
+				Row: {
+					createdAt: string
+					id: number
+					name: string
+					updatedAt: string
+				}
+				Insert: {
+					createdAt?: string
+					id?: number
+					name: string
+					updatedAt?: string
+				}
+				Update: {
+					createdAt?: string
+					id?: number
+					name?: string
+					updatedAt?: string
+				}
+				Relationships: []
+			}
+			flightSegments: {
+				Row: {
+					airline: number
+					arrivalAirport: number
+					class: number
+					createdAt: string
+					departureAirport: number
+					flightTransaction: string
+					id: string
+					order: number
+					seatCategory: number
+					updatedAt: string
+				}
+				Insert: {
+					airline: number
+					arrivalAirport: number
+					class: number
+					createdAt?: string
+					departureAirport: number
+					flightTransaction: string
+					id?: string
+					order: number
+					seatCategory: number
+					updatedAt?: string
+				}
+				Update: {
+					airline?: number
+					arrivalAirport?: number
+					class?: number
+					createdAt?: string
+					departureAirport?: number
+					flightTransaction?: string
+					id?: string
+					order?: number
+					seatCategory?: number
+					updatedAt?: string
+				}
+				Relationships: [
+					{
+						foreignKeyName: 'public_flightSegments_airline_fkey'
+						columns: ['airline']
+						isOneToOne: false
+						referencedRelation: 'airlines'
+						referencedColumns: ['id']
+					},
+					{
+						foreignKeyName: 'public_flightSegments_class_fkey'
+						columns: ['class']
+						isOneToOne: false
+						referencedRelation: 'flightClasses'
+						referencedColumns: ['id']
+					},
+					{
+						foreignKeyName: 'public_flightSegments_flight_fkey'
+						columns: ['flightTransaction']
+						isOneToOne: false
+						referencedRelation: 'flightTransactions'
+						referencedColumns: ['id']
+					},
+					{
+						foreignKeyName: 'public_flightSegments_flightSeatCategory_fkey'
+						columns: ['seatCategory']
+						isOneToOne: false
+						referencedRelation: 'flightSeatCategories'
+						referencedColumns: ['id']
+					},
+					{
+						foreignKeyName: 'public_flightSegments_fromAirport_fkey'
+						columns: ['departureAirport']
+						isOneToOne: false
+						referencedRelation: 'airports'
+						referencedColumns: ['id']
+					},
+					{
+						foreignKeyName: 'public_flightSegments_toAirport_fkey'
+						columns: ['arrivalAirport']
+						isOneToOne: false
+						referencedRelation: 'airports'
+						referencedColumns: ['id']
+					},
+				]
+			}
+			flightTransactions: {
 				Row: {
 					createdAt: string
 					id: string
@@ -347,109 +612,6 @@ export type Database = {
 						columns: ['transaction']
 						isOneToOne: false
 						referencedRelation: 'transactions'
-						referencedColumns: ['id']
-					},
-				]
-			}
-			flightSeatCategories: {
-				Row: {
-					createdAt: string
-					id: number
-					name: string
-					updatedAt: string
-				}
-				Insert: {
-					createdAt?: string
-					id?: number
-					name: string
-					updatedAt?: string
-				}
-				Update: {
-					createdAt?: string
-					id?: number
-					name?: string
-					updatedAt?: string
-				}
-				Relationships: []
-			}
-			flightSegments: {
-				Row: {
-					airline: number
-					arrivalAirport: number
-					class: number
-					createdAt: string
-					departureAirport: number
-					id: string
-					order: number
-					parentFlight: string
-					seatCategory: number
-					updatedAt: string
-				}
-				Insert: {
-					airline: number
-					arrivalAirport: number
-					class: number
-					createdAt?: string
-					departureAirport: number
-					id?: string
-					order: number
-					parentFlight: string
-					seatCategory: number
-					updatedAt?: string
-				}
-				Update: {
-					airline?: number
-					arrivalAirport?: number
-					class?: number
-					createdAt?: string
-					departureAirport?: number
-					id?: string
-					order?: number
-					parentFlight?: string
-					seatCategory?: number
-					updatedAt?: string
-				}
-				Relationships: [
-					{
-						foreignKeyName: 'public_flightSegments_airline_fkey'
-						columns: ['airline']
-						isOneToOne: false
-						referencedRelation: 'airlines'
-						referencedColumns: ['id']
-					},
-					{
-						foreignKeyName: 'public_flightSegments_class_fkey'
-						columns: ['class']
-						isOneToOne: false
-						referencedRelation: 'flightClasses'
-						referencedColumns: ['id']
-					},
-					{
-						foreignKeyName: 'public_flightSegments_flight_fkey'
-						columns: ['parentFlight']
-						isOneToOne: false
-						referencedRelation: 'flights'
-						referencedColumns: ['id']
-					},
-					{
-						foreignKeyName: 'public_flightSegments_flightSeatCategory_fkey'
-						columns: ['seatCategory']
-						isOneToOne: false
-						referencedRelation: 'flightSeatCategories'
-						referencedColumns: ['id']
-					},
-					{
-						foreignKeyName: 'public_flightSegments_fromAirport_fkey'
-						columns: ['departureAirport']
-						isOneToOne: false
-						referencedRelation: 'airports'
-						referencedColumns: ['id']
-					},
-					{
-						foreignKeyName: 'public_flightSegments_toAirport_fkey'
-						columns: ['arrivalAirport']
-						isOneToOne: false
-						referencedRelation: 'airports'
 						referencedColumns: ['id']
 					},
 				]
@@ -559,6 +721,126 @@ export type Database = {
 					updatedAt?: string
 				}
 				Relationships: []
+			}
+			healthAndWellnessCategories: {
+				Row: {
+					createdAt: string
+					id: number
+					name: string
+					updatedAt: string
+				}
+				Insert: {
+					createdAt?: string
+					id?: number
+					name?: string
+					updatedAt?: string
+				}
+				Update: {
+					createdAt?: string
+					id?: number
+					name?: string
+					updatedAt?: string
+				}
+				Relationships: []
+			}
+			healthAndWellnessTransactions: {
+				Row: {
+					category: number
+					createdAt: string
+					id: string
+					transaction: string
+					updatedAt: string
+				}
+				Insert: {
+					category: number
+					createdAt?: string
+					id?: string
+					transaction: string
+					updatedAt?: string
+				}
+				Update: {
+					category?: number
+					createdAt?: string
+					id?: string
+					transaction?: string
+					updatedAt?: string
+				}
+				Relationships: [
+					{
+						foreignKeyName: 'public_healthAndWellnessTransactions_category_fkey'
+						columns: ['category']
+						isOneToOne: false
+						referencedRelation: 'healthAndWellnessCategories'
+						referencedColumns: ['id']
+					},
+					{
+						foreignKeyName: 'public_healthAndWellnessTransactions_transaction_fkey'
+						columns: ['transaction']
+						isOneToOne: false
+						referencedRelation: 'transactions'
+						referencedColumns: ['id']
+					},
+				]
+			}
+			homeCategories: {
+				Row: {
+					createdAt: string
+					id: number
+					name: string
+					updatedAt: string
+				}
+				Insert: {
+					createdAt?: string
+					id?: number
+					name: string
+					updatedAt?: string
+				}
+				Update: {
+					createdAt?: string
+					id?: number
+					name?: string
+					updatedAt?: string
+				}
+				Relationships: []
+			}
+			homeTransactions: {
+				Row: {
+					category: number
+					createdAt: string
+					id: string
+					transaction: string
+					updatedAt: string
+				}
+				Insert: {
+					category: number
+					createdAt?: string
+					id?: string
+					transaction: string
+					updatedAt?: string
+				}
+				Update: {
+					category?: number
+					createdAt?: string
+					id?: string
+					transaction?: string
+					updatedAt?: string
+				}
+				Relationships: [
+					{
+						foreignKeyName: 'public_homeTransactions_category_fkey'
+						columns: ['category']
+						isOneToOne: false
+						referencedRelation: 'homeCategories'
+						referencedColumns: ['id']
+					},
+					{
+						foreignKeyName: 'public_homeTransactions_transaction_fkey'
+						columns: ['transaction']
+						isOneToOne: false
+						referencedRelation: 'transactions'
+						referencedColumns: ['id']
+					},
+				]
 			}
 			loyaltyPrograms: {
 				Row: {
@@ -724,6 +1006,66 @@ export type Database = {
 					},
 				]
 			}
+			shoppingCategories: {
+				Row: {
+					createdAt: string
+					id: number
+					name: string
+					updatedAt: string
+				}
+				Insert: {
+					createdAt?: string
+					id?: number
+					name: string
+					updatedAt?: string
+				}
+				Update: {
+					createdAt?: string
+					id?: number
+					name?: string
+					updatedAt?: string
+				}
+				Relationships: []
+			}
+			shoppingTransactions: {
+				Row: {
+					category: number
+					createdAt: string
+					id: string
+					transaction: string
+					updatedAt: string
+				}
+				Insert: {
+					category: number
+					createdAt?: string
+					id?: string
+					transaction: string
+					updatedAt?: string
+				}
+				Update: {
+					category?: number
+					createdAt?: string
+					id?: string
+					transaction?: string
+					updatedAt?: string
+				}
+				Relationships: [
+					{
+						foreignKeyName: 'public_shoppingTransactions_category_fkey'
+						columns: ['category']
+						isOneToOne: false
+						referencedRelation: 'shoppingCategories'
+						referencedColumns: ['id']
+					},
+					{
+						foreignKeyName: 'public_shoppingTransactions_transaction_fkey'
+						columns: ['transaction']
+						isOneToOne: false
+						referencedRelation: 'transactions'
+						referencedColumns: ['id']
+					},
+				]
+			}
 			transactionCategories: {
 				Row: {
 					createdAt: string
@@ -838,6 +1180,66 @@ export type Database = {
 						columns: ['user']
 						isOneToOne: false
 						referencedRelation: 'profiles'
+						referencedColumns: ['id']
+					},
+				]
+			}
+			transportationCategories: {
+				Row: {
+					createdAt: string
+					id: number
+					name: string
+					updatedAt: string
+				}
+				Insert: {
+					createdAt?: string
+					id?: number
+					name: string
+					updatedAt?: string
+				}
+				Update: {
+					createdAt?: string
+					id?: number
+					name?: string
+					updatedAt?: string
+				}
+				Relationships: []
+			}
+			transportationTransactions: {
+				Row: {
+					category: number
+					createdAt: string
+					id: string
+					transaction: string
+					updatedAt: string
+				}
+				Insert: {
+					category: number
+					createdAt?: string
+					id?: string
+					transaction: string
+					updatedAt?: string
+				}
+				Update: {
+					category?: number
+					createdAt?: string
+					id?: string
+					transaction?: string
+					updatedAt?: string
+				}
+				Relationships: [
+					{
+						foreignKeyName: 'public_transportationTransactions_category_fkey'
+						columns: ['category']
+						isOneToOne: false
+						referencedRelation: 'transportationCategories'
+						referencedColumns: ['id']
+					},
+					{
+						foreignKeyName: 'public_transportationTransactions_transaction_fkey'
+						columns: ['transaction']
+						isOneToOne: false
+						referencedRelation: 'transactions'
 						referencedColumns: ['id']
 					},
 				]
