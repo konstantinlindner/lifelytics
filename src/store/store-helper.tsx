@@ -8,6 +8,7 @@ import {
 } from '@/store/use-store'
 
 import supabase from '@/lib/supabase'
+import { cn } from '@/lib/utils'
 
 import dayjs from 'dayjs'
 
@@ -219,24 +220,17 @@ export async function InitializeStore() {
 		setWebsite(profile.website)
 		setCreatedAt(profile.createdAt)
 		setUpdatedAt(profile.updatedAt)
-		const userCity = cities?.find((city) => city.id === profile.city)
-		setCity(userCity)
-		setCountry(
-			countries?.find((country) => country.id === userCity?.country),
-		)
-		setPrimaryCurrency(
-			currencies?.find(
-				(currency) => currency.id === profile.primaryCurrency,
-			),
-		)
+		setCity(getCityFromId(profile.city))
+		setCountry(getCountryFromCityId(profile.city))
+		setPrimaryCurrency(getCurrencyFromId(profile.primaryCurrency))
 	}
 	if (counterparts) setCounterparts(counterparts)
 
 	if (paymentMethods) {
 		const formattedPaymentMethods = paymentMethods
 			.map((paymentMethod) => {
-				const category = paymentMethodCategories?.find(
-					(category) => category.id === paymentMethod.category,
+				const category = getPaymentMethodCategoryFromId(
+					paymentMethod.category,
 				)
 
 				if (!category) {
@@ -246,16 +240,13 @@ export async function InitializeStore() {
 					return
 				}
 
-				const loyaltyProgram = loyaltyPrograms?.find(
-					(loyaltyProgram) =>
-						loyaltyProgram.id === paymentMethod.loyaltyProgram,
-				)
-
 				return {
 					id: paymentMethod.id,
 					name: paymentMethod.name,
 					category: category,
-					loyaltyProgram: loyaltyProgram ?? null,
+					loyaltyProgram: getLoyaltyProgramFromId(
+						paymentMethod.loyaltyProgram,
+					),
 					createdAt: paymentMethod.createdAt,
 					updatedAt: paymentMethod.updatedAt,
 				}
@@ -279,20 +270,12 @@ export async function InitializeStore() {
 					if (foodAndDrinkTransaction) {
 						return {
 							id: foodAndDrinkTransaction.id,
-							placeCategory: useDatabase
-								.getState()
-								.foodAndDrinkPlaceCategories?.find(
-									(category) =>
-										category.id ===
-										foodAndDrinkTransaction.foodPlaceCategory,
-								),
-							typeCategory: useDatabase
-								.getState()
-								.foodAndDrinkTypeCategories?.find(
-									(category) =>
-										category.id ===
-										foodAndDrinkTransaction?.foodTypeCategory,
-								),
+							placeCategory: getFoodAndDrinkPlaceCategoryFromId(
+								foodAndDrinkTransaction.placeCategory,
+							),
+							typeCategory: getFoodAndDrinkTypeCategoryFromId(
+								foodAndDrinkTransaction?.typeCategory,
+							),
 							isEatIn: foodAndDrinkTransaction.isEatIn,
 							isTakeAway: foodAndDrinkTransaction.isTakeAway,
 							isLeftovers: foodAndDrinkTransaction.isLeftovers,
@@ -314,13 +297,9 @@ export async function InitializeStore() {
 					if (healthAndWellnessTransaction) {
 						return {
 							id: healthAndWellnessTransaction.id,
-							category: useDatabase
-								.getState()
-								.healthAndWellnessCategories?.find(
-									(category) =>
-										category.id ===
-										healthAndWellnessTransaction.category,
-								),
+							category: getHealthAndWellnessCategoryFromId(
+								healthAndWellnessTransaction.category,
+							),
 							createdAt: healthAndWellnessTransaction.createdAt,
 							updatedAt: healthAndWellnessTransaction.updatedAt,
 						}
@@ -345,20 +324,12 @@ export async function InitializeStore() {
 							if (accommodationTransaction) {
 								return {
 									id: accommodationTransaction.id,
-									type: useDatabase
-										.getState()
-										.accommodationTypes?.find(
-											(type) =>
-												type.id ===
-												accommodationTransaction.type,
-										),
-									category: useDatabase
-										.getState()
-										.accommodationCategories?.find(
-											(category) =>
-												category.id ===
-												accommodationTransaction.category,
-										),
+									type: getAccommodationTypeFromId(
+										accommodationTransaction.type,
+									),
+									category: getAccommodationCategoryFromId(
+										accommodationTransaction.category,
+									),
 									createdAt:
 										accommodationTransaction.createdAt,
 									updatedAt:
@@ -369,13 +340,9 @@ export async function InitializeStore() {
 
 						return {
 							id: homeTransaction.id,
-							category: useDatabase
-								.getState()
-								.homeCategories?.find(
-									(category) =>
-										category.id ===
-										homeTransaction.category,
-								),
+							category: getHomeCategoryFromId(
+								homeTransaction.category,
+							),
 							accommodationTransaction:
 								formattedAccommodationTransaction ?? null,
 							createdAt: homeTransaction.createdAt,
@@ -392,13 +359,9 @@ export async function InitializeStore() {
 					if (shoppingTransaction) {
 						return {
 							id: shoppingTransaction.id,
-							category: useDatabase
-								.getState()
-								.shoppingCategories?.find(
-									(category) =>
-										category.id ===
-										shoppingTransaction.category,
-								),
+							category: getShoppingCategoryFromId(
+								shoppingTransaction.category,
+							),
 							createdAt: shoppingTransaction.createdAt,
 							updatedAt: shoppingTransaction.updatedAt,
 						}
@@ -430,51 +393,29 @@ export async function InitializeStore() {
 
 								return {
 									id: flightTransaction.id,
-									luggageCategory: useDatabase
-										.getState()
-										.flightLuggageCategories?.find(
-											(category) =>
-												category.id ===
-												flightTransaction.luggageCategory,
+									luggageCategory:
+										getFlightLuggageCategoryFromId(
+											flightTransaction.luggageCategory,
 										),
 									segments: flightSegmentChildren?.map(
 										(segment) => ({
 											id: segment.id,
 											order: segment.order,
-											departureAirport: useDatabase
-												.getState()
-												.airports?.find(
-													(airport) =>
-														airport.id ===
-														segment.departureAirport,
-												),
-											arrivalAirport: useDatabase
-												.getState()
-												.airports?.find(
-													(airport) =>
-														airport.id ===
-														segment.arrivalAirport,
-												),
-											airline: useDatabase
-												.getState()
-												.airlines?.find(
-													(airline) =>
-														airline.id ===
-														segment.airline,
-												),
-											class: useDatabase
-												.getState()
-												.flightClasses?.find(
-													(flightClass) =>
-														flightClass.id ===
-														segment.class,
-												),
-											seatCategory: useDatabase
-												.getState()
-												.flightSeatCategories?.find(
-													(seatCategory) =>
-														seatCategory.id ===
-														segment.seatCategory,
+											departureAirport: getAirportFromId(
+												segment.departureAirport,
+											),
+											arrivalAirport: getAirportFromId(
+												segment.arrivalAirport,
+											),
+											airline: getAirlineFromId(
+												segment.airline,
+											),
+											class: getFlightClassFromId(
+												segment.class,
+											),
+											seatCategory:
+												getFlightSeatCategoryFromId(
+													segment.seatCategory,
 												),
 											createdAt: segment.createdAt,
 											updatedAt: segment.updatedAt,
@@ -496,13 +437,9 @@ export async function InitializeStore() {
 							if (carTransaction) {
 								return {
 									id: carTransaction.id,
-									category: useDatabase
-										.getState()
-										.carCategories?.find(
-											(category) =>
-												category.id ===
-												carTransaction.category,
-										),
+									category: getCarCategoryFromId(
+										carTransaction.category,
+									),
 									createdAt: carTransaction.createdAt,
 									updatedAt: carTransaction.updatedAt,
 								}
@@ -511,13 +448,9 @@ export async function InitializeStore() {
 
 						return {
 							id: transportationTransaction.id,
-							category: useDatabase
-								.getState()
-								.transportationCategories?.find(
-									(category) =>
-										category.id ===
-										transportationTransaction.category,
-								),
+							category: getTransportationCategoryFromId(
+								transportationTransaction.category,
+							),
 							flightTransaction:
 								formattedFlightTransaction ?? null,
 							carTransaction: formattedCarTransaction ?? null,
@@ -527,32 +460,19 @@ export async function InitializeStore() {
 					}
 				})()
 
-				const category = useDatabase
-					.getState()
-					.transactionCategories?.find(
-						(category) => category.id === transaction.category,
-					)
-				const isIncome = category?.isIncome
-				const counterpart = useUser
-					.getState()
-					.counterparts?.find(
-						(counterpart) =>
-							counterpart.id === transaction.counterpart,
-					)
-				const currency = useDatabase
-					.getState()
-					.currencies?.find(
-						(currency) => currency.id === transaction.currency,
-					)
-				const city = useDatabase
-					.getState()
-					.cities?.find((city) => city.id === transaction.city)
-				const country = useDatabase
-					.getState()
-					.countries?.find((country) => country.id === city?.country)
+				const transactionCategory = getTransactionCategoryFromId(
+					transaction.category,
+				)
+				const isIncome = transactionCategory?.isIncome
+				const counterpart = getCounterpartFromId(
+					transaction.counterpart,
+				)
+				const currency = getCurrencyFromId(transaction.currency)
+				const city = getCityFromId(transaction.city)
+				const country = getCountryFromCityId(transaction.city)
 
 				if (
-					!category ||
+					!transactionCategory ||
 					!counterpart ||
 					!currency ||
 					!city ||
@@ -576,13 +496,10 @@ export async function InitializeStore() {
 					currency: currency,
 					city: city,
 					country: country,
-					category: category,
-					paymentMethod: useUser
-						.getState()
-						.paymentMethods?.find(
-							(paymentMethod) =>
-								paymentMethod.id === transaction.paymentMethod,
-						),
+					category: transactionCategory,
+					paymentMethod: getPaymentMethodFromId(
+						transaction.paymentMethod,
+					),
 					foodAndDrinkTransaction:
 						formattedFoodAndDrinkTransaction ?? null,
 					healthAndWellnessTransaction:
@@ -1528,11 +1445,11 @@ async function addCounterpart({
 	isIncome,
 	isExpense,
 }: AddCounterpartProps) {
-	const user = useUser.getState().id
+	const userId = getUserId()
 
-	if (!user) {
+	if (!userId) {
 		console.error('No user ID found')
-		return
+		return null
 	}
 
 	const setCounterparts = useUser.getState().setCounterparts
@@ -1547,24 +1464,22 @@ async function addCounterpart({
 		try {
 			const { data: newCounterpart, error } = await supabase
 				.from('counterparts')
-				.insert([
-					{
-						user: user,
-						name: name,
-						isIncome: isIncome,
-						isExpense: isExpense,
-					},
-				])
+				.insert({
+					user: userId,
+					name: name,
+					isIncome: isIncome,
+					isExpense: isExpense,
+				})
 				.select()
 
 			if (error) throw error
 
 			setCounterparts([...existingCounterparts, ...newCounterpart])
 
-			return
+			return newCounterpart[0]
 		} catch (error) {
 			console.error('Error adding counterpart to db:', error)
-			return
+			return null
 		}
 	}
 
@@ -1603,8 +1518,11 @@ async function addCounterpart({
 						: counterpart,
 				),
 			)
+
+			return updatedCounterpart[0]
 		} catch (error) {
 			console.error('Error updating counterpart in db:', error)
+			return null
 		}
 	}
 }
@@ -1615,10 +1533,19 @@ type AddTransactionProps = {
 	amount: number
 	counterpartName: string
 	description: string | null
-	currency: Currency
-	city: City
-	category: TransactionCategory
-	paymentMethod: PaymentMethod
+	currencyId: string
+	cityId: number
+	categoryId: number
+	paymentMethodId: string
+	foodAndDrinkTransaction?: {
+		placeCategoryId: number
+		typeCategoryId: number
+		isEatIn: boolean | null
+		isTakeAway: boolean | null
+		isLeftovers: boolean | null
+		isDelivery: boolean | null
+		isWorked: boolean | null
+	}
 }
 
 export async function addTransaction({
@@ -1627,41 +1554,33 @@ export async function addTransaction({
 	amount,
 	counterpartName,
 	description,
-	currency,
-	city,
-	category,
-	paymentMethod,
+	currencyId,
+	cityId,
+	categoryId,
+	paymentMethodId,
+	foodAndDrinkTransaction,
 }: AddTransactionProps) {
-	const user = useUser.getState().id
+	const userId = getUserId()
 
-	if (!user) {
+	if (!userId) {
 		console.error('No user ID found')
 		return
 	}
 
 	const setTransactions = useUser.getState().setTransactions
 
-	const existingTransactions = useUser.getState().transactions
-	const country = useDatabase
-		.getState()
-		.countries?.find((country) => country.id === city.country)
+	const transactionCategory = getTransactionCategoryFromId(categoryId)
 
-	if (!country) {
-		console.error('Country not found')
+	if (!transactionCategory) {
+		console.error('Transaction category not found')
 		return
 	}
 
-	await addCounterpart({
+	const counterpart = await addCounterpart({
 		name: counterpartName,
-		isIncome: category.isIncome,
-		isExpense: !category.isIncome,
+		isIncome: transactionCategory.isIncome,
+		isExpense: !transactionCategory.isIncome,
 	})
-
-	const counterpart = useUser
-		.getState()
-		.counterparts?.find(
-			(counterpart) => counterpart.name === counterpartName,
-		)
 
 	if (!counterpart) {
 		console.error('Counterpart not found')
@@ -1671,25 +1590,34 @@ export async function addTransaction({
 	try {
 		const { data: newTransaction, error } = await supabase
 			.from('transactions')
-			.insert([
-				{
-					user: user,
-					item: item,
-					amount: amount,
-					city: city.id,
-					currency: currency.id,
-					transactionDate: dayjs(date).format('YYYY-MM-DD'),
-					description: description,
-					counterpart: counterpart.id,
-					category: category.id,
-					paymentMethod: paymentMethod.id,
-				},
-			])
+			.insert({
+				user: userId,
+				item: item,
+				amount: amount,
+				city: cityId,
+				currency: currencyId,
+				transactionDate: dayjs(date).format('YYYY-MM-DD'),
+				description: description,
+				counterpart: counterpart.id,
+				category: categoryId,
+				paymentMethod: paymentMethodId,
+			})
 			.select()
 
 		if (error) return error
 
 		if (newTransaction) {
+			const existingTransactions = useUser.getState().transactions
+			const city = getCityFromId(cityId)
+			const country = getCountryFromCityId(cityId)
+			const currency = getCurrencyFromId(currencyId)
+			const paymentMethod = getPaymentMethodFromId(paymentMethodId)
+
+			if (!city || !country || !currency || !paymentMethod) {
+				console.error('Transaction data is incomplete')
+				return
+			}
+
 			setTransactions([
 				...existingTransactions,
 				{
@@ -1697,16 +1625,15 @@ export async function addTransaction({
 					item: item,
 					description: description,
 					amount: amount,
-					isIncome: category?.isIncome,
+					isIncome: transactionCategory?.isIncome,
 					transactionDate: date,
-
 					counterpart: counterpart,
 					currency: currency,
 					city: city,
 					country: country,
-					category: category,
+					category: transactionCategory,
 					paymentMethod: paymentMethod,
-					// todo here we set child transactions
+					// TODO here we set child transactions
 					foodAndDrinkTransaction: null,
 					healthAndWellnessTransaction: null,
 					homeTransaction: null,
@@ -1772,36 +1699,403 @@ export function getTransactionCategoryIcon({
 }: GetTransactionCategoryIconProps) {
 	switch (transactionCategory.name) {
 		case 'Home':
-			return <HomeIcon className={className} />
+			return <HomeIcon className={cn(className)} />
 		case 'Food and drink':
-			return <UtensilsCrossedIcon className={className} />
+			return <UtensilsCrossedIcon className={cn(className)} />
 		case 'Transportation':
-			return <CarIcon className={className} />
+			return <CarIcon className={cn(className)} />
 		case 'Entertainment':
-			return <DramaIcon className={className} />
+			return <DramaIcon className={cn(className)} />
 		case 'Health and wellness':
-			return <HeartIcon className={className} />
+			return <HeartIcon className={cn(className)} />
 		case 'Shopping':
-			return <ShoppingBagIcon className={className} />
+			return <ShoppingBagIcon className={cn(className)} />
 		case 'Savings and investments':
-			return <PercentIcon className={className} />
+			return <PercentIcon className={cn(className)} />
 		case 'Subscriptions':
-			return <RotateCwIcon className={className} />
+			return <RotateCwIcon className={cn(className)} />
 		case 'Other expenses':
-			return <CircleDollarSignIcon className={className} />
+			return <CircleDollarSignIcon className={cn(className)} />
 		case 'Salary':
-			return <CoinsIcon className={className} />
+			return <CoinsIcon className={cn(className)} />
 		case 'Sale':
-			return <ReceiptIcon className={className} />
+			return <ReceiptIcon className={cn(className)} />
 		case 'Gift':
-			return <GiftIcon className={className} />
+			return <GiftIcon className={cn(className)} />
 		case 'Tax return':
-			return <Undo2Icon className={className} />
+			return <Undo2Icon className={cn(className)} />
 		case 'Realized investment':
-			return <PercentIcon className={className} />
+			return <PercentIcon className={cn(className)} />
 		case 'Other income':
-			return <CircleDollarSignIcon className={className} />
+			return <CircleDollarSignIcon className={cn(className)} />
 		default:
 			return null
 	}
+}
+
+// Get from ID functions, etc
+
+export function getUserId() {
+	const userId = useUser.getState().id
+
+	if (!userId) {
+		console.error('No user ID found')
+		return null
+	}
+
+	return userId
+}
+
+export function getAccommodationCategoryFromId(id: number) {
+	const category = useDatabase
+		.getState()
+		.accommodationCategories?.find((category) => category.id === id)
+
+	if (!category) {
+		console.error('Accommodation category not found')
+		return null
+	}
+
+	return category
+}
+
+export function getAccommodationTypeFromId(id: number) {
+	const type = useDatabase
+		.getState()
+		.accommodationTypes?.find((type) => type.id === id)
+
+	if (!type) {
+		console.error('Accommodation type not found')
+		return null
+	}
+
+	return type
+}
+
+export function getAirlineAllianceFromId(id: number) {
+	const alliance = useDatabase
+		.getState()
+		.airlineAlliances?.find((alliance) => alliance.id === id)
+
+	if (!alliance) {
+		console.error('Airline alliance not found')
+		return null
+	}
+
+	return alliance
+}
+
+export function getAirlineFromId(id: number) {
+	const airline = useDatabase
+		.getState()
+		.airlines?.find((airline) => airline.id === id)
+
+	if (!airline) {
+		console.error('Airline not found')
+		return null
+	}
+
+	return airline
+}
+
+export function getAirportFromId(id: number) {
+	const airport = useDatabase
+		.getState()
+		.airports?.find((airport) => airport.id === id)
+
+	if (!airport) {
+		console.error('Airport not found')
+		return null
+	}
+
+	return airport
+}
+
+export function getCarCategoryFromId(id: number) {
+	const category = useDatabase
+		.getState()
+		.carCategories?.find((category) => category.id === id)
+
+	if (!category) {
+		console.error('Car category not found')
+		return null
+	}
+
+	return category
+}
+
+export function getCityFromId(id: number | null) {
+	if (!id) {
+		console.error('No city ID found')
+		return null
+	}
+
+	const city = useDatabase.getState().cities?.find((city) => city.id === id)
+
+	if (!city) {
+		console.error('City not found')
+		return null
+	}
+
+	return city
+}
+
+export function getCounterpartFromId(id: string) {
+	const counterpart = useUser
+		.getState()
+		.counterparts?.find((counterpart) => counterpart.id === id)
+
+	if (!counterpart) {
+		console.error('Counterpart not found')
+		return null
+	}
+
+	return counterpart
+}
+
+export function getCountryFromId(id: number) {
+	const country = useDatabase
+		.getState()
+		.countries?.find((country) => country.id === id)
+
+	if (!country) {
+		console.error('Country not found')
+		return null
+	}
+
+	return country
+}
+
+export function getCountryFromCityId(id: number | null) {
+	if (!id) {
+		console.error('No city ID found (country from city id)')
+		return null
+	}
+
+	const city = getCityFromId(id)
+
+	if (!city) {
+		console.error('City not found (country from city id)')
+		return null
+	}
+
+	const country = getCountryFromId(city.country)
+
+	if (!country) {
+		console.error('Country not found')
+		return null
+	}
+
+	return country
+}
+
+export function getCurrencyFromId(id: string | null) {
+	if (!id) {
+		console.error('No currency ID found')
+		return null
+	}
+
+	const currency = useDatabase
+		.getState()
+		.currencies?.find((currency) => currency.id === id)
+
+	if (!currency) {
+		console.error('Currency not found')
+		return null
+	}
+
+	return currency
+}
+
+export function getFlightClassFromId(id: number) {
+	const flightClass = useDatabase
+		.getState()
+		.flightClasses?.find((flightClass) => flightClass.id === id)
+
+	if (!flightClass) {
+		console.error('Flight class not found')
+		return null
+	}
+
+	return flightClass
+}
+
+export function getFlightLuggageCategoryFromId(id: number) {
+	const luggageCategory = useDatabase
+		.getState()
+		.flightLuggageCategories?.find(
+			(luggageCategory) => luggageCategory.id === id,
+		)
+
+	if (!luggageCategory) {
+		console.error('Flight luggage category not found')
+		return null
+	}
+
+	return luggageCategory
+}
+
+export function getFlightSeatCategoryFromId(id: number) {
+	const seatCategory = useDatabase
+		.getState()
+		.flightSeatCategories?.find((seatCategory) => seatCategory.id === id)
+
+	if (!seatCategory) {
+		console.error('Flight seat category not found')
+		return null
+	}
+
+	return seatCategory
+}
+
+export function getFoodAndDrinkPlaceCategoryFromId(id: number) {
+	const placeCategory = useDatabase
+		.getState()
+		.foodAndDrinkPlaceCategories?.find(
+			(placeCategory) => placeCategory.id === id,
+		)
+
+	if (!placeCategory) {
+		console.error('Food and drink place category not found')
+		return null
+	}
+
+	return placeCategory
+}
+
+export function getFoodAndDrinkTypeCategoryFromId(id: number) {
+	const typeCategory = useDatabase
+		.getState()
+		.foodAndDrinkTypeCategories?.find(
+			(typeCategory) => typeCategory.id === id,
+		)
+
+	if (!typeCategory) {
+		console.error('Food and drink type category not found')
+		return null
+	}
+
+	return typeCategory
+}
+
+export function getHealthAndWellnessCategoryFromId(id: number) {
+	const category = useDatabase
+		.getState()
+		.healthAndWellnessCategories?.find((category) => category.id === id)
+
+	if (!category) {
+		console.error('Health and wellness category not found')
+		return null
+	}
+
+	return category
+}
+
+export function getHomeCategoryFromId(id: number) {
+	const category = useDatabase
+		.getState()
+		.homeCategories?.find((category) => category.id === id)
+
+	if (!category) {
+		console.error('Home category not found')
+		return null
+	}
+
+	return category
+}
+
+export function getLoyaltyProgramFromId(id: number | null) {
+	if (!id) {
+		console.error('No loyalty program ID found')
+		return null
+	}
+
+	const program = useDatabase
+		.getState()
+		.loyaltyPrograms?.find((program) => program.id === id)
+
+	if (!program) {
+		console.error('Loyalty program not found')
+		return null
+	}
+
+	return program
+}
+
+export function getPaymentMethodCategoryFromId(id: number) {
+	const category = useDatabase
+		.getState()
+		.paymentMethodCategories?.find((method) => method.id === id)
+
+	if (!category) {
+		console.error('Payment method category not found')
+		return null
+	}
+
+	return category
+}
+
+export function getPaymentMethodFromId(id: string) {
+	const method = useUser
+		.getState()
+		.paymentMethods?.find((method) => method.id === id)
+
+	if (!method) {
+		console.error('Payment method not found')
+		return null
+	}
+
+	return method
+}
+
+export function getShoppingCategoryFromId(id: number) {
+	const category = useDatabase
+		.getState()
+		.shoppingCategories?.find((category) => category.id === id)
+
+	if (!category) {
+		console.error('Shopping category not found')
+		return null
+	}
+
+	return category
+}
+
+export function getTransactionCategoryFromId(id: number) {
+	const category = useDatabase
+		.getState()
+		.transactionCategories?.find((category) => category.id === id)
+
+	if (!category) {
+		console.error('Transaction category not found')
+		return null
+	}
+
+	return category
+}
+
+export function getTransactionFromId(id: string) {
+	const transaction = useUser
+		.getState()
+		.transactions?.find((transaction) => transaction.id === id)
+
+	if (!transaction) {
+		console.error('Transaction not found')
+		return null
+	}
+
+	return transaction
+}
+
+export function getTransportationCategoryFromId(id: number) {
+	const category = useDatabase
+		.getState()
+		.transportationCategories?.find((category) => category.id === id)
+
+	if (!category) {
+		console.error('Transportation category not found')
+		return null
+	}
+
+	return category
 }
