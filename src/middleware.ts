@@ -67,10 +67,12 @@ export async function middleware(request: NextRequest) {
 	} = await supabase.auth.getSession()
 
 	const { data: profiles } = await supabase.from('profiles').select(`
-  onboardingCompletedDate
-  `)
+  		onboardingCompletedDate,
+  		isAdmin
+	`)
 
 	const isOnboardingCompleted = !!profiles?.[0]?.onboardingCompletedDate
+	const isAdmin = !!profiles?.[0]?.isAdmin
 
 	const path = request.nextUrl.pathname
 	const isPortalPath = path === '/sign-in' || path === '/sign-up'
@@ -94,6 +96,11 @@ export async function middleware(request: NextRequest) {
 
 	// if user is signed in and the current path is /onboarding and the user has completed onboarding, redirect the user to /dashboard
 	if (isOnboardingPath && isOnboardingCompleted) {
+		return NextResponse.redirect(new URL('/dashboard', request.url))
+	}
+
+	// if user is signed in and the current path is /dashboard/database and the user is not an admin, redirect the user to /dashboard
+	if (isDashboardPath && !isAdmin && path.startsWith('/dashboard/database')) {
 		return NextResponse.redirect(new URL('/dashboard', request.url))
 	}
 
