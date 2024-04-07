@@ -640,41 +640,41 @@ export type Database = {
 			foodAndDrinkTransactions: {
 				Row: {
 					createdAt: string
-					foodPlaceCategory: number
-					foodTypeCategory: number
 					id: string
 					isDelivery: boolean | null
 					isEatIn: boolean | null
 					isLeftovers: boolean | null
 					isTakeAway: boolean | null
 					isWorked: boolean | null
+					placeCategory: number
 					transaction: string
+					typeCategory: number
 					updatedAt: string
 				}
 				Insert: {
 					createdAt?: string
-					foodPlaceCategory: number
-					foodTypeCategory: number
 					id?: string
 					isDelivery?: boolean | null
 					isEatIn?: boolean | null
 					isLeftovers?: boolean | null
 					isTakeAway?: boolean | null
 					isWorked?: boolean | null
+					placeCategory: number
 					transaction: string
+					typeCategory: number
 					updatedAt?: string
 				}
 				Update: {
 					createdAt?: string
-					foodPlaceCategory?: number
-					foodTypeCategory?: number
 					id?: string
 					isDelivery?: boolean | null
 					isEatIn?: boolean | null
 					isLeftovers?: boolean | null
 					isTakeAway?: boolean | null
 					isWorked?: boolean | null
+					placeCategory?: number
 					transaction?: string
+					typeCategory?: number
 					updatedAt?: string
 				}
 				Relationships: [
@@ -687,14 +687,14 @@ export type Database = {
 					},
 					{
 						foreignKeyName: 'public_foodTransactions_foodPlaceCategory_fkey'
-						columns: ['foodPlaceCategory']
+						columns: ['placeCategory']
 						isOneToOne: false
 						referencedRelation: 'foodAndDrinkPlaceCategories'
 						referencedColumns: ['id']
 					},
 					{
 						foreignKeyName: 'public_foodTransactions_foodTypeCategory_fkey'
-						columns: ['foodTypeCategory']
+						columns: ['typeCategory']
 						isOneToOne: false
 						referencedRelation: 'foodAndDrinkTypeCategories'
 						referencedColumns: ['id']
