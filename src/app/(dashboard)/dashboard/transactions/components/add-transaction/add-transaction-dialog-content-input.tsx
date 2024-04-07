@@ -99,49 +99,15 @@ export default function AddTransactionDialogContentInput({
 	})
 
 	async function onSubmit(data: z.infer<typeof FormSchema>) {
-		const category = transactionCategories?.find(
-			(category) => category.id === data.category,
-		)
-
-		const currency = currencies?.find(
-			(currency) => currency.id === data.currency,
-		)
-
-		const city = cities?.find((city) => city.id === data.city)
-
-		const paymentMethod = paymentMethods?.find(
-			(paymentMethod) => paymentMethod.id === data.paymentMethod,
-		)
-
-		if (!category) {
-			toast('Error applying transaction category')
-			return
-		}
-
-		if (!currency) {
-			toast('Error applying transaction currency')
-			return
-		}
-
-		if (!city) {
-			toast('Error applying transaction city')
-			return
-		}
-
-		if (!paymentMethod) {
-			toast('Error applying payment method')
-			return
-		}
-
 		const error = await addTransaction({
 			date: data.transactionDate,
 			item: data.item,
 			amount: data.amount,
 			counterpartName: data.counterpart,
-			currency: currency,
-			paymentMethod: paymentMethod,
-			city: city,
-			category: category,
+			currencyId: data.currency,
+			paymentMethodId: data.paymentMethod,
+			cityId: data.city,
+			categoryId: data.category,
 			description: data.description ?? null,
 		})
 
