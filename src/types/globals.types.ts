@@ -27,12 +27,12 @@ export type FlightSegment =
 	Database['public']['Tables']['flightSegments']['Row']
 export type FlightTransaction =
 	Database['public']['Tables']['flightTransactions']['Row']
-export type FoodPlaceCategory =
-	Database['public']['Tables']['foodPlaceCategories']['Row']
-export type FoodTransaction =
-	Database['public']['Tables']['foodTransactions']['Row']
-export type FoodTypeCategory =
-	Database['public']['Tables']['foodTypeCategories']['Row']
+export type FoodAndDrinkPlaceCategory =
+	Database['public']['Tables']['foodAndDrinkPlaceCategories']['Row']
+export type FoodAndDrinkTransaction =
+	Database['public']['Tables']['foodAndDrinkTransactions']['Row']
+export type FoodAndDrinkTypeCategory =
+	Database['public']['Tables']['foodAndDrinkTypeCategories']['Row']
 export type HealthAndWellnessCategory =
 	Database['public']['Tables']['healthAndWellnessCategories']['Row']
 export type HealthAndWellnessTransaction =
