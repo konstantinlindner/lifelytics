@@ -495,7 +495,46 @@ export type Database = {
 				}
 				Relationships: []
 			}
-			flightSegments: {
+			flightTransactions: {
+				Row: {
+					createdAt: string
+					id: string
+					luggageCategory: number
+					transportationTransaction: string
+					updatedAt: string
+				}
+				Insert: {
+					createdAt?: string
+					id?: string
+					luggageCategory: number
+					transportationTransaction: string
+					updatedAt?: string
+				}
+				Update: {
+					createdAt?: string
+					id?: string
+					luggageCategory?: number
+					transportationTransaction?: string
+					updatedAt?: string
+				}
+				Relationships: [
+					{
+						foreignKeyName: 'public_flights_luggageCategory_fkey'
+						columns: ['luggageCategory']
+						isOneToOne: false
+						referencedRelation: 'flightLuggageCategories'
+						referencedColumns: ['id']
+					},
+					{
+						foreignKeyName: 'public_flightTransactions_transportationTransaction_fkey'
+						columns: ['transportationTransaction']
+						isOneToOne: false
+						referencedRelation: 'transportationTransactions'
+						referencedColumns: ['id']
+					},
+				]
+			}
+			flightTransactionSegments: {
 				Row: {
 					airline: number
 					arrivalAirport: number
@@ -573,45 +612,6 @@ export type Database = {
 						columns: ['arrivalAirport']
 						isOneToOne: false
 						referencedRelation: 'airports'
-						referencedColumns: ['id']
-					},
-				]
-			}
-			flightTransactions: {
-				Row: {
-					createdAt: string
-					id: string
-					luggageCategory: number
-					transportationTransaction: string
-					updatedAt: string
-				}
-				Insert: {
-					createdAt?: string
-					id?: string
-					luggageCategory: number
-					transportationTransaction: string
-					updatedAt?: string
-				}
-				Update: {
-					createdAt?: string
-					id?: string
-					luggageCategory?: number
-					transportationTransaction?: string
-					updatedAt?: string
-				}
-				Relationships: [
-					{
-						foreignKeyName: 'public_flights_luggageCategory_fkey'
-						columns: ['luggageCategory']
-						isOneToOne: false
-						referencedRelation: 'flightLuggageCategories'
-						referencedColumns: ['id']
-					},
-					{
-						foreignKeyName: 'public_flightTransactions_transportationTransaction_fkey'
-						columns: ['transportationTransaction']
-						isOneToOne: false
-						referencedRelation: 'transportationTransactions'
 						referencedColumns: ['id']
 					},
 				]
