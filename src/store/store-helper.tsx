@@ -1,6 +1,7 @@
 import { City, Currency, TransactionCategory } from '@/types/globals.types'
 
 import {
+	FlightTransactionSegment,
 	PaymentMethod,
 	Transaction,
 	useDatabase,
@@ -185,7 +186,7 @@ export async function InitializeStore() {
 		shoppingTransactions,
 		transportationTransactions,
 		flightTransactions,
-		flightSegments,
+		flightTransactionSegments,
 		carTransactions,
 	] = await Promise.all([
 		fetchSession(),
@@ -200,7 +201,7 @@ export async function InitializeStore() {
 		fetchShoppingTransactions(),
 		fetchTransportationTransactions(),
 		fetchFlightTransactions(),
-		fetchFlightSegments(),
+		fetchFlightTransactionSegments(),
 		fetchCarTransactions(),
 	])
 
@@ -384,8 +385,8 @@ export async function InitializeStore() {
 
 						const formattedFlightTransaction = (() => {
 							if (flightTransaction) {
-								const flightSegmentChildren =
-									flightSegments?.filter(
+								const flightTransactionSegmentChildren =
+									flightTransactionSegments?.filter(
 										(segment) =>
 											segment.flightTransaction ===
 											flightTransaction.id,
@@ -397,30 +398,33 @@ export async function InitializeStore() {
 										getFlightLuggageCategoryFromId(
 											flightTransaction.luggageCategory,
 										),
-									segments: flightSegmentChildren?.map(
-										(segment) => ({
-											id: segment.id,
-											order: segment.order,
-											departureAirport: getAirportFromId(
-												segment.departureAirport,
-											),
-											arrivalAirport: getAirportFromId(
-												segment.arrivalAirport,
-											),
-											airline: getAirlineFromId(
-												segment.airline,
-											),
-											class: getFlightClassFromId(
-												segment.class,
-											),
-											seatCategory:
-												getFlightSeatCategoryFromId(
-													segment.seatCategory,
+									segments:
+										flightTransactionSegmentChildren?.map(
+											(segment) => ({
+												id: segment.id,
+												order: segment.order,
+												departureAirport:
+													getAirportFromId(
+														segment.departureAirport,
+													),
+												arrivalAirport:
+													getAirportFromId(
+														segment.arrivalAirport,
+													),
+												airline: getAirlineFromId(
+													segment.airline,
 												),
-											createdAt: segment.createdAt,
-											updatedAt: segment.updatedAt,
-										}),
-									),
+												class: getFlightClassFromId(
+													segment.class,
+												),
+												seatCategory:
+													getFlightSeatCategoryFromId(
+														segment.seatCategory,
+													),
+												createdAt: segment.createdAt,
+												updatedAt: segment.updatedAt,
+											}),
+										),
 									createdAt: flightTransaction.createdAt,
 									updatedAt: flightTransaction.updatedAt,
 								}
@@ -710,20 +714,20 @@ async function fetchFlightTransactions() {
 	}
 }
 
-async function fetchFlightSegments() {
+async function fetchFlightTransactionSegments() {
 	try {
-		const { data: flightSegments, error } = await supabase
-			.from('flightSegments')
+		const { data: flightTransactionSegments, error } = await supabase
+			.from('flightTransactionSegments')
 			.select()
 
 		if (error) throw error
 
-		if (!flightSegments) {
+		if (!flightTransactionSegments) {
 			console.error('No flight segments found')
 			return
 		}
 
-		return flightSegments
+		return flightTransactionSegments
 	} catch (error) {
 		console.error('Error fetching flight segments:', error)
 	}
@@ -1527,6 +1531,573 @@ async function addCounterpart({
 	}
 }
 
+type FoodAndDrinkTransactionInput = {
+	placeCategoryId: number
+	typeCategoryId: number
+	isEatIn: boolean | null
+	isTakeAway: boolean | null
+	isLeftovers: boolean | null
+	isDelivery: boolean | null
+	isWorked: boolean | null
+}
+
+type AddFoodAndDrinkTransactionProps = {
+	parentTransactionId: string
+	foodAndDrinkTransaction?: FoodAndDrinkTransactionInput
+}
+
+async function addFoodAndDrinkTransaction({
+	parentTransactionId,
+	foodAndDrinkTransaction,
+}: AddFoodAndDrinkTransactionProps) {
+	if (!foodAndDrinkTransaction) {
+		return null
+	}
+
+	try {
+		const { data: newFoodAndDrinkTransaction, error } = await supabase
+			.from('foodAndDrinkTransactions')
+			.insert({
+				transaction: parentTransactionId,
+				placeCategory: foodAndDrinkTransaction.placeCategoryId,
+				typeCategory: foodAndDrinkTransaction.typeCategoryId,
+				isEatIn: foodAndDrinkTransaction.isEatIn,
+				isTakeAway: foodAndDrinkTransaction.isTakeAway,
+				isLeftovers: foodAndDrinkTransaction.isLeftovers,
+				isDelivery: foodAndDrinkTransaction.isDelivery,
+				isWorked: foodAndDrinkTransaction.isWorked,
+			})
+			.select()
+
+		if (error) throw error
+
+		const placeCategory = getFoodAndDrinkPlaceCategoryFromId(
+			newFoodAndDrinkTransaction[0].placeCategory,
+		)
+		const typeCategory = getFoodAndDrinkTypeCategoryFromId(
+			newFoodAndDrinkTransaction[0].typeCategory,
+		)
+
+		if (!placeCategory || !typeCategory) {
+			console.error('Food and drink transaction data is incomplete')
+			return null
+		}
+
+		const formattedFoodAndDrinkTransaction = {
+			id: newFoodAndDrinkTransaction[0].id,
+			placeCategory: placeCategory,
+			typeCategory: typeCategory,
+			isEatIn: newFoodAndDrinkTransaction[0].isEatIn,
+			isTakeAway: newFoodAndDrinkTransaction[0].isTakeAway,
+			isLeftovers: newFoodAndDrinkTransaction[0].isLeftovers,
+			isDelivery: newFoodAndDrinkTransaction[0].isDelivery,
+			isWorked: newFoodAndDrinkTransaction[0].isWorked,
+			createdAt: newFoodAndDrinkTransaction[0].createdAt,
+			updatedAt: newFoodAndDrinkTransaction[0].updatedAt,
+		}
+
+		return formattedFoodAndDrinkTransaction
+	} catch (error) {
+		console.error('Error adding food and drink transaction to db:', error)
+		return null
+	}
+}
+
+type HealthAndWellnessTransactionInput = {
+	categoryId: number
+}
+
+type HealthAndWellnessTransactionProps = {
+	parentTransactionId: string
+	healthAndWellnessTransaction?: HealthAndWellnessTransactionInput
+}
+
+async function addHealthAndWellnessTransaction({
+	parentTransactionId,
+	healthAndWellnessTransaction,
+}: HealthAndWellnessTransactionProps) {
+	if (!healthAndWellnessTransaction) {
+		return null
+	}
+
+	try {
+		const { data: newHealthAndWellnessTransaction, error } = await supabase
+			.from('healthAndWellnessTransactions')
+			.insert({
+				transaction: parentTransactionId,
+				category: healthAndWellnessTransaction.categoryId,
+			})
+			.select()
+
+		if (error) throw error
+
+		const category = getHealthAndWellnessCategoryFromId(
+			newHealthAndWellnessTransaction[0].category,
+		)
+
+		if (!category) {
+			console.error('Health and wellness transaction data is incomplete')
+			return null
+		}
+
+		const formattedHealthAndWellnessTransaction = {
+			id: newHealthAndWellnessTransaction[0].id,
+			category: category,
+			createdAt: newHealthAndWellnessTransaction[0].createdAt,
+			updatedAt: newHealthAndWellnessTransaction[0].updatedAt,
+		}
+
+		return formattedHealthAndWellnessTransaction
+	} catch (error) {
+		console.error(
+			'Error adding health and wellness transaction to db:',
+			error,
+		)
+		return null
+	}
+}
+
+type AccommodationTransactionInput = {
+	typeId: number
+	categoryId: number
+}
+
+type AccommodationTransactionProps = {
+	parentHomeTransactionId: string
+	homeTransaction?: AccommodationTransactionInput
+}
+
+async function addAccommodationTransaction({
+	parentHomeTransactionId,
+	homeTransaction,
+}: AccommodationTransactionProps) {
+	if (!homeTransaction) {
+		return null
+	}
+
+	try {
+		const { data: newAccommodationTransaction, error } = await supabase
+			.from('accommodationTransactions')
+			.insert({
+				homeTransaction: parentHomeTransactionId,
+				type: homeTransaction.typeId,
+				category: homeTransaction.categoryId,
+			})
+			.select()
+
+		if (error) throw error
+
+		const type = getAccommodationTypeFromId(
+			newAccommodationTransaction[0].type,
+		)
+		const category = getAccommodationCategoryFromId(
+			newAccommodationTransaction[0].category,
+		)
+
+		if (!type || !category) {
+			console.error('Accommodation transaction data is incomplete')
+			return null
+		}
+
+		const formattedAccommodationTransaction = {
+			id: newAccommodationTransaction[0].id,
+			type: type,
+			category: category,
+			createdAt: newAccommodationTransaction[0].createdAt,
+			updatedAt: newAccommodationTransaction[0].updatedAt,
+		}
+
+		return formattedAccommodationTransaction
+	} catch (error) {
+		console.error('Error adding accommodation transaction to db:', error)
+		return null
+	}
+}
+
+type HomeTransactionInput = {
+	categoryId: number
+	accommodationTransaction?: AccommodationTransactionInput
+}
+
+type HomeTransactionProps = {
+	parentTransactionId: string
+	homeTransaction?: HomeTransactionInput
+}
+
+async function addHomeTransaction({
+	parentTransactionId,
+	homeTransaction,
+}: HomeTransactionProps) {
+	if (!homeTransaction) {
+		return null
+	}
+
+	try {
+		const { data: newHomeTransaction, error } = await supabase
+			.from('homeTransactions')
+			.insert({
+				transaction: parentTransactionId,
+				category: homeTransaction.categoryId,
+			})
+			.select()
+
+		if (error) throw error
+
+		const category = getHomeCategoryFromId(newHomeTransaction[0].category)
+
+		if (!category) {
+			console.error('Home transaction data is incomplete')
+			return null
+		}
+
+		const newAccommodationTransaction = await addAccommodationTransaction({
+			parentHomeTransactionId: newHomeTransaction[0].id,
+			homeTransaction: homeTransaction.accommodationTransaction,
+		})
+
+		const formattedHomeTransaction = {
+			id: newHomeTransaction[0].id,
+			category: category,
+			accommodationTransaction: newAccommodationTransaction,
+			createdAt: newHomeTransaction[0].createdAt,
+			updatedAt: newHomeTransaction[0].updatedAt,
+		}
+
+		return formattedHomeTransaction
+	} catch (error) {
+		console.error('Error adding home transaction to db:', error)
+		return null
+	}
+}
+
+type ShoppingTransactionInput = {
+	categoryId: number
+	accommodationTransaction?: AccommodationTransactionInput
+}
+
+type ShoppingTransactionProps = {
+	parentTransactionId: string
+	shoppingTransaction?: ShoppingTransactionInput
+}
+
+async function addShoppingTransaction({
+	parentTransactionId,
+	shoppingTransaction,
+}: ShoppingTransactionProps) {
+	if (!shoppingTransaction) {
+		return null
+	}
+
+	try {
+		const { data: newShoppingTransaction, error } = await supabase
+			.from('shoppingTransactions')
+			.insert({
+				transaction: parentTransactionId,
+				category: shoppingTransaction.categoryId,
+			})
+			.select()
+
+		if (error) throw error
+
+		const category = getShoppingCategoryFromId(
+			newShoppingTransaction[0].category,
+		)
+
+		if (!category) {
+			console.error('Shopping transaction data is incomplete')
+			return null
+		}
+
+		const formattedShoppingTransaction = {
+			id: newShoppingTransaction[0].id,
+			category: category,
+			createdAt: newShoppingTransaction[0].createdAt,
+			updatedAt: newShoppingTransaction[0].updatedAt,
+		}
+
+		return formattedShoppingTransaction
+	} catch (error) {
+		console.error('Error adding shopping transaction to db:', error)
+		return null
+	}
+}
+
+type FlightTransactionSegmentInput = {
+	order: number
+	departureAirportId: number
+	arrivalAirportId: number
+	airlineId: number
+	classId: number
+	seatCategoryId: number
+}[]
+
+type FlightTransactionSegmentProps = {
+	parentFlightTransactionId: string
+	segments: FlightTransactionSegmentInput
+}
+
+async function addFlightTransactionSegments({
+	parentFlightTransactionId,
+	segments,
+}: FlightTransactionSegmentProps) {
+	if (!segments) {
+		return null
+	}
+
+	try {
+		const newFlightTransactionSegments = await Promise.all(
+			segments.map(async (segment) => {
+				const { data: newFlightTransactionSegment, error } =
+					await supabase
+						.from('flightTransactionSegments')
+						.insert({
+							flightTransaction: parentFlightTransactionId,
+							order: segment.order,
+							departureAirport: segment.departureAirportId,
+							arrivalAirport: segment.arrivalAirportId,
+							airline: segment.airlineId,
+							class: segment.classId,
+							seatCategory: segment.seatCategoryId,
+						})
+						.select()
+
+				if (error) throw error
+
+				const departureAirport = getAirportFromId(
+					newFlightTransactionSegment[0].departureAirport,
+				)
+				const arrivalAirport = getAirportFromId(
+					newFlightTransactionSegment[0].arrivalAirport,
+				)
+				const airline = getAirlineFromId(
+					newFlightTransactionSegment[0].airline,
+				)
+				const flightClass = getFlightClassFromId(
+					newFlightTransactionSegment[0].class,
+				)
+				const seatCategory = getFlightSeatCategoryFromId(
+					newFlightTransactionSegment[0].seatCategory,
+				)
+
+				if (
+					!departureAirport ||
+					!arrivalAirport ||
+					!airline ||
+					!flightClass ||
+					!seatCategory
+				) {
+					console.error('Flight segment data is incomplete')
+					return null
+				}
+
+				return {
+					id: newFlightTransactionSegment[0].id,
+					order: newFlightTransactionSegment[0].order,
+					departureAirport: departureAirport,
+					arrivalAirport: arrivalAirport,
+					airline: airline,
+					class: flightClass,
+					seatCategory: seatCategory,
+					createdAt: newFlightTransactionSegment[0].createdAt,
+					updatedAt: newFlightTransactionSegment[0].updatedAt,
+				}
+			}),
+		)
+
+		const filteredNewFlightTransactionSegments =
+			newFlightTransactionSegments.filter(
+				(segment): segment is FlightTransactionSegment =>
+					Boolean(segment),
+			)
+
+		return filteredNewFlightTransactionSegments
+	} catch (error) {
+		console.error('Error adding flight segments to db:', error)
+		return null
+	}
+}
+
+type FlightTransactionInput = {
+	luggageCategoryId: number
+	segments: FlightTransactionSegmentInput
+}
+
+type FlightTransactionProps = {
+	parentTransportationTransactionId: string
+	flightTransaction?: FlightTransactionInput
+}
+
+async function addFlightTransaction({
+	parentTransportationTransactionId,
+	flightTransaction,
+}: FlightTransactionProps) {
+	if (!flightTransaction) {
+		return null
+	}
+
+	try {
+		const { data: newFlightTransaction, error } = await supabase
+			.from('flightTransactions')
+			.insert({
+				transportationTransaction: parentTransportationTransactionId,
+				luggageCategory: flightTransaction.luggageCategoryId,
+			})
+			.select()
+
+		if (error) throw error
+
+		const luggageCategory = getFlightLuggageCategoryFromId(
+			newFlightTransaction[0].luggageCategory,
+		)
+
+		if (!luggageCategory) {
+			console.error('Flight transaction data is incomplete')
+			return null
+		}
+
+		const newFlightTransactionSegments = await addFlightTransactionSegments(
+			{
+				parentFlightTransactionId: newFlightTransaction[0].id,
+				segments: flightTransaction.segments,
+			},
+		)
+
+		if (!newFlightTransactionSegments) {
+			console.error('Flight transaction segments not found')
+			return null
+		}
+
+		const formattedFlightTransaction = {
+			id: newFlightTransaction[0].id,
+			luggageCategory: luggageCategory,
+			segments: newFlightTransactionSegments,
+			createdAt: newFlightTransaction[0].createdAt,
+			updatedAt: newFlightTransaction[0].updatedAt,
+		}
+
+		return formattedFlightTransaction
+	} catch (error) {
+		console.error('Error adding flight transaction to db:', error)
+		return null
+	}
+}
+
+type CarTransactionInput = {
+	categoryId: number
+}
+
+type CarTransactionProps = {
+	parentTransportationTransactionId: string
+	carTransaction?: CarTransactionInput
+}
+
+async function addCarTransaction({
+	parentTransportationTransactionId,
+	carTransaction,
+}: CarTransactionProps) {
+	if (!carTransaction) {
+		return null
+	}
+
+	try {
+		const { data: newCarTransaction, error } = await supabase
+			.from('carTransactions')
+			.insert({
+				transportationTransaction: parentTransportationTransactionId,
+				category: carTransaction.categoryId,
+			})
+			.select()
+
+		if (error) throw error
+
+		const category = getCarCategoryFromId(newCarTransaction[0].category)
+
+		if (!category) {
+			console.error('Car transaction data is incomplete')
+			return null
+		}
+
+		const formattedCarTransaction = {
+			id: newCarTransaction[0].id,
+			category: category,
+			createdAt: newCarTransaction[0].createdAt,
+			updatedAt: newCarTransaction[0].updatedAt,
+		}
+
+		return formattedCarTransaction
+	} catch (error) {
+		console.error('Error adding car transaction to db:', error)
+		return null
+	}
+}
+
+type TransportationTransactionInput = {
+	categoryId: number
+	flightTransaction?: FlightTransactionInput
+	carTransaction?: CarTransactionInput
+}
+
+type TransportationTransactionProps = {
+	parentTransactionId: string
+	transportationTransaction?: TransportationTransactionInput
+}
+
+async function addTransportationTransaction({
+	parentTransactionId,
+	transportationTransaction,
+}: TransportationTransactionProps) {
+	if (!transportationTransaction) {
+		return null
+	}
+
+	try {
+		const { data: newTransportationTransaction, error } = await supabase
+			.from('transportationTransactions')
+			.insert({
+				transaction: parentTransactionId,
+				category: transportationTransaction.categoryId,
+			})
+			.select()
+
+		if (error) throw error
+
+		const category = getTransportationCategoryFromId(
+			newTransportationTransaction[0].category,
+		)
+
+		if (!category) {
+			console.error('Transportation transaction data is incomplete')
+			return null
+		}
+
+		const newFlightTransaction = await addFlightTransaction({
+			parentTransportationTransactionId:
+				newTransportationTransaction[0].id,
+			flightTransaction: transportationTransaction.flightTransaction,
+		})
+
+		const newCarTransaction = await addCarTransaction({
+			parentTransportationTransactionId:
+				newTransportationTransaction[0].id,
+			carTransaction: transportationTransaction.carTransaction,
+		})
+
+		const formattedTransportationTransaction = {
+			id: newTransportationTransaction[0].id,
+			category: category,
+			flightTransaction: newFlightTransaction,
+			carTransaction: newCarTransaction,
+			createdAt: newTransportationTransaction[0].createdAt,
+			updatedAt: newTransportationTransaction[0].updatedAt,
+		}
+
+		return formattedTransportationTransaction
+	} catch (error) {
+		console.error('Error adding transportation transaction to db:', error)
+		return null
+	}
+}
+
 type AddTransactionProps = {
 	date: Date
 	item: string
@@ -1537,15 +2108,11 @@ type AddTransactionProps = {
 	cityId: number
 	categoryId: number
 	paymentMethodId: string
-	foodAndDrinkTransaction?: {
-		placeCategoryId: number
-		typeCategoryId: number
-		isEatIn: boolean | null
-		isTakeAway: boolean | null
-		isLeftovers: boolean | null
-		isDelivery: boolean | null
-		isWorked: boolean | null
-	}
+	foodAndDrinkTransaction?: FoodAndDrinkTransactionInput
+	healthAndWellnessTransaction?: HealthAndWellnessTransactionInput
+	homeTransaction?: HomeTransactionInput
+	shoppingTransaction?: ShoppingTransactionInput
+	transportationTransaction?: TransportationTransactionInput
 }
 
 export async function addTransaction({
@@ -1559,6 +2126,10 @@ export async function addTransaction({
 	categoryId,
 	paymentMethodId,
 	foodAndDrinkTransaction,
+	healthAndWellnessTransaction,
+	homeTransaction,
+	shoppingTransaction,
+	transportationTransaction,
 }: AddTransactionProps) {
 	const userId = getUserId()
 
@@ -1566,8 +2137,6 @@ export async function addTransaction({
 		console.error('No user ID found')
 		return
 	}
-
-	const setTransactions = useUser.getState().setTransactions
 
 	const transactionCategory = getTransactionCategoryFromId(categoryId)
 
@@ -1606,7 +2175,9 @@ export async function addTransaction({
 
 		if (error) return error
 
-		if (newTransaction) {
+		if (newTransaction[0]) {
+			const setTransactions = useUser.getState().setTransactions
+
 			const existingTransactions = useUser.getState().transactions
 			const city = getCityFromId(cityId)
 			const country = getCountryFromCityId(cityId)
@@ -1617,6 +2188,31 @@ export async function addTransaction({
 				console.error('Transaction data is incomplete')
 				return
 			}
+
+			const newFoodAndDrinkTransaction = await addFoodAndDrinkTransaction(
+				{
+					foodAndDrinkTransaction,
+					parentTransactionId: newTransaction[0].id,
+				},
+			)
+			const newHealthAndWellnessTransaction =
+				await addHealthAndWellnessTransaction({
+					healthAndWellnessTransaction,
+					parentTransactionId: newTransaction[0].id,
+				})
+			const newHomeTransaction = await addHomeTransaction({
+				homeTransaction,
+				parentTransactionId: newTransaction[0].id,
+			})
+			const newShoppingTransaction = await addShoppingTransaction({
+				shoppingTransaction,
+				parentTransactionId: newTransaction[0].id,
+			})
+			const newTransportationTransaction =
+				await addTransportationTransaction({
+					transportationTransaction,
+					parentTransactionId: newTransaction[0].id,
+				})
 
 			setTransactions([
 				...existingTransactions,
@@ -1633,12 +2229,12 @@ export async function addTransaction({
 					country: country,
 					category: transactionCategory,
 					paymentMethod: paymentMethod,
-					// TODO here we set child transactions
-					foodAndDrinkTransaction: null,
-					healthAndWellnessTransaction: null,
-					homeTransaction: null,
-					shoppingTransaction: null,
-					transportationTransaction: null,
+					foodAndDrinkTransaction: newFoodAndDrinkTransaction,
+					healthAndWellnessTransaction:
+						newHealthAndWellnessTransaction,
+					homeTransaction: newHomeTransaction,
+					shoppingTransaction: newShoppingTransaction,
+					transportationTransaction: newTransportationTransaction,
 					createdAt: newTransaction[0].createdAt,
 					updatedAt: newTransaction[0].updatedAt,
 				},
@@ -1733,8 +2329,7 @@ export function getTransactionCategoryIcon({
 	}
 }
 
-// Get from ID functions, etc
-
+// Get object from id functions, etc
 export function getUserId() {
 	const userId = useUser.getState().id
 
