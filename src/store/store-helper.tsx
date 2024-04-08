@@ -1478,7 +1478,7 @@ async function addCounterpart({
 
 			if (error) throw error
 
-			setCounterparts([...existingCounterparts, ...newCounterpart])
+			setCounterparts([...existingCounterparts, newCounterpart[0]])
 
 			return newCounterpart[0]
 		} catch (error) {
