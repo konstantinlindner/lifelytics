@@ -23,10 +23,10 @@ export type FlightLuggageCategory =
 	Database['public']['Tables']['flightLuggageCategories']['Row']
 export type FlightSeatCategory =
 	Database['public']['Tables']['flightSeatCategories']['Row']
-export type FlightSegment =
-	Database['public']['Tables']['flightSegments']['Row']
 export type FlightTransaction =
 	Database['public']['Tables']['flightTransactions']['Row']
+export type FlightTransactionSegment =
+	Database['public']['Tables']['flightTransactionSegments']['Row']
 export type FoodAndDrinkPlaceCategory =
 	Database['public']['Tables']['foodAndDrinkPlaceCategories']['Row']
 export type FoodAndDrinkTransaction =
