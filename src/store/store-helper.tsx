@@ -1772,7 +1772,6 @@ async function addHomeTransaction({
 
 type ShoppingTransactionInput = {
 	categoryId: number
-	accommodationTransaction?: AccommodationTransactionInput
 }
 
 type ShoppingTransactionProps = {
