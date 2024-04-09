@@ -9,6 +9,7 @@ import {
 	Counterpart,
 	Country,
 	Currency,
+	EatInTakeAway,
 	FlightClass,
 	FlightLuggageCategory,
 	FlightSeatCategory,
@@ -60,9 +61,9 @@ type Database = {
 	setFoodAndDrinkPlaceCategories: (
 		foodAndDrinkPlaceCategories: FoodAndDrinkPlaceCategory[],
 	) => void
-	foodAndDrinkTypeCategories: FoodAndDrinkPlaceCategory[]
+	foodAndDrinkTypeCategories: FoodAndDrinkTypeCategory[]
 	setFoodAndDrinkTypeCategories: (
-		foodAndDrinkTypeCategories: FoodAndDrinkPlaceCategory[],
+		foodAndDrinkTypeCategories: FoodAndDrinkTypeCategory[],
 	) => void
 	healthAndWellnessCategories: HealthAndWellnessCategory[]
 	setHealthAndWellnessCategories: (
@@ -163,8 +164,7 @@ type FoodAndDrinkTransaction = {
 	id: string
 	placeCategory: FoodAndDrinkPlaceCategory
 	typeCategory: FoodAndDrinkTypeCategory
-	isEatIn: boolean | null
-	isTakeAway: boolean | null
+	eatInTakeAway: EatInTakeAway | null
 	isLeftovers: boolean | null
 	isDelivery: boolean | null
 	isWorked: boolean | null
@@ -214,12 +214,12 @@ type TransportationTransaction = {
 type FlightTransaction = {
 	id: string
 	luggageCategory: FlightLuggageCategory
-	segments: FlightSegment[]
+	segments: FlightTransactionSegment[]
 	createdAt: string
 	updatedAt: string
 }
 
-type FlightSegment = {
+export type FlightTransactionSegment = {
 	id: string
 	order: number
 	departureAirport: Airport
@@ -299,7 +299,7 @@ export const useDatabase = create<Database>()((set) => ({
 	},
 	foodAndDrinkTypeCategories: [],
 	setFoodAndDrinkTypeCategories: (
-		foodAndDrinkTypeCategories: FoodAndDrinkPlaceCategory[],
+		foodAndDrinkTypeCategories: FoodAndDrinkTypeCategory[],
 	) => {
 		set({ foodAndDrinkTypeCategories })
 	},
