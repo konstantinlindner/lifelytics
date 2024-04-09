@@ -619,18 +619,21 @@ export type Database = {
 			foodAndDrinkPlaceCategories: {
 				Row: {
 					createdAt: string
+					hasOptions: boolean
 					id: number
 					name: string
 					updatedAt: string
 				}
 				Insert: {
 					createdAt?: string
+					hasOptions: boolean
 					id?: number
 					name: string
 					updatedAt?: string
 				}
 				Update: {
 					createdAt?: string
+					hasOptions?: boolean
 					id?: number
 					name?: string
 					updatedAt?: string
@@ -640,11 +643,12 @@ export type Database = {
 			foodAndDrinkTransactions: {
 				Row: {
 					createdAt: string
+					eatInTakeAway:
+						| Database['public']['Enums']['eatInTakeAway']
+						| null
 					id: string
 					isDelivery: boolean | null
-					isEatIn: boolean | null
 					isLeftovers: boolean | null
-					isTakeAway: boolean | null
 					isWorked: boolean | null
 					placeCategory: number
 					transaction: string
@@ -653,11 +657,12 @@ export type Database = {
 				}
 				Insert: {
 					createdAt?: string
+					eatInTakeAway?:
+						| Database['public']['Enums']['eatInTakeAway']
+						| null
 					id?: string
 					isDelivery?: boolean | null
-					isEatIn?: boolean | null
 					isLeftovers?: boolean | null
-					isTakeAway?: boolean | null
 					isWorked?: boolean | null
 					placeCategory: number
 					transaction: string
@@ -666,11 +671,12 @@ export type Database = {
 				}
 				Update: {
 					createdAt?: string
+					eatInTakeAway?:
+						| Database['public']['Enums']['eatInTakeAway']
+						| null
 					id?: string
 					isDelivery?: boolean | null
-					isEatIn?: boolean | null
 					isLeftovers?: boolean | null
-					isTakeAway?: boolean | null
 					isWorked?: boolean | null
 					placeCategory?: number
 					transaction?: string
@@ -1260,6 +1266,7 @@ export type Database = {
 				| 'Oceania'
 				| 'North America'
 				| 'South America'
+			eatInTakeAway: 'eat-in' | 'take-away'
 		}
 		CompositeTypes: {
 			[_ in never]: never
