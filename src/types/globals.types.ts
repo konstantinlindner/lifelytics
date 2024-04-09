@@ -61,3 +61,4 @@ export type TransportationTransaction =
 
 // enums
 export type Continent = Database['public']['Enums']['continents']
+export type EatInTakeAway = Database['public']['Enums']['eatInTakeAway']
