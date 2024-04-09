@@ -71,9 +71,11 @@ const formSchema = z.object({
 		.string({
 			required_error: 'Email is required',
 		})
+		.trim()
+		.toLowerCase()
 		.email(),
 	birthDate: z.date().optional(),
-	website: z.string().trim().optional(),
+	website: z.string().trim().toLowerCase().url().optional(),
 	city: z.coerce.number({
 		required_error: 'Please select a city',
 	}),
