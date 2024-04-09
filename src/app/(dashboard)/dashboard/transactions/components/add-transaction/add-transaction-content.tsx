@@ -5,30 +5,30 @@ import {
 	DialogTitle,
 } from '@/components/ui/dialog'
 
+import AddTransactionButton from './add-transaction-button'
 import { Screen, screens } from './add-transaction-constants'
-import AddTransactionDialogContentButton from './add-transaction-dialog-content-button'
-import AddTransactionDialogContentInput from './add-transaction-dialog-content-input'
+import AddTransactionInput from './add-transaction-input'
 
-type AddTransactionDialogContentProps = {
+type AddTransactionContentProps = {
 	screen: Screen
 	setScreen: (newScreen: Screen) => void
 }
 
-export default function AddTransactionDialogContent({
+export default function AddTransactionContent({
 	screen,
 	setScreen,
-}: AddTransactionDialogContentProps) {
+}: AddTransactionContentProps) {
 	const screenChildren = screens.filter(
 		(otherScreen) => otherScreen.parent === screen.id,
 	)
 
 	return (
-		<DialogContent className="max-h-screen max-w-xl overflow-y-scroll">
+		<DialogContent className="max-h-[90vh] max-w-2xl overflow-y-scroll">
 			<DialogHeader>
-				<DialogTitle>{screen.title}</DialogTitle>
+				<DialogTitle>New transaction</DialogTitle>
 				<DialogDescription>{screen.subtitle}</DialogDescription>
 			</DialogHeader>
-			<main className="mx-auto py-7">
+			<main className="flex flex-col items-center justify-center py-7">
 				{screenChildren.length > 0 && (
 					<div
 						className={
@@ -38,7 +38,7 @@ export default function AddTransactionDialogContent({
 						}
 					>
 						{screenChildren.map((child, index) => (
-							<AddTransactionDialogContentButton
+							<AddTransactionButton
 								key={index}
 								screen={child}
 								keyboardShortcut={String(index + 1)}
@@ -48,7 +48,7 @@ export default function AddTransactionDialogContent({
 					</div>
 				)}
 				{!screenChildren.length && (
-					<AddTransactionDialogContentInput screen={screen} />
+					<AddTransactionInput screen={screen} />
 				)}
 			</main>
 		</DialogContent>

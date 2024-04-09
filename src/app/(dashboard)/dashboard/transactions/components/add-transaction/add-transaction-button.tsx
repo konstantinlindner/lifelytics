@@ -1,18 +1,16 @@
-import { ReactNode } from 'react'
+import { Screen } from './add-transaction-constants'
 
-import { Screen, screens } from './add-transaction-constants'
-
-type AddTransactionDialogContentButtonProps = {
+type AddTransactionButtonProps = {
 	screen: Screen
 	keyboardShortcut: string
 	setScreen: (newScreen: Screen) => void
 }
 
-export default function AddTransactionDialogContentButton({
+export default function AddTransactionButton({
 	screen,
 	keyboardShortcut,
 	setScreen,
-}: AddTransactionDialogContentButtonProps) {
+}: AddTransactionButtonProps) {
 	return (
 		<button
 			onClick={() => setScreen(screen)}

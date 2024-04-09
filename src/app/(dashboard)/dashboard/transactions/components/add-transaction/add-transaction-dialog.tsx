@@ -9,7 +9,7 @@ import { CommandItem } from '@/components/ui/command'
 import { Dialog, DialogTrigger } from '@/components/ui/dialog'
 
 import { Screen, screens } from './add-transaction-constants'
-import AddTransactionDialogContent from './add-transaction-dialog-content'
+import AddTransactionContent from './add-transaction-content'
 
 type addTransactionDialogProps = {
 	openingScreen?: Screen
@@ -46,10 +46,7 @@ export default function AddTransactionDialog({
 					</CommandItem>
 				)}
 
-				<AddTransactionDialogContent
-					screen={screen}
-					setScreen={setScreen}
-				/>
+				<AddTransactionContent screen={screen} setScreen={setScreen} />
 			</Dialog>
 		</main>
 	)
