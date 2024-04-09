@@ -1,4 +1,9 @@
-import { City, Currency, TransactionCategory } from '@/types/globals.types'
+import {
+	City,
+	Currency,
+	EatInTakeAway,
+	TransactionCategory,
+} from '@/types/globals.types'
 
 import {
 	FlightTransactionSegment,
@@ -277,8 +282,8 @@ export async function InitializeStore() {
 							typeCategory: getFoodAndDrinkTypeCategoryFromId(
 								foodAndDrinkTransaction?.typeCategory,
 							),
-							isEatIn: foodAndDrinkTransaction.isEatIn,
-							isTakeAway: foodAndDrinkTransaction.isTakeAway,
+							eatInTakeAway:
+								foodAndDrinkTransaction.eatInTakeAway,
 							isLeftovers: foodAndDrinkTransaction.isLeftovers,
 							isDelivery: foodAndDrinkTransaction.isDelivery,
 							isWorked: foodAndDrinkTransaction.isWorked,
@@ -1534,8 +1539,7 @@ async function addCounterpart({
 type FoodAndDrinkTransactionInput = {
 	placeCategoryId: number
 	typeCategoryId: number
-	isEatIn: boolean | null
-	isTakeAway: boolean | null
+	eatInTakeAway: EatInTakeAway | null
 	isLeftovers: boolean | null
 	isDelivery: boolean | null
 	isWorked: boolean | null
@@ -1561,8 +1565,7 @@ async function addFoodAndDrinkTransaction({
 				transaction: parentTransactionId,
 				placeCategory: foodAndDrinkTransaction.placeCategoryId,
 				typeCategory: foodAndDrinkTransaction.typeCategoryId,
-				isEatIn: foodAndDrinkTransaction.isEatIn,
-				isTakeAway: foodAndDrinkTransaction.isTakeAway,
+				eatInTakeAway: foodAndDrinkTransaction.eatInTakeAway,
 				isLeftovers: foodAndDrinkTransaction.isLeftovers,
 				isDelivery: foodAndDrinkTransaction.isDelivery,
 				isWorked: foodAndDrinkTransaction.isWorked,
@@ -1587,8 +1590,7 @@ async function addFoodAndDrinkTransaction({
 			id: newFoodAndDrinkTransaction[0].id,
 			placeCategory: placeCategory,
 			typeCategory: typeCategory,
-			isEatIn: newFoodAndDrinkTransaction[0].isEatIn,
-			isTakeAway: newFoodAndDrinkTransaction[0].isTakeAway,
+			eatInTakeAway: newFoodAndDrinkTransaction[0].eatInTakeAway,
 			isLeftovers: newFoodAndDrinkTransaction[0].isLeftovers,
 			isDelivery: newFoodAndDrinkTransaction[0].isDelivery,
 			isWorked: newFoodAndDrinkTransaction[0].isWorked,
@@ -2600,7 +2602,6 @@ export function getHomeCategoryFromId(id: number) {
 
 export function getLoyaltyProgramFromId(id: number | null) {
 	if (!id) {
-		console.error('No loyalty program ID found')
 		return null
 	}
 
