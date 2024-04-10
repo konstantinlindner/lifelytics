@@ -333,7 +333,9 @@ export default function AddTransactionInput({
 								name="foodAndDrinkTransaction.placeCategoryId"
 								render={({ field }) => (
 									<FormItem className="flex flex-col">
-										<FormLabel>Place category</FormLabel>
+										<FormLabel className="max-w-fit">
+											Place category
+										</FormLabel>
 										<Popover>
 											<PopoverTrigger asChild>
 												<FormControl>
@@ -412,7 +414,9 @@ export default function AddTransactionInput({
 								name="foodAndDrinkTransaction.typeCategoryId"
 								render={({ field }) => (
 									<FormItem className="flex flex-col">
-										<FormLabel>Food type</FormLabel>
+										<FormLabel className="max-w-fit">
+											Food type
+										</FormLabel>
 										<Popover>
 											<PopoverTrigger asChild>
 												<FormControl>
@@ -719,7 +723,9 @@ export default function AddTransactionInput({
 						name="currency"
 						render={({ field }) => (
 							<FormItem className="flex flex-col">
-								<FormLabel>Currency</FormLabel>
+								<FormLabel className="max-w-fit">
+									Currency
+								</FormLabel>
 								<Popover>
 									<PopoverTrigger asChild>
 										<FormControl>
@@ -807,7 +813,9 @@ export default function AddTransactionInput({
 						name="paymentMethod"
 						render={({ field }) => (
 							<FormItem className="flex flex-col">
-								<FormLabel>Payment method</FormLabel>
+								<FormLabel className="max-w-fit">
+									Payment method
+								</FormLabel>
 								<Popover>
 									<PopoverTrigger asChild>
 										<FormControl>
@@ -883,7 +891,9 @@ export default function AddTransactionInput({
 						name="city"
 						render={({ field }) => (
 							<FormItem className="flex flex-col">
-								<FormLabel>Location</FormLabel>
+								<FormLabel className="max-w-fit">
+									Location
+								</FormLabel>
 								<Popover>
 									<PopoverTrigger asChild>
 										<FormControl>
