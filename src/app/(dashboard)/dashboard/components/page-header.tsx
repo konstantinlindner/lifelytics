@@ -14,7 +14,7 @@ const allSidebarItems = [
 export default function PageHeader() {
 	const pathname = usePathname()
 	const currentPage = allSidebarItems.find((item) => item.href === pathname)
-	const pageHeader = currentPage ? currentPage.header : ''
+	const pageHeader = currentPage?.header ?? ''
 
 	return <h2 className="text-2xl font-bold tracking-tight">{pageHeader}</h2>
 }
