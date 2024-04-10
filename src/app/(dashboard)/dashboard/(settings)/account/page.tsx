@@ -127,7 +127,9 @@ export default function Account() {
 							name="currency"
 							render={({ field }) => (
 								<FormItem className="flex flex-col">
-									<FormLabel>Default currency</FormLabel>
+									<FormLabel className="max-w-fit">
+										Default currency
+									</FormLabel>
 									<Popover>
 										<PopoverTrigger asChild>
 											<FormControl>

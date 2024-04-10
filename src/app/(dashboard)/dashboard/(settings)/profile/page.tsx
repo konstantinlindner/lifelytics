@@ -84,14 +84,14 @@ const formSchema = z.object({
 export default function Profile() {
 	const [isLoading, setIsLoading] = useState(false)
 
-	const cities = useDatabase((state) => state.cities)
-
 	const firstName = useUser((state) => state.firstName)
 	const lastName = useUser((state) => state.lastName)
 	const email = useUser((state) => state.email)
 	const birthDate = useUser((state) => state.birthDate)
 	const website = useUser((state) => state.website)
 	const city = useUser((state) => state.city)
+
+	const cities = useDatabase((state) => state.cities)
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		defaultValues: {
@@ -105,7 +105,7 @@ export default function Profile() {
 		resolver: zodResolver(formSchema),
 	})
 
-	const handleSave = async (values: z.infer<typeof formSchema>) => {
+	async function handleSave(values: z.infer<typeof formSchema>) {
 		setIsLoading(true)
 
 		try {
@@ -279,7 +279,9 @@ export default function Profile() {
 							name="city"
 							render={({ field }) => (
 								<FormItem className="flex flex-col">
-									<FormLabel>Location</FormLabel>
+									<FormLabel className="max-w-fit">
+										Location
+									</FormLabel>
 									<Popover>
 										<PopoverTrigger asChild>
 											<FormControl>
