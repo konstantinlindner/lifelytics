@@ -2,6 +2,8 @@
 
 import { useState } from 'react'
 
+import { CommandLoading } from 'cmdk'
+
 import { CoinsIcon, PlusIcon } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
@@ -14,24 +16,34 @@ import AddTransactionContent from './add-transaction-content'
 type addTransactionDialogProps = {
 	openingScreen?: Screen
 	button?: boolean
+	buttonTitle?: string
 	commandItem?: boolean
+	commandItemTitle?: string
 }
 
 export default function AddTransactionDialog({
 	openingScreen,
 	button,
+	buttonTitle,
 	commandItem,
+	commandItemTitle,
 }: addTransactionDialogProps) {
 	const [open, setOpen] = useState(false)
 	const [screen, setScreen] = useState<Screen>(openingScreen ?? screens[0])
 
+	function handleOpenChange() {
+		setOpen(!open)
+		setScreen(openingScreen ?? screens[0])
+	}
+
 	return (
 		<main>
-			<Dialog open={open} onOpenChange={setOpen}>
+			<Dialog open={open} onOpenChange={handleOpenChange}>
 				{button && (
 					<DialogTrigger asChild>
 						<Button size="sm" variant="outline" className="h-8">
-							<PlusIcon className="mr-2 h-5 w-5" /> Add
+							<PlusIcon className="mr-2 h-5 w-5" />
+							{buttonTitle ?? 'Add'}
 						</Button>
 					</DialogTrigger>
 				)}
@@ -42,7 +54,7 @@ export default function AddTransactionDialog({
 						}}
 					>
 						<CoinsIcon className="mr-2 h-4 w-4" />
-						<span>Add transaction</span>
+						<span>{commandItemTitle ?? 'Add transaction'}</span>
 					</CommandItem>
 				)}
 

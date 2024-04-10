@@ -28,7 +28,7 @@ import {
 	TableRow,
 } from '@/components/ui/table'
 
-import AddTransactionDialog from './add-transaction/add-transaction-dialog'
+import AddTransactionDialog from '../../components/add-transaction/add-transaction-dialog'
 import { CategoryFilter } from './components/category-filter'
 import { CityFilter } from './components/city-filter'
 import { CountryFilter } from './components/country-filter'
