@@ -67,7 +67,7 @@ export const transactionColumns: ColumnDef<Transaction>[] = [
 		cell: ({ row }) => {
 			const date = dayjs(row.getValue('date')).format('YYYY-MM-DD')
 
-			return <div>{date}</div>
+			return <div className="whitespace-nowrap">{date}</div>
 		},
 	},
 	{
