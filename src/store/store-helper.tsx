@@ -19,9 +19,12 @@ import { cn } from '@/lib/utils'
 import dayjs from 'dayjs'
 
 import {
+	BaggageClaimIcon,
+	BriefcaseBusinessIcon,
 	CarIcon,
 	CircleDollarSignIcon,
 	CoinsIcon,
+	CreditCardIcon,
 	DramaIcon,
 	GiftIcon,
 	HeartIcon,
@@ -497,6 +500,7 @@ export async function InitializeStore() {
 					item: transaction.item,
 					description: transaction.description,
 					amount: transaction.amount,
+					tip: transaction.tip,
 					isIncome: isIncome,
 					transactionDate: dayjs(
 						transaction.transactionDate,
@@ -2103,6 +2107,7 @@ type AddTransactionProps = {
 	date: Date
 	item: string
 	amount: number
+	tip: number | null
 	counterpartName: string
 	description: string | null
 	currencyId: string
@@ -2120,6 +2125,7 @@ export async function addTransaction({
 	date,
 	item,
 	amount,
+	tip,
 	counterpartName,
 	description,
 	currencyId,
@@ -2164,6 +2170,7 @@ export async function addTransaction({
 				user: userId,
 				item: item,
 				amount: amount,
+				tip: tip,
 				city: cityId,
 				currency: currencyId,
 				transactionDate: dayjs(date).format('YYYY-MM-DD'),
@@ -2222,6 +2229,7 @@ export async function addTransaction({
 					item: item,
 					description: description,
 					amount: amount,
+					tip: tip,
 					isIncome: transactionCategory?.isIncome,
 					transactionDate: date,
 					counterpart: counterpart,
@@ -2286,7 +2294,7 @@ export async function deleteTransaction({
 }
 
 type GetTransactionCategoryIconProps = {
-	transactionCategory: TransactionCategory
+	transactionCategory: TransactionCategory | undefined | null
 	className?: string
 }
 
@@ -2294,7 +2302,7 @@ export function getTransactionCategoryIcon({
 	transactionCategory,
 	className,
 }: GetTransactionCategoryIconProps) {
-	switch (transactionCategory.name) {
+	switch (transactionCategory?.name) {
 		case 'Home':
 			return <HomeIcon className={cn(className)} />
 		case 'Food and drink':
@@ -2315,6 +2323,8 @@ export function getTransactionCategoryIcon({
 			return <CircleDollarSignIcon className={cn(className)} />
 		case 'Salary':
 			return <CoinsIcon className={cn(className)} />
+		case 'Consulting':
+			return <BriefcaseBusinessIcon className={cn(className)} />
 		case 'Sale':
 			return <ReceiptIcon className={cn(className)} />
 		case 'Gift':
@@ -2323,6 +2333,10 @@ export function getTransactionCategoryIcon({
 			return <Undo2Icon className={cn(className)} />
 		case 'Realized investment':
 			return <PercentIcon className={cn(className)} />
+		case 'Insurance claim':
+			return <BaggageClaimIcon className={cn(className)} />
+		case 'Cashback':
+			return <CreditCardIcon className={cn(className)} />
 		case 'Other income':
 			return <CircleDollarSignIcon className={cn(className)} />
 		default:
