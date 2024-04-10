@@ -7,7 +7,10 @@ import {
 	TransactionCategory,
 } from '@/types/globals.types'
 
-import { addTransaction } from '@/store/store-helper'
+import {
+	addTransaction,
+	getTransactionCategoryIcon,
+} from '@/store/store-helper'
 import { useDatabase, useUser } from '@/store/use-store'
 
 import { cn } from '@/lib/utils'
@@ -18,7 +21,12 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import * as z from 'zod'
 
-import { CheckIcon, ChevronsUpDownIcon, InfoIcon } from 'lucide-react'
+import {
+	CheckIcon,
+	ChevronsUpDownIcon,
+	InfoIcon,
+	UtensilsCrossedIcon,
+} from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
@@ -78,6 +86,7 @@ const FormSchema = z.object({
 			invalid_type_error: 'Please specify the amount',
 		})
 		.positive(),
+	tip: z.coerce.number().positive().optional(),
 	currency: z.string({
 		required_error: 'Please select a currency',
 	}),
@@ -219,11 +228,22 @@ export default function AddTransactionInput({
 		)
 	}, [currentFoodAndDrinkPlaceCategoryId, foodAndDrinkPlaceCategories])
 
+	function setTipAmount(tipPercentage: number) {
+		const amount = form.watch('amount')
+
+		if (!amount) {
+			return
+		}
+
+		form.setValue('tip', amount * tipPercentage)
+	}
+
 	async function onSubmit(data: z.infer<typeof FormSchema>) {
 		const error = await addTransaction({
 			date: data.transactionDate,
 			item: data.item,
 			amount: data.amount,
+			tip: data.tip ?? 0,
 			counterpartName: data.counterpart,
 			currencyId: data.currency,
 			paymentMethodId: data.paymentMethod,
@@ -265,23 +285,39 @@ export default function AddTransactionInput({
 												variant="outline"
 												role="combobox"
 												className={cn(
-													'w-[200px] justify-between',
+													'w-[290px] justify-between',
 													!field.value &&
 														'text-muted-foreground',
 												)}
 											>
-												{field.value
-													? transactionCategories?.find(
+												<div className="flex items-center gap-3">
+													{getTransactionCategoryIcon(
+														{
+															transactionCategory:
+																transactionCategories?.find(
+																	(
+																		category,
+																	) =>
+																		category.id ===
+																		field.value,
+																),
+															className:
+																'h-4 w-4',
+														},
+													)}
+													{
+														transactionCategories?.find(
 															(category) =>
 																category.id ===
 																field.value,
-													  )?.name
-													: 'Select category'}
-												<ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+														)?.name
+													}
+												</div>
+												<ChevronsUpDownIcon className="h-4 w-4 shrink-0 opacity-50" />
 											</Button>
 										</FormControl>
 									</PopoverTrigger>
-									<PopoverContent className="w-[200px] p-0">
+									<PopoverContent className="w-[290px] p-0">
 										<Command>
 											<CommandInput placeholder="Search category..." />
 											<CommandEmpty>
@@ -311,6 +347,16 @@ export default function AddTransactionInput({
 																		: 'opacity-0',
 																)}
 															/>
+
+															{getTransactionCategoryIcon(
+																{
+																	transactionCategory:
+																		category,
+																	className:
+																		'mr-2 h-4 w-4 text-muted-foreground',
+																},
+															)}
+
 															{category.name}
 														</CommandItem>
 													),
@@ -326,7 +372,10 @@ export default function AddTransactionInput({
 
 					{currentCategory?.name === 'Food and drink' && (
 						<Card className="space-y-5 p-6">
-							<h3>Food and drink</h3>
+							<div className="flex items-center gap-4">
+								<UtensilsCrossedIcon className="h-6 w-6" />
+								<h3>Food and drink</h3>
+							</div>
 
 							<FormField
 								control={form.control}
@@ -554,7 +603,10 @@ export default function AddTransactionInput({
 
 													<TooltipProvider>
 														<Tooltip>
-															<TooltipTrigger type="button">
+															<TooltipTrigger
+																type="button"
+																className="cursor-default"
+															>
 																<InfoIcon className="h-4 w-4" />
 															</TooltipTrigger>
 															<TooltipContent>
@@ -597,7 +649,10 @@ export default function AddTransactionInput({
 
 													<TooltipProvider>
 														<Tooltip>
-															<TooltipTrigger type="button">
+															<TooltipTrigger
+																type="button"
+																className="cursor-default"
+															>
 																<InfoIcon className="h-4 w-4" />
 															</TooltipTrigger>
 															<TooltipContent>
@@ -637,7 +692,10 @@ export default function AddTransactionInput({
 
 														<TooltipProvider>
 															<Tooltip>
-																<TooltipTrigger type="button">
+																<TooltipTrigger
+																	type="button"
+																	className="cursor-default"
+																>
 																	<InfoIcon className="h-4 w-4" />
 																</TooltipTrigger>
 																<TooltipContent>
@@ -692,6 +750,7 @@ export default function AddTransactionInput({
 										placeholder="iPhone case"
 										{...field}
 										value={field.value ?? ''}
+										className="w-[290px]"
 									/>
 								</FormControl>
 								<FormMessage />
@@ -711,6 +770,7 @@ export default function AddTransactionInput({
 										placeholder="The Apple Store"
 										{...field}
 										value={field.value ?? ''}
+										className="w-[290px]"
 									/>
 								</FormControl>
 								<FormMessage />
@@ -733,7 +793,7 @@ export default function AddTransactionInput({
 												variant="outline"
 												role="combobox"
 												className={cn(
-													'w-[200px] justify-between',
+													'w-[290px] justify-between',
 													!field.value &&
 														'text-muted-foreground',
 												)}
@@ -749,7 +809,7 @@ export default function AddTransactionInput({
 											</Button>
 										</FormControl>
 									</PopoverTrigger>
-									<PopoverContent className="w-[200px] p-0">
+									<PopoverContent className="w-[290px] p-0">
 										<Command>
 											<CommandInput placeholder="Search currency..." />
 											<CommandEmpty>
@@ -801,6 +861,100 @@ export default function AddTransactionInput({
 										type="number"
 										{...field}
 										value={field.value}
+										className="w-[150px]"
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+
+					<FormField
+						control={form.control}
+						name="tip"
+						render={({ field }) => (
+							<FormItem>
+								<div className="space-x-2">
+									<FormLabel>Tip amount</FormLabel>
+
+									<Button
+										onClick={() => {
+											setTipAmount(0.1)
+										}}
+										type="button"
+										variant="link"
+										className="h-0 p-0"
+									>
+										10%
+									</Button>
+									<Button
+										onClick={() => {
+											setTipAmount(0.15)
+										}}
+										type="button"
+										variant="link"
+										className="h-0 p-0"
+									>
+										15%
+									</Button>
+									<Button
+										onClick={() => {
+											setTipAmount(0.18)
+										}}
+										type="button"
+										variant="link"
+										className="h-0 p-0"
+									>
+										18%
+									</Button>
+									<Button
+										onClick={() => {
+											setTipAmount(0.2)
+										}}
+										type="button"
+										variant="link"
+										className="h-0 p-0"
+									>
+										20%
+									</Button>
+									<Button
+										onClick={() => {
+											setTipAmount(0.22)
+										}}
+										type="button"
+										variant="link"
+										className="h-0 p-0"
+									>
+										22%
+									</Button>
+									<Button
+										onClick={() => {
+											setTipAmount(0.25)
+										}}
+										type="button"
+										variant="link"
+										className="h-0 p-0"
+									>
+										25%
+									</Button>
+									<Button
+										onClick={() => {
+											setTipAmount(0.3)
+										}}
+										type="button"
+										variant="link"
+										className="h-0 p-0"
+									>
+										30%
+									</Button>
+								</div>
+								<FormControl>
+									<Input
+										placeholder="12.34"
+										type="number"
+										{...field}
+										value={field.value}
+										className="w-[150px]"
 									/>
 								</FormControl>
 								<FormMessage />
@@ -823,7 +977,7 @@ export default function AddTransactionInput({
 												variant="outline"
 												role="combobox"
 												className={cn(
-													'w-[200px] justify-between',
+													'w-[290px] justify-between',
 													!field.value &&
 														'text-muted-foreground',
 												)}
@@ -839,7 +993,7 @@ export default function AddTransactionInput({
 											</Button>
 										</FormControl>
 									</PopoverTrigger>
-									<PopoverContent className="w-[200px] p-0">
+									<PopoverContent className="w-[290px] p-0">
 										<Command>
 											<CommandInput placeholder="Search..." />
 											<CommandEmpty>
@@ -901,7 +1055,7 @@ export default function AddTransactionInput({
 												variant="outline"
 												role="combobox"
 												className={cn(
-													'w-[200px] justify-between',
+													'w-[290px] justify-between',
 													!field.value &&
 														'text-muted-foreground',
 												)}
@@ -917,7 +1071,7 @@ export default function AddTransactionInput({
 											</Button>
 										</FormControl>
 									</PopoverTrigger>
-									<PopoverContent className="w-[200px] p-0">
+									<PopoverContent className="w-[290px] p-0">
 										<Command>
 											<CommandInput placeholder="Search city..." />
 											<CommandEmpty>
