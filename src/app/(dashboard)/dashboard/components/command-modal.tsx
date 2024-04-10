@@ -7,7 +7,6 @@ import { useRouter } from 'next/navigation'
 import {
 	CalculatorIcon,
 	CalendarIcon,
-	CoinsIcon,
 	SettingsIcon,
 	UserIcon,
 } from 'lucide-react'
@@ -24,7 +23,7 @@ import {
 	CommandShortcut,
 } from '@/components/ui/command'
 
-import AddTransactionDialog from '../transactions/components/add-transaction/add-transaction-dialog'
+import AddTransactionDialog from './add-transaction/add-transaction-dialog'
 
 export default function CommandModal() {
 	const router = useRouter()
