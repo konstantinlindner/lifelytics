@@ -144,6 +144,7 @@ export type Transaction = {
 	item: string
 	description: string | null
 	amount: number
+	tip: number | null
 	isIncome: boolean
 	transactionDate: Date
 	counterpart: Counterpart
