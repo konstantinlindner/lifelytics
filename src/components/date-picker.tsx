@@ -41,7 +41,7 @@ export default function DatePicker({
 
 	return (
 		<Popover key={date?.getDate()}>
-			<div className="relative w-[280px]">
+			<div className="relative w-[290px]">
 				<Input
 					type="string"
 					value={stringDate}
