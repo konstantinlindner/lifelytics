@@ -14,11 +14,11 @@ export const sidebarItems = [
 		href: '/dashboard/transactions',
 		header: 'Transactions',
 	},
-	// { title: "Flights", href: "/dashboard/flights" },
+
+	{ title: 'Flights', href: '/dashboard/flights', header: 'Flights' },
 	// { title: "Accommodation", href: "/dashboard/accommodation" },
-	// { title: "Transportation", href: "/dashboard/transportations" },
-	// { title: "Food", href: "/dashboard/food" },
-	// { title: "Other", href: "/dashboard/other" },
+	// { title: 'Transportation', href: '/dashboard/transportations' },
+	// { title: 'Food', href: '/dashboard/food' },
 	// { title: "Subscriptions", href: "/dashboard/subscriptions" },
 	// { title: "Income", href: "/dashboard/income" },
 	{
