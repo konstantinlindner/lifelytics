@@ -1108,7 +1108,7 @@ export type Database = {
 					id: string
 					item: string
 					paymentMethod: string
-					tipAmount: number | null
+					tip: number | null
 					transactionDate: string
 					updatedAt: string
 					user: string
@@ -1124,7 +1124,7 @@ export type Database = {
 					id?: string
 					item?: string
 					paymentMethod: string
-					tipAmount?: number | null
+					tip?: number | null
 					transactionDate: string
 					updatedAt?: string
 					user: string
@@ -1140,7 +1140,7 @@ export type Database = {
 					id?: string
 					item?: string
 					paymentMethod?: string
-					tipAmount?: number | null
+					tip?: number | null
 					transactionDate?: string
 					updatedAt?: string
 					user?: string
