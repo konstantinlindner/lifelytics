@@ -16,8 +16,9 @@ import { useDatabase, useUser } from '@/store/use-store'
 import { cn } from '@/lib/utils'
 
 import { zodResolver } from '@hookform/resolvers/zod'
+import { PopoverClose } from '@radix-ui/react-popover'
 import dayjs from 'dayjs'
-import { useForm } from 'react-hook-form'
+import { useFieldArray, useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import * as z from 'zod'
 
@@ -100,58 +101,92 @@ const FormSchema = z.object({
 	description: z.string().trim().optional(),
 	foodAndDrinkTransaction: z
 		.object({
-			placeCategoryId: z.coerce.number(),
-			typeCategoryId: z.coerce.number(),
-			eatInTakeAway: z
-				.union([z.literal('eat-in'), z.literal('take-away')])
-				.nullable(),
-			isLeftovers: z.boolean().nullable(),
-			isDelivery: z.boolean().nullable(),
-			isWorked: z.boolean().nullable(),
+			placeCategoryId: z.coerce.number({
+				invalid_type_error: 'Select a category',
+			}),
+			typeCategoryId: z.coerce.number({
+				invalid_type_error: 'Select the type',
+			}),
+			eatInTakeAway: z.union([
+				z.literal('eat-in'),
+				z.literal('take-away'),
+			]),
+			isLeftovers: z.boolean(),
+			isDelivery: z.boolean(),
+			isWorked: z.boolean(),
 		})
 		.optional(),
 	healthAndWellnessTransaction: z
 		.object({
-			categoryId: z.coerce.number(),
+			categoryId: z.coerce.number({
+				invalid_type_error: 'Select a category',
+			}),
 		})
 		.optional(),
 	homeTransaction: z
 		.object({
-			categoryId: z.coerce.number(),
+			categoryId: z.coerce.number({
+				invalid_type_error: 'Select a category',
+			}),
 			accommodationTransaction: z
 				.object({
-					typeId: z.coerce.number(),
-					categoryId: z.coerce.number(),
+					typeId: z.coerce.number({
+						invalid_type_error: 'Select the type',
+					}),
+					categoryId: z.coerce.number({
+						invalid_type_error: 'Select a category',
+					}),
 				})
 				.optional(),
 		})
 		.optional(),
 	shoppingTransaction: z
 		.object({
-			categoryId: z.coerce.number(),
+			categoryId: z.coerce.number({
+				invalid_type_error: 'Select a category',
+			}),
 		})
 		.optional(),
 	transportationTransaction: z
 		.object({
-			categoryId: z.coerce.number(),
+			categoryId: z.coerce.number({
+				invalid_type_error: 'Select a category',
+			}),
 			flightTransaction: z
 				.object({
-					luggageCategoryId: z.coerce.number(),
-					segments: z.array(
-						z.object({
-							order: z.coerce.number(),
-							departureAirportId: z.coerce.number(),
-							arrivalAirportId: z.coerce.number(),
-							airlineId: z.coerce.number(),
-							classId: z.coerce.number(),
-							seatCategoryId: z.coerce.number(),
-						}),
-					),
+					luggageCategoryId: z.coerce.number({
+						invalid_type_error: 'Select a category',
+					}),
+					segments: z
+						.array(
+							z.object({
+								order: z.coerce.number(),
+								departureAirportId: z.coerce.number({
+									invalid_type_error: 'Select an airport',
+								}),
+								arrivalAirportId: z.coerce.number({
+									invalid_type_error: 'Select an airport',
+								}),
+								airlineId: z.coerce.number({
+									invalid_type_error: 'Select an airline',
+								}),
+								classId: z.coerce.number({
+									invalid_type_error: 'Select a class',
+								}),
+								seatCategoryId: z.coerce.number({
+									invalid_type_error:
+										'Select a seat category',
+								}),
+							}),
+						)
+						.min(1),
 				})
 				.optional(),
 			carTransaction: z
 				.object({
-					categoryId: z.coerce.number(),
+					categoryId: z.coerce.number({
+						invalid_type_error: 'Select a category',
+					}),
 				})
 				.optional(),
 		})
@@ -183,8 +218,14 @@ export default function AddTransactionInput({
 		resolver: zodResolver(FormSchema),
 		defaultValues: {
 			transactionDate: new Date(),
-			category: screen.transactionCategoryId ?? undefined,
+			category: screen.transactionCategoryId!,
 			currency: defaultCurrency?.id,
+			foodAndDrinkTransaction: {
+				eatInTakeAway: 'eat-in',
+				isLeftovers: false,
+				isDelivery: false,
+				isWorked: false,
+			},
 		},
 	})
 
@@ -228,6 +269,45 @@ export default function AddTransactionInput({
 		)
 	}, [currentFoodAndDrinkPlaceCategoryId, foodAndDrinkPlaceCategories])
 
+	// register and unregister fields
+	useEffect(() => {
+		if (currentCategory?.name === 'Food and drink') {
+			form.register('foodAndDrinkTransaction')
+		} else {
+			form.unregister('foodAndDrinkTransaction')
+		}
+
+		if (currentCategory?.name === 'Health and wellness') {
+			form.register('healthAndWellnessTransaction')
+		} else {
+			form.unregister('healthAndWellnessTransaction')
+		}
+
+		if (currentCategory?.name === 'Home') {
+			form.register('homeTransaction')
+		} else {
+			form.unregister('homeTransaction')
+		}
+
+		if (currentCategory?.name === 'Shopping') {
+			form.register('shoppingTransaction')
+		} else {
+			form.unregister('shoppingTransaction')
+		}
+
+		if (currentCategory?.name === 'Transportation') {
+			form.register('transportationTransaction')
+		} else {
+			form.unregister('transportationTransaction')
+		}
+	}, [form, currentCategory])
+
+	// append and remove flight segments
+	// const { append, remove, fields } = useFieldArray({
+	// 	control: form.control,
+	// 	name: 'transportationTransaction.flightTransaction.segments',
+	// })
+
 	function setTipAmount(tipPercentage: number) {
 		const amount = form.watch('amount')
 
@@ -238,31 +318,37 @@ export default function AddTransactionInput({
 		form.setValue('tip', amount * tipPercentage)
 	}
 
+	console.log(form.formState.errors)
+
 	async function onSubmit(data: z.infer<typeof FormSchema>) {
-		const error = await addTransaction({
-			date: data.transactionDate,
-			item: data.item,
-			amount: data.amount,
-			tip: data.tip ?? 0,
-			counterpartName: data.counterpart,
-			currencyId: data.currency,
-			paymentMethodId: data.paymentMethod,
-			cityId: data.city,
-			categoryId: data.category,
-			description: data.description ?? null,
-			foodAndDrinkTransaction: data.foodAndDrinkTransaction,
-			healthAndWellnessTransaction: data.healthAndWellnessTransaction,
-			homeTransaction: data.homeTransaction,
-			shoppingTransaction: data.shoppingTransaction,
-			transportationTransaction: data.transportationTransaction,
-		})
+		toast(JSON.stringify(data))
 
-		if (error) {
-			toast(error.message)
-			return
-		}
+		console.log(JSON.stringify(data))
 
-		toast('Transaction added successfully')
+		// const error = await addTransaction({
+		// 	date: data.transactionDate,
+		// 	item: data.item,
+		// 	amount: data.amount,
+		// 	tip: data.tip ?? 0,
+		// 	counterpartName: data.counterpart,
+		// 	currencyId: data.currency,
+		// 	paymentMethodId: data.paymentMethod,
+		// 	cityId: data.city,
+		// 	categoryId: data.category,
+		// 	description: data.description ?? null,
+		// 	foodAndDrinkTransaction: data.foodAndDrinkTransaction,
+		// 	healthAndWellnessTransaction: data.healthAndWellnessTransaction,
+		// 	homeTransaction: data.homeTransaction,
+		// 	shoppingTransaction: data.shoppingTransaction,
+		// 	transportationTransaction: data.transportationTransaction,
+		// })
+
+		// if (error) {
+		// 	toast(error.message)
+		// 	return
+		// }
+
+		// toast('Transaction added successfully')
 	}
 
 	return (
@@ -337,27 +423,31 @@ export default function AddTransactionInput({
 																	category.id,
 																)
 															}}
+															className="p-0"
 														>
-															<CheckIcon
-																className={cn(
-																	'mr-2 h-4 w-4',
-																	category.id ===
-																		field.value
-																		? 'opacity-100'
-																		: 'opacity-0',
+															{/* move this styling to others too */}
+															<PopoverClose className="flex h-full w-full px-2 py-1.5">
+																<CheckIcon
+																	className={cn(
+																		'mr-2 h-4 w-4',
+																		category.id ===
+																			field.value
+																			? 'opacity-100'
+																			: 'opacity-0',
+																	)}
+																/>
+
+																{getTransactionCategoryIcon(
+																	{
+																		transactionCategory:
+																			category,
+																		className:
+																			'mr-2 h-4 w-4 text-muted-foreground',
+																	},
 																)}
-															/>
 
-															{getTransactionCategoryIcon(
-																{
-																	transactionCategory:
-																		category,
-																	className:
-																		'mr-2 h-4 w-4 text-muted-foreground',
-																},
-															)}
-
-															{category.name}
+																{category.name}
+															</PopoverClose>
 														</CommandItem>
 													),
 												)}
@@ -370,6 +460,7 @@ export default function AddTransactionInput({
 						)}
 					/>
 
+					{/* Food and drink */}
 					{currentCategory?.name === 'Food and drink' && (
 						<Card className="space-y-5 p-6">
 							<div className="flex items-center gap-4">
