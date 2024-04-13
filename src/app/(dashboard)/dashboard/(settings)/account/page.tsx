@@ -138,7 +138,7 @@ export default function Account() {
 													variant="outline"
 													role="combobox"
 													className={cn(
-														'w-[200px] justify-between',
+														'w-[100px] justify-between',
 														!field.value &&
 															'text-muted-foreground',
 													)}
@@ -154,7 +154,10 @@ export default function Account() {
 												</Button>
 											</FormControl>
 										</PopoverTrigger>
-										<PopoverContent className="w-[200px] p-0">
+										<PopoverContent
+											align="start"
+											className="w-[200px] p-0"
+										>
 											<Command>
 												<CommandInput placeholder="Search currency..." />
 												<CommandEmpty>
@@ -177,6 +180,7 @@ export default function Account() {
 																			'',
 																	)
 																}}
+																className="p-0"
 															>
 																<PopoverClose className="flex h-full w-full px-2 py-1.5">
 																	<CheckIcon
