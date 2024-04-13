@@ -3,6 +3,7 @@
 import { useState } from 'react'
 
 import {
+	getCityCountryStringFromCityId,
 	setBirthDate,
 	setFirstName,
 	setLastName,
@@ -290,23 +291,21 @@ export default function Profile() {
 													variant="outline"
 													role="combobox"
 													className={cn(
-														'w-[200px] justify-between',
+														'w-[290px] justify-between',
 														!field.value &&
 															'text-muted-foreground',
 													)}
 												>
 													{field.value
-														? cities?.find(
-																(city) =>
-																	city.id ===
-																	field.value,
-														  )?.name
+														? getCityCountryStringFromCityId(
+																field.value,
+														  )
 														: 'Select city'}
 													<ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
 												</Button>
 											</FormControl>
 										</PopoverTrigger>
-										<PopoverContent className="w-[200px] p-0">
+										<PopoverContent className="w-[290px] p-0">
 											<Command>
 												<CommandInput placeholder="Search city..." />
 												<CommandEmpty>
@@ -325,6 +324,7 @@ export default function Profile() {
 																	city.id,
 																)
 															}}
+															className="p-0"
 														>
 															<PopoverClose className="flex h-full w-full px-2 py-1.5">
 																<CheckIcon
@@ -336,7 +336,9 @@ export default function Profile() {
 																			: 'opacity-0',
 																	)}
 																/>
-																{city.name}
+																{getCityCountryStringFromCityId(
+																	city.id,
+																)}
 															</PopoverClose>
 														</CommandItem>
 													))}
