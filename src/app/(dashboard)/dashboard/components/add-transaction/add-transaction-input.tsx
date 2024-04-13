@@ -9,6 +9,7 @@ import {
 
 import {
 	addTransaction,
+	getCityCountryStringFromCityId,
 	getTransactionCategoryIcon,
 } from '@/store/store-helper'
 import { useDatabase, useUser } from '@/store/use-store'
@@ -318,37 +319,39 @@ export default function AddTransactionInput({
 		form.setValue('tip', amount * tipPercentage)
 	}
 
+	// todo remove console log
 	console.log(form.formState.errors)
 
 	async function onSubmit(data: z.infer<typeof FormSchema>) {
 		toast(JSON.stringify(data))
 
+		// todo remove console log
 		console.log(JSON.stringify(data))
 
-		// const error = await addTransaction({
-		// 	date: data.transactionDate,
-		// 	item: data.item,
-		// 	amount: data.amount,
-		// 	tip: data.tip ?? 0,
-		// 	counterpartName: data.counterpart,
-		// 	currencyId: data.currency,
-		// 	paymentMethodId: data.paymentMethod,
-		// 	cityId: data.city,
-		// 	categoryId: data.category,
-		// 	description: data.description ?? null,
-		// 	foodAndDrinkTransaction: data.foodAndDrinkTransaction,
-		// 	healthAndWellnessTransaction: data.healthAndWellnessTransaction,
-		// 	homeTransaction: data.homeTransaction,
-		// 	shoppingTransaction: data.shoppingTransaction,
-		// 	transportationTransaction: data.transportationTransaction,
-		// })
+		const error = await addTransaction({
+			date: data.transactionDate,
+			item: data.item,
+			amount: data.amount,
+			tip: data.tip ?? 0,
+			counterpartName: data.counterpart,
+			currencyId: data.currency,
+			paymentMethodId: data.paymentMethod,
+			cityId: data.city,
+			categoryId: data.category,
+			description: data.description ?? null,
+			foodAndDrinkTransaction: data.foodAndDrinkTransaction,
+			healthAndWellnessTransaction: data.healthAndWellnessTransaction,
+			homeTransaction: data.homeTransaction,
+			shoppingTransaction: data.shoppingTransaction,
+			transportationTransaction: data.transportationTransaction,
+		})
 
-		// if (error) {
-		// 	toast(error.message)
-		// 	return
-		// }
+		if (error) {
+			toast(error.message)
+			return
+		}
 
-		// toast('Transaction added successfully')
+		toast('Transaction added successfully')
 	}
 
 	return (
@@ -523,6 +526,7 @@ export default function AddTransactionInput({
 																				'',
 																		)
 																	}}
+																	className="p-0"
 																>
 																	<PopoverClose className="flex h-full w-full px-2 py-1.5">
 																		<CheckIcon
@@ -606,6 +610,7 @@ export default function AddTransactionInput({
 																				'',
 																		)
 																	}}
+																	className="p-0"
 																>
 																	<PopoverClose className="flex h-full w-full px-2 py-1.5">
 																		<CheckIcon
@@ -921,6 +926,7 @@ export default function AddTransactionInput({
 																	'',
 															)
 														}}
+														className="p-0"
 													>
 														<PopoverClose className="flex h-full w-full px-2 py-1.5">
 															<CheckIcon
@@ -1113,6 +1119,7 @@ export default function AddTransactionInput({
 																		'',
 																)
 															}}
+															className="p-0"
 														>
 															<PopoverClose className="flex h-full w-full px-2 py-1.5">
 																<CheckIcon
@@ -1161,11 +1168,9 @@ export default function AddTransactionInput({
 												)}
 											>
 												{field.value
-													? cities?.find(
-															(city) =>
-																city.id ===
-																field.value,
-													  )?.name
+													? getCityCountryStringFromCityId(
+															field.value,
+													  )
 													: 'Select city'}
 												<ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
 											</Button>
@@ -1188,6 +1193,7 @@ export default function AddTransactionInput({
 																city.id,
 															)
 														}}
+														className="p-0"
 													>
 														<PopoverClose className="flex h-full w-full px-2 py-1.5">
 															<CheckIcon
@@ -1199,7 +1205,9 @@ export default function AddTransactionInput({
 																		: 'opacity-0',
 																)}
 															/>
-															{city.name}
+															{getCityCountryStringFromCityId(
+																city.id,
+															)}
 														</PopoverClose>
 													</CommandItem>
 												))}
