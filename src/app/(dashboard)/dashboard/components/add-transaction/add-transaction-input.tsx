@@ -892,7 +892,7 @@ export default function AddTransactionInput({
 												variant="outline"
 												role="combobox"
 												className={cn(
-													'w-[290px] justify-between',
+													'w-[100px] justify-between',
 													!field.value &&
 														'text-muted-foreground',
 												)}
@@ -908,7 +908,10 @@ export default function AddTransactionInput({
 											</Button>
 										</FormControl>
 									</PopoverTrigger>
-									<PopoverContent className="w-[290px] p-0">
+									<PopoverContent
+										align="start"
+										className="w-[290px] p-0"
+									>
 										<Command>
 											<CommandInput placeholder="Search currency..." />
 											<CommandEmpty>
