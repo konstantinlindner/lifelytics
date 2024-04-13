@@ -55,7 +55,7 @@ export default function CurrencyPicker() {
 					<ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
 				</Button>
 			</PopoverTrigger>
-			<PopoverContent className="w-[200px] p-0">
+			<PopoverContent align="start" className="w-[200px] p-0">
 				<Command>
 					<CommandInput placeholder="Search currency..." />
 					<CommandEmpty>No currency found.</CommandEmpty>
@@ -67,6 +67,7 @@ export default function CurrencyPicker() {
 								onSelect={() => {
 									setSelectedCurrency(currency.id)
 								}}
+								className="p-0"
 							>
 								<PopoverClose className="flex h-full w-full px-2 py-1.5">
 									<CheckIcon
