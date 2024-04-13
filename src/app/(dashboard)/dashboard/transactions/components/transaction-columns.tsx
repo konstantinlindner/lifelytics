@@ -1,6 +1,9 @@
 'use client'
 
-import { deleteTransaction } from '@/store/store-helper'
+import {
+	deleteTransaction,
+	getCityCountryStringFromCityId,
+} from '@/store/store-helper'
 import { Transaction } from '@/store/use-store'
 
 import { cn } from '@/lib/utils'
@@ -146,6 +149,20 @@ export const transactionColumns: ColumnDef<Transaction>[] = [
 		),
 		filterFn: (row, id, value) => {
 			return value.includes(row.getValue(id))
+		},
+	},
+	{
+		id: 'location',
+		accessorKey: 'city.id',
+		header: ({ column }) => (
+			<ColumnHeader column={column} title="Location" />
+		),
+		cell: ({ row }) => {
+			return (
+				<div>
+					{getCityCountryStringFromCityId(row.getValue('location'))}
+				</div>
+			)
 		},
 	},
 	{
