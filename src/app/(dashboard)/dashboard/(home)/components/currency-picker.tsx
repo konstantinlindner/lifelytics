@@ -6,6 +6,8 @@ import { useDatabase, useUser } from '@/store/use-store'
 
 import { cn } from '@/lib/utils'
 
+import { PopoverClose } from '@radix-ui/react-popover'
+
 import { CheckIcon, ChevronsUpDownIcon } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
@@ -66,15 +68,17 @@ export default function CurrencyPicker() {
 									setSelectedCurrency(currency.id)
 								}}
 							>
-								<CheckIcon
-									className={cn(
-										'mr-2 h-4 w-4',
-										currency.id === selectedCurrency
-											? 'opacity-100'
-											: 'opacity-0',
-									)}
-								/>
-								{currency.name}
+								<PopoverClose className="flex h-full w-full px-2 py-1.5">
+									<CheckIcon
+										className={cn(
+											'mr-2 h-4 w-4',
+											currency.id === selectedCurrency
+												? 'opacity-100'
+												: 'opacity-0',
+										)}
+									/>
+									{currency.name}
+								</PopoverClose>
 							</CommandItem>
 						))}
 					</CommandGroup>

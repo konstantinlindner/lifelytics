@@ -425,7 +425,6 @@ export default function AddTransactionInput({
 															}}
 															className="p-0"
 														>
-															{/* move this styling to others too */}
 															<PopoverClose className="flex h-full w-full px-2 py-1.5">
 																<CheckIcon
 																	className={cn(
@@ -525,18 +524,20 @@ export default function AddTransactionInput({
 																		)
 																	}}
 																>
-																	<CheckIcon
-																		className={cn(
-																			'mr-2 h-4 w-4',
-																			category.id ===
-																				field.value
-																				? 'opacity-100'
-																				: 'opacity-0',
-																		)}
-																	/>
-																	{
-																		category.name
-																	}
+																	<PopoverClose className="flex h-full w-full px-2 py-1.5">
+																		<CheckIcon
+																			className={cn(
+																				'mr-2 h-4 w-4',
+																				category.id ===
+																					field.value
+																					? 'opacity-100'
+																					: 'opacity-0',
+																			)}
+																		/>
+																		{
+																			category.name
+																		}
+																	</PopoverClose>
 																</CommandItem>
 															),
 														)}
@@ -606,18 +607,20 @@ export default function AddTransactionInput({
 																		)
 																	}}
 																>
-																	<CheckIcon
-																		className={cn(
-																			'mr-2 h-4 w-4',
-																			category.id ===
-																				field.value
-																				? 'opacity-100'
-																				: 'opacity-0',
-																		)}
-																	/>
-																	{
-																		category.name
-																	}
+																	<PopoverClose className="flex h-full w-full px-2 py-1.5">
+																		<CheckIcon
+																			className={cn(
+																				'mr-2 h-4 w-4',
+																				category.id ===
+																					field.value
+																					? 'opacity-100'
+																					: 'opacity-0',
+																			)}
+																		/>
+																		{
+																			category.name
+																		}
+																	</PopoverClose>
 																</CommandItem>
 															),
 														)}
@@ -919,16 +922,18 @@ export default function AddTransactionInput({
 															)
 														}}
 													>
-														<CheckIcon
-															className={cn(
-																'mr-2 h-4 w-4',
-																currency.id ===
-																	field.value
-																	? 'opacity-100'
-																	: 'opacity-0',
-															)}
-														/>
-														{currency.name}
+														<PopoverClose className="flex h-full w-full px-2 py-1.5">
+															<CheckIcon
+																className={cn(
+																	'mr-2 h-4 w-4',
+																	currency.id ===
+																		field.value
+																		? 'opacity-100'
+																		: 'opacity-0',
+																)}
+															/>
+															{currency.name}
+														</PopoverClose>
 													</CommandItem>
 												))}
 											</CommandGroup>
@@ -1109,16 +1114,20 @@ export default function AddTransactionInput({
 																)
 															}}
 														>
-															<CheckIcon
-																className={cn(
-																	'mr-2 h-4 w-4',
-																	paymentMethod.id ===
-																		field.value
-																		? 'opacity-100'
-																		: 'opacity-0',
-																)}
-															/>
-															{paymentMethod.name}
+															<PopoverClose className="flex h-full w-full px-2 py-1.5">
+																<CheckIcon
+																	className={cn(
+																		'mr-2 h-4 w-4',
+																		paymentMethod.id ===
+																			field.value
+																			? 'opacity-100'
+																			: 'opacity-0',
+																	)}
+																/>
+																{
+																	paymentMethod.name
+																}
+															</PopoverClose>
 														</CommandItem>
 													),
 												)}
@@ -1180,16 +1189,18 @@ export default function AddTransactionInput({
 															)
 														}}
 													>
-														<CheckIcon
-															className={cn(
-																'mr-2 h-4 w-4',
-																city.id ===
-																	field.value
-																	? 'opacity-100'
-																	: 'opacity-0',
-															)}
-														/>
-														{city.name}
+														<PopoverClose className="flex h-full w-full px-2 py-1.5">
+															<CheckIcon
+																className={cn(
+																	'mr-2 h-4 w-4',
+																	city.id ===
+																		field.value
+																		? 'opacity-100'
+																		: 'opacity-0',
+																)}
+															/>
+															{city.name}
+														</PopoverClose>
 													</CommandItem>
 												))}
 											</CommandGroup>

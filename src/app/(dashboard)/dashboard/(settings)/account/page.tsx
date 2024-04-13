@@ -8,6 +8,7 @@ import { useDatabase, useUser } from '@/store/use-store'
 import { cn } from '@/lib/utils'
 
 import { zodResolver } from '@hookform/resolvers/zod'
+import { PopoverClose } from '@radix-ui/react-popover'
 import dayjs from 'dayjs'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
@@ -177,16 +178,20 @@ export default function Account() {
 																	)
 																}}
 															>
-																<CheckIcon
-																	className={cn(
-																		'mr-2 h-4 w-4',
-																		currency.id ===
-																			field.value
-																			? 'opacity-100'
-																			: 'opacity-0',
-																	)}
-																/>
-																{currency.name}
+																<PopoverClose className="flex h-full w-full px-2 py-1.5">
+																	<CheckIcon
+																		className={cn(
+																			'mr-2 h-4 w-4',
+																			currency.id ===
+																				field.value
+																				? 'opacity-100'
+																				: 'opacity-0',
+																		)}
+																	/>
+																	{
+																		currency.name
+																	}
+																</PopoverClose>
 															</CommandItem>
 														),
 													)}
