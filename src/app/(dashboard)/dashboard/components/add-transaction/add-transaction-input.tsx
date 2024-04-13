@@ -910,7 +910,7 @@ export default function AddTransactionInput({
 									</PopoverTrigger>
 									<PopoverContent
 										align="start"
-										className="w-[290px] p-0"
+										className="w-[200px] p-0"
 									>
 										<Command>
 											<CommandInput placeholder="Search currency..." />
