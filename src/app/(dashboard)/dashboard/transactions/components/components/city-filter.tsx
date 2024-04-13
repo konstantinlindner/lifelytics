@@ -1,3 +1,4 @@
+import { getCityCountryStringFromCityId } from '@/store/store-helper'
 import { useDatabase } from '@/store/use-store'
 
 import { cn } from '@/lib/utils'
@@ -50,7 +51,7 @@ export function CityFilter<TData, TValue>({
 					City
 				</Button>
 			</PopoverTrigger>
-			<PopoverContent className="w-[200px] p-0" align="start">
+			<PopoverContent className="w-[290px] p-0" align="start">
 				<Command>
 					<CommandInput placeholder="Search city..." />
 					<CommandList>
@@ -92,7 +93,11 @@ export function CityFilter<TData, TValue>({
 												className={cn('h-4 w-4')}
 											/>
 										</div>
-										<span>{option.name}</span>
+										<span>
+											{getCityCountryStringFromCityId(
+												option.id,
+											)}
+										</span>
 										{facets?.get(option.name) && (
 											<span className="ml-auto flex h-4 w-4 items-center justify-center font-mono text-xs">
 												{facets.get(option.name)}
