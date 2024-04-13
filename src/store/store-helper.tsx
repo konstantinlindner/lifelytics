@@ -2450,6 +2450,33 @@ export function getCityFromId(id: number | null) {
 	return city
 }
 
+export function getCityCountryStringFromCityId(id: number | null) {
+	if (!id) {
+		return null
+	}
+
+	const city = getCityFromId(id)
+
+	if (!city) {
+		console.error('City not found (country city string from city id)')
+		return null
+	}
+
+	// if the city is online, return only the city name
+	if (city.name === 'Online') {
+		return city.name
+	}
+
+	const country = getCountryFromId(city.country)
+
+	if (!country) {
+		console.error('Country not found')
+		return null
+	}
+
+	return `${city.name}, ${country.name}`
+}
+
 export function getCounterpartFromId(id: string) {
 	const counterpart = useUser
 		.getState()
