@@ -52,6 +52,7 @@ export function TransactionTable<TData, TValue>({
 	const [sorting, setSorting] = useState<SortingState>([])
 	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
 	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
+		city: false,
 		country: false,
 		currency: false,
 		description: false,
