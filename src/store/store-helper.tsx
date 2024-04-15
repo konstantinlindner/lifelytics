@@ -115,6 +115,8 @@ export async function InitializeStore() {
 	const setAccommodationCategories =
 		useDatabase.getState().setAccommodationCategories
 	const setShoppingCategories = useDatabase.getState().setShoppingCategories
+	const setTransportationCategories =
+		useDatabase.getState().setTransportationCategories
 
 	const [
 		cities,
@@ -135,6 +137,7 @@ export async function InitializeStore() {
 		homeCategories,
 		accommodationCategories,
 		shoppingCategories,
+		transportationCategories,
 	] = await Promise.all([
 		fetchCities(),
 		fetchCountries(),
@@ -154,6 +157,7 @@ export async function InitializeStore() {
 		fetchHomeCategories(),
 		fetchAccommodationCategories(),
 		fetchShoppingCategories(),
+		fetchTransportationCategories(),
 	])
 
 	if (cities) setCities(cities)
@@ -180,6 +184,8 @@ export async function InitializeStore() {
 	if (accommodationCategories)
 		setAccommodationCategories(accommodationCategories)
 	if (shoppingCategories) setShoppingCategories(shoppingCategories)
+	if (transportationCategories)
+		setTransportationCategories(transportationCategories)
 
 	// set user
 	const setId = useUser.getState().setId
@@ -1154,6 +1160,25 @@ async function fetchShoppingCategories() {
 		return shoppingCategories
 	} catch (error) {
 		console.error('Error fetching shopping categories:', error)
+	}
+}
+
+async function fetchTransportationCategories() {
+	try {
+		const { data: transportationCategories, error } = await supabase
+			.from('transportationCategories')
+			.select()
+
+		if (error) throw error
+
+		if (!transportationCategories) {
+			console.error('No transportation categories found')
+			return
+		}
+
+		return transportationCategories
+	} catch (error) {
+		console.error('Error fetching transportation categories:', error)
 	}
 }
 
