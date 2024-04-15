@@ -453,14 +453,12 @@ export default function AddTransactionInput({
 
 									<h3>{selectedCategory.name}</h3>
 								</div>
-
 								{/* Food and drink */}
 								{selectedCategory.name === 'Food and drink' && (
 									<FoodAndDrinkCategoryFormFields
 										form={form}
 									/>
 								)}
-
 								{/* Health and wellness */}
 								{selectedCategory.name ===
 									'Health and wellness' && (
@@ -468,18 +466,14 @@ export default function AddTransactionInput({
 										form={form}
 									/>
 								)}
-
 								{/* Home */}
 								{selectedCategory.name === 'Home' && (
 									<HomeCategoryFormFields form={form} />
 								)}
-
 								{/* Shopping */}
 								{selectedCategory.name === 'Shopping' && (
 									<ShoppingCategoryFormFields form={form} />
 								)}
-
-								{/* Transportation */}
 							</Card>
 						)}
 
