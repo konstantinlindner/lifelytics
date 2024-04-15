@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 
 import {
+	EatInTakeAway,
 	FoodAndDrinkPlaceCategory,
 	TransactionCategory,
 } from '@/types/globals.types'
@@ -19,16 +20,11 @@ import { cn } from '@/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { PopoverClose } from '@radix-ui/react-popover'
 import dayjs from 'dayjs'
-import { useFieldArray, useForm } from 'react-hook-form'
+import { UseFormReturn, useFieldArray, useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import * as z from 'zod'
 
-import {
-	CheckIcon,
-	ChevronsUpDownIcon,
-	InfoIcon,
-	UtensilsCrossedIcon,
-} from 'lucide-react'
+import { CheckIcon, ChevronsUpDownIcon, InfoIcon } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
@@ -211,9 +207,6 @@ export default function AddTransactionInput({
 	const foodAndDrinkPlaceCategories = useDatabase(
 		(state) => state.foodAndDrinkPlaceCategories,
 	)
-	const foodAndDrinkTypeCategories = useDatabase(
-		(state) => state.foodAndDrinkTypeCategories,
-	)
 
 	const form = useForm<z.infer<typeof FormSchema>>({
 		resolver: zodResolver(FormSchema),
@@ -230,78 +223,78 @@ export default function AddTransactionInput({
 		},
 	})
 
-	const currentCategoryId = form.watch('category')
-	const currentFoodAndDrinkPlaceCategoryId = form.watch(
+	const selectedCategoryId = form.watch('category')
+	const selectedFoodAndDrinkPlaceCategoryId = form.watch(
 		'foodAndDrinkTransaction.placeCategoryId',
 	)
-	const currentEatInTakeAway = form.watch(
+	const selectedEatInTakeAway = form.watch(
 		'foodAndDrinkTransaction.eatInTakeAway',
 	)
 
-	const [currentCategory, setCurrentCategory] = useState<
+	const [selectedCategory, setSelectedCategory] = useState<
 		TransactionCategory | undefined
 	>(
 		transactionCategories?.find(
-			(category) => category.id === currentCategoryId,
+			(category) => category.id === selectedCategoryId,
 		),
 	)
 	const [
-		currentFoodAndDrinkPlaceCategory,
-		setCurrentFoodAndDrinkPlaceCategory,
+		selectedFoodAndDrinkPlaceCategory,
+		setSelectedFoodAndDrinkPlaceCategory,
 	] = useState<FoodAndDrinkPlaceCategory | undefined>(
 		foodAndDrinkPlaceCategories?.find(
-			(category) => category.id === currentFoodAndDrinkPlaceCategoryId,
+			(category) => category.id === selectedFoodAndDrinkPlaceCategoryId,
 		),
 	)
 
 	useEffect(() => {
-		setCurrentCategory(
+		setSelectedCategory(
 			transactionCategories?.find(
-				(category) => category.id === currentCategoryId,
+				(category) => category.id === selectedCategoryId,
 			),
 		)
-	}, [currentCategoryId, transactionCategories])
+	}, [selectedCategoryId, transactionCategories])
 	useEffect(() => {
-		setCurrentFoodAndDrinkPlaceCategory(
+		setSelectedFoodAndDrinkPlaceCategory(
 			foodAndDrinkPlaceCategories?.find(
 				(category) =>
-					category.id === currentFoodAndDrinkPlaceCategoryId,
+					category.id === selectedFoodAndDrinkPlaceCategoryId,
 			),
 		)
-	}, [currentFoodAndDrinkPlaceCategoryId, foodAndDrinkPlaceCategories])
+	}, [selectedFoodAndDrinkPlaceCategoryId, foodAndDrinkPlaceCategories])
 
 	// register and unregister fields
 	useEffect(() => {
-		if (currentCategory?.name === 'Food and drink') {
+		if (selectedCategory?.name === 'Food and drink') {
 			form.register('foodAndDrinkTransaction')
 		} else {
 			form.unregister('foodAndDrinkTransaction')
 		}
 
-		if (currentCategory?.name === 'Health and wellness') {
+		if (selectedCategory?.name === 'Health and wellness') {
 			form.register('healthAndWellnessTransaction')
 		} else {
 			form.unregister('healthAndWellnessTransaction')
 		}
 
-		if (currentCategory?.name === 'Home') {
+		if (selectedCategory?.name === 'Home') {
 			form.register('homeTransaction')
 		} else {
 			form.unregister('homeTransaction')
 		}
 
-		if (currentCategory?.name === 'Shopping') {
+		if (selectedCategory?.name === 'Shopping') {
 			form.register('shoppingTransaction')
 		} else {
 			form.unregister('shoppingTransaction')
 		}
 
-		if (currentCategory?.name === 'Transportation') {
+		if (selectedCategory?.name === 'Transportation') {
 			form.register('transportationTransaction')
 		} else {
 			form.unregister('transportationTransaction')
 		}
-	}, [form, currentCategory])
+	}, [form, selectedCategory])
 
 	// append and remove flight segments
 	// const { append, remove, fields } = useFieldArray({
@@ -462,362 +455,42 @@ export default function AddTransactionInput({
 						)}
 					/>
 
-					{/* Food and drink */}
-					{currentCategory?.name === 'Food and drink' && (
-						<Card className="space-y-5 p-6">
-							<div className="flex items-center gap-4">
-								<UtensilsCrossedIcon className="h-6 w-6" />
-								<h3>Food and drink</h3>
-							</div>
+					{/* Custom fields depending on category */}
+					{selectedCategory &&
+						['Food and drink', 'Health and wellness'].includes(
+							selectedCategory.name,
+						) && (
+							<Card className="space-y-5 p-6">
+								<div className="flex items-center gap-4">
+									{getTransactionCategoryIcon({
+										transactionCategory: selectedCategory,
+									})}
 
-							<FormField
-								control={form.control}
-								name="foodAndDrinkTransaction.placeCategoryId"
-								render={({ field }) => (
-									<FormItem className="flex flex-col">
-										<FormLabel className="max-w-fit">
-											Place category
-										</FormLabel>
-										<Popover>
-											<PopoverTrigger asChild>
-												<FormControl>
-													<Button
-														variant="outline"
-														role="combobox"
-														className={cn(
-															'w-[200px] justify-between',
-															!field.value &&
-																'text-muted-foreground',
-														)}
-													>
-														{field.value
-															? foodAndDrinkPlaceCategories?.find(
-																	(
-																		category,
-																	) =>
-																		category.id ===
-																		field.value,
-															  )?.name
-															: 'Select category'}
-														<ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-													</Button>
-												</FormControl>
-											</PopoverTrigger>
-											<PopoverContent className="w-[200px] p-0">
-												<Command>
-													<CommandInput placeholder="Search category..." />
-													<CommandEmpty>
-														No category found.
-													</CommandEmpty>
-													<CommandGroup className="max-h-[20rem] overflow-y-auto">
-														{foodAndDrinkPlaceCategories?.map(
-															(category) => (
-																<CommandItem
-																	value={
-																		category.name
-																	}
-																	key={
-																		category.id
-																	}
-																	onSelect={() => {
-																		form.setValue(
-																			'foodAndDrinkTransaction.placeCategoryId',
-																			category.id ??
-																				'',
-																		)
-																	}}
-																	className="p-0"
-																>
-																	<PopoverClose className="flex h-full w-full px-2 py-1.5">
-																		<CheckIcon
-																			className={cn(
-																				'mr-2 h-4 w-4',
-																				category.id ===
-																					field.value
-																					? 'opacity-100'
-																					: 'opacity-0',
-																			)}
-																		/>
-																		{
-																			category.name
-																		}
-																	</PopoverClose>
-																</CommandItem>
-															),
-														)}
-													</CommandGroup>
-												</Command>
-											</PopoverContent>
-										</Popover>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
+									<h3>{selectedCategory.name}</h3>
+								</div>
 
-							<FormField
-								control={form.control}
-								name="foodAndDrinkTransaction.typeCategoryId"
-								render={({ field }) => (
-									<FormItem className="flex flex-col">
-										<FormLabel className="max-w-fit">
-											Food type
-										</FormLabel>
-										<Popover>
-											<PopoverTrigger asChild>
-												<FormControl>
-													<Button
-														variant="outline"
-														role="combobox"
-														className={cn(
-															'w-[200px] justify-between',
-															!field.value &&
-																'text-muted-foreground',
-														)}
-													>
-														{field.value
-															? foodAndDrinkTypeCategories?.find(
-																	(
-																		category,
-																	) =>
-																		category.id ===
-																		field.value,
-															  )?.name
-															: 'Select type'}
-														<ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-													</Button>
-												</FormControl>
-											</PopoverTrigger>
-											<PopoverContent className="w-[200px] p-0">
-												<Command>
-													<CommandInput placeholder="Search type..." />
-													<CommandEmpty>
-														No type found.
-													</CommandEmpty>
-													<CommandGroup className="max-h-[20rem] overflow-y-auto">
-														{foodAndDrinkTypeCategories?.map(
-															(category) => (
-																<CommandItem
-																	value={
-																		category.name
-																	}
-																	key={
-																		category.id
-																	}
-																	onSelect={() => {
-																		form.setValue(
-																			'foodAndDrinkTransaction.typeCategoryId',
-																			category.id ??
-																				'',
-																		)
-																	}}
-																	className="p-0"
-																>
-																	<PopoverClose className="flex h-full w-full px-2 py-1.5">
-																		<CheckIcon
-																			className={cn(
-																				'mr-2 h-4 w-4',
-																				category.id ===
-																					field.value
-																					? 'opacity-100'
-																					: 'opacity-0',
-																			)}
-																		/>
-																		{
-																			category.name
-																		}
-																	</PopoverClose>
-																</CommandItem>
-															),
-														)}
-													</CommandGroup>
-												</Command>
-											</PopoverContent>
-										</Popover>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-
-							{currentFoodAndDrinkPlaceCategory?.hasOptions && (
-								<>
-									<FormField
-										control={form.control}
-										name="foodAndDrinkTransaction.eatInTakeAway"
-										render={({ field }) => (
-											<FormItem className="space-y-3 rounded-md border p-4">
-												<FormControl>
-													<RadioGroup
-														onValueChange={
-															field.onChange
-														}
-														defaultValue={
-															field.value ??
-															undefined
-														}
-														className="flex flex-col space-y-1"
-													>
-														<FormItem className="flex items-center space-x-3 space-y-0">
-															<FormControl>
-																<RadioGroupItem value="eat-in" />
-															</FormControl>
-															<FormLabel className="font-normal">
-																Eat in
-															</FormLabel>
-														</FormItem>
-														<FormItem className="flex items-center space-x-3 space-y-0">
-															<FormControl>
-																<RadioGroupItem value="take-away" />
-															</FormControl>
-															<FormLabel className="font-normal">
-																Take-away
-															</FormLabel>
-														</FormItem>
-													</RadioGroup>
-												</FormControl>
-												<FormMessage />
-											</FormItem>
-										)}
+								{/* Food and drink */}
+								{selectedCategory.name === 'Food and drink' && (
+									<FoodAndDrinkCategoryFormFields
+										form={form}
+										selectedFoodAndDrinkPlaceCategory={
+											selectedFoodAndDrinkPlaceCategory
+										}
+										selectedEatInTakeAway={
+											selectedEatInTakeAway
+										}
 									/>
+								)}
 
-									<div className="space-y-3 rounded-md border p-4">
-										<FormField
-											control={form.control}
-											name="foodAndDrinkTransaction.isLeftovers"
-											render={({ field }) => (
-												<FormItem className="flex flex-row items-center space-x-3 space-y-0">
-													<FormControl>
-														<Checkbox
-															checked={Boolean(
-																field.value,
-															)}
-															onCheckedChange={
-																field.onChange
-															}
-														/>
-													</FormControl>
-
-													<FormLabel>
-														Leftovers
-													</FormLabel>
-
-													<TooltipProvider>
-														<Tooltip>
-															<TooltipTrigger
-																type="button"
-																className="cursor-default"
-															>
-																<InfoIcon className="h-4 w-4" />
-															</TooltipTrigger>
-															<TooltipContent>
-																<p>
-																	Did you have
-																	enough
-																	leftovers to
-																	get an extra
-																	meal out of
-																	it?
-																</p>
-															</TooltipContent>
-														</Tooltip>
-													</TooltipProvider>
-
-													<FormMessage />
-												</FormItem>
-											)}
-										/>
-
-										<FormField
-											control={form.control}
-											name="foodAndDrinkTransaction.isDelivery"
-											render={({ field }) => (
-												<FormItem className="flex flex-row items-center space-x-3 space-y-0">
-													<FormControl>
-														<Checkbox
-															checked={Boolean(
-																field.value,
-															)}
-															onCheckedChange={
-																field.onChange
-															}
-														/>
-													</FormControl>
-
-													<FormLabel>
-														Delivery
-													</FormLabel>
-
-													<TooltipProvider>
-														<Tooltip>
-															<TooltipTrigger
-																type="button"
-																className="cursor-default"
-															>
-																<InfoIcon className="h-4 w-4" />
-															</TooltipTrigger>
-															<TooltipContent>
-																<p>
-																	Was this
-																	ordered as
-																	delivery?
-																</p>
-															</TooltipContent>
-														</Tooltip>
-													</TooltipProvider>
-													<FormMessage />
-												</FormItem>
-											)}
-										/>
-
-										{currentEatInTakeAway === 'eat-in' && (
-											<FormField
-												control={form.control}
-												name="foodAndDrinkTransaction.isWorked"
-												render={({ field }) => (
-													<FormItem className="flex flex-row items-center space-x-3 space-y-0">
-														<FormControl>
-															<Checkbox
-																checked={Boolean(
-																	field.value,
-																)}
-																onCheckedChange={
-																	field.onChange
-																}
-															/>
-														</FormControl>
-
-														<FormLabel>
-															Worked
-														</FormLabel>
-
-														<TooltipProvider>
-															<Tooltip>
-																<TooltipTrigger
-																	type="button"
-																	className="cursor-default"
-																>
-																	<InfoIcon className="h-4 w-4" />
-																</TooltipTrigger>
-																<TooltipContent>
-																	<p>
-																		Did you
-																		patronize
-																		this
-																		establishment
-																		to work?
-																	</p>
-																</TooltipContent>
-															</Tooltip>
-														</TooltipProvider>
-														<FormMessage />
-													</FormItem>
-												)}
-											/>
-										)}
-									</div>
-								</>
-							)}
-						</Card>
-					)}
+								{/* Health and wellness */}
+								{selectedCategory.name ===
+									'Health and wellness' && (
+									<HealthAndWellnessCategoryFormFields
+										form={form}
+									/>
+								)}
+							</Card>
+						)}
 
 					<FormField
 						control={form.control}
@@ -1247,5 +920,407 @@ export default function AddTransactionInput({
 				</Button>
 			</form>
 		</Form>
+	)
+}
+
+type FoodAndDrinkCategoryFormFieldsProps = {
+	// todo fix any
+	form: UseFormReturn<any>
+	selectedFoodAndDrinkPlaceCategory?: FoodAndDrinkPlaceCategory
+	selectedEatInTakeAway: EatInTakeAway
+}
+
+function FoodAndDrinkCategoryFormFields({
+	form,
+	selectedFoodAndDrinkPlaceCategory,
+	selectedEatInTakeAway,
+}: FoodAndDrinkCategoryFormFieldsProps) {
+	const foodAndDrinkPlaceCategories = useDatabase(
+		(state) => state.foodAndDrinkPlaceCategories,
+	)
+	const foodAndDrinkTypeCategories = useDatabase(
+		(state) => state.foodAndDrinkTypeCategories,
+	)
+
+	return (
+		<>
+			<FormField
+				control={form.control}
+				name="foodAndDrinkTransaction.placeCategoryId"
+				render={({ field }) => (
+					<FormItem className="flex flex-col">
+						<FormLabel className="max-w-fit">
+							Place category
+						</FormLabel>
+						<Popover>
+							<PopoverTrigger asChild>
+								<FormControl>
+									<Button
+										variant="outline"
+										role="combobox"
+										className={cn(
+											'w-[200px] justify-between',
+											!field.value &&
+												'text-muted-foreground',
+										)}
+									>
+										{field.value
+											? foodAndDrinkPlaceCategories?.find(
+													(category) =>
+														category.id ===
+														field.value,
+											  )?.name
+											: 'Select category'}
+										<ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+									</Button>
+								</FormControl>
+							</PopoverTrigger>
+							<PopoverContent className="w-[200px] p-0">
+								<Command>
+									<CommandInput placeholder="Search category..." />
+									<CommandEmpty>
+										No category found.
+									</CommandEmpty>
+									<CommandGroup className="max-h-[20rem] overflow-y-auto">
+										{foodAndDrinkPlaceCategories?.map(
+											(category) => (
+												<CommandItem
+													value={category.name}
+													key={category.id}
+													onSelect={() => {
+														form.setValue(
+															'foodAndDrinkTransaction.placeCategoryId',
+															category.id ?? '',
+														)
+													}}
+													className="p-0"
+												>
+													<PopoverClose className="flex h-full w-full px-2 py-1.5">
+														<CheckIcon
+															className={cn(
+																'mr-2 h-4 w-4',
+																category.id ===
+																	field.value
+																	? 'opacity-100'
+																	: 'opacity-0',
+															)}
+														/>
+														{category.name}
+													</PopoverClose>
+												</CommandItem>
+											),
+										)}
+									</CommandGroup>
+								</Command>
+							</PopoverContent>
+						</Popover>
+						<FormMessage />
+					</FormItem>
+				)}
+			/>
+
+			<FormField
+				control={form.control}
+				name="foodAndDrinkTransaction.typeCategoryId"
+				render={({ field }) => (
+					<FormItem className="flex flex-col">
+						<FormLabel className="max-w-fit">Food type</FormLabel>
+						<Popover>
+							<PopoverTrigger asChild>
+								<FormControl>
+									<Button
+										variant="outline"
+										role="combobox"
+										className={cn(
+											'w-[200px] justify-between',
+											!field.value &&
+												'text-muted-foreground',
+										)}
+									>
+										{field.value
+											? foodAndDrinkTypeCategories?.find(
+													(category) =>
+														category.id ===
+														field.value,
+											  )?.name
+											: 'Select type'}
+										<ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+									</Button>
+								</FormControl>
+							</PopoverTrigger>
+							<PopoverContent className="w-[200px] p-0">
+								<Command>
+									<CommandInput placeholder="Search type..." />
+									<CommandEmpty>No type found.</CommandEmpty>
+									<CommandGroup className="max-h-[20rem] overflow-y-auto">
+										{foodAndDrinkTypeCategories?.map(
+											(category) => (
+												<CommandItem
+													value={category.name}
+													key={category.id}
+													onSelect={() => {
+														form.setValue(
+															'foodAndDrinkTransaction.typeCategoryId',
+															category.id ?? '',
+														)
+													}}
+													className="p-0"
+												>
+													<PopoverClose className="flex h-full w-full px-2 py-1.5">
+														<CheckIcon
+															className={cn(
+																'mr-2 h-4 w-4',
+																category.id ===
+																	field.value
+																	? 'opacity-100'
+																	: 'opacity-0',
+															)}
+														/>
+														{category.name}
+													</PopoverClose>
+												</CommandItem>
+											),
+										)}
+									</CommandGroup>
+								</Command>
+							</PopoverContent>
+						</Popover>
+						<FormMessage />
+					</FormItem>
+				)}
+			/>
+
+			{selectedFoodAndDrinkPlaceCategory?.hasOptions && (
+				<>
+					<FormField
+						control={form.control}
+						name="foodAndDrinkTransaction.eatInTakeAway"
+						render={({ field }) => (
+							<FormItem className="space-y-3 rounded-md border p-4">
+								<FormControl>
+									<RadioGroup
+										onValueChange={field.onChange}
+										defaultValue={field.value ?? undefined}
+										className="flex flex-col space-y-1"
+									>
+										<FormItem className="flex items-center space-x-3 space-y-0">
+											<FormControl>
+												<RadioGroupItem value="eat-in" />
+											</FormControl>
+											<FormLabel className="font-normal">
+												Eat in
+											</FormLabel>
+										</FormItem>
+										<FormItem className="flex items-center space-x-3 space-y-0">
+											<FormControl>
+												<RadioGroupItem value="take-away" />
+											</FormControl>
+											<FormLabel className="font-normal">
+												Take-away
+											</FormLabel>
+										</FormItem>
+									</RadioGroup>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+
+					<div className="space-y-3 rounded-md border p-4">
+						<FormField
+							control={form.control}
+							name="foodAndDrinkTransaction.isLeftovers"
+							render={({ field }) => (
+								<FormItem className="flex flex-row items-center space-x-3 space-y-0">
+									<FormControl>
+										<Checkbox
+											checked={Boolean(field.value)}
+											onCheckedChange={field.onChange}
+										/>
+									</FormControl>
+
+									<FormLabel>Leftovers</FormLabel>
+
+									<TooltipProvider>
+										<Tooltip>
+											<TooltipTrigger
+												type="button"
+												className="cursor-default"
+											>
+												<InfoIcon className="h-4 w-4" />
+											</TooltipTrigger>
+											<TooltipContent>
+												<p>
+													Did you have enough
+													leftovers to get an extra
+													meal out of it?
+												</p>
+											</TooltipContent>
+										</Tooltip>
+									</TooltipProvider>
+
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+
+						<FormField
+							control={form.control}
+							name="foodAndDrinkTransaction.isDelivery"
+							render={({ field }) => (
+								<FormItem className="flex flex-row items-center space-x-3 space-y-0">
+									<FormControl>
+										<Checkbox
+											checked={Boolean(field.value)}
+											onCheckedChange={field.onChange}
+										/>
+									</FormControl>
+
+									<FormLabel>Delivery</FormLabel>
+
+									<TooltipProvider>
+										<Tooltip>
+											<TooltipTrigger
+												type="button"
+												className="cursor-default"
+											>
+												<InfoIcon className="h-4 w-4" />
+											</TooltipTrigger>
+											<TooltipContent>
+												<p>
+													Was this ordered as
+													delivery?
+												</p>
+											</TooltipContent>
+										</Tooltip>
+									</TooltipProvider>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+
+						{selectedEatInTakeAway === 'eat-in' && (
+							<FormField
+								control={form.control}
+								name="foodAndDrinkTransaction.isWorked"
+								render={({ field }) => (
+									<FormItem className="flex flex-row items-center space-x-3 space-y-0">
+										<FormControl>
+											<Checkbox
+												checked={Boolean(field.value)}
+												onCheckedChange={field.onChange}
+											/>
+										</FormControl>
+
+										<FormLabel>Worked</FormLabel>
+
+										<TooltipProvider>
+											<Tooltip>
+												<TooltipTrigger
+													type="button"
+													className="cursor-default"
+												>
+													<InfoIcon className="h-4 w-4" />
+												</TooltipTrigger>
+												<TooltipContent>
+													<p>
+														Did you patronize this
+														establishment to work?
+													</p>
+												</TooltipContent>
+											</Tooltip>
+										</TooltipProvider>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+						)}
+					</div>
+				</>
+			)}
+		</>
+	)
+}
+
+type HealthAndWellnessCategoryFormFieldsProps = {
+	// todo fix any
+	form: UseFormReturn<any>
+}
+
+function HealthAndWellnessCategoryFormFields({
+	form,
+}: HealthAndWellnessCategoryFormFieldsProps) {
+	const healthAndWellnessCategories = useDatabase(
+		(state) => state.healthAndWellnessCategories,
+	)
+	return (
+		<FormField
+			control={form.control}
+			name="healthAndWellnessTransaction.categoryId"
+			render={({ field }) => (
+				<FormItem className="flex flex-col">
+					<FormLabel className="max-w-fit">Category</FormLabel>
+					<Popover>
+						<PopoverTrigger asChild>
+							<FormControl>
+								<Button
+									variant="outline"
+									role="combobox"
+									className={cn(
+										'w-[200px] justify-between',
+										!field.value && 'text-muted-foreground',
+									)}
+								>
+									{field.value
+										? healthAndWellnessCategories?.find(
+												(category) =>
+													category.id === field.value,
+										  )?.name
+										: 'Select category'}
+									<ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+								</Button>
+							</FormControl>
+						</PopoverTrigger>
+						<PopoverContent className="w-[200px] p-0">
+							<Command>
+								<CommandInput placeholder="Search category..." />
+								<CommandEmpty>No category found.</CommandEmpty>
+								<CommandGroup className="max-h-[20rem] overflow-y-auto">
+									{healthAndWellnessCategories?.map(
+										(category) => (
+											<CommandItem
+												value={category.name}
+												key={category.id}
+												onSelect={() => {
+													form.setValue(
+														'healthAndWellnessTransaction.categoryId',
+														category.id ?? '',
+													)
+												}}
+												className="p-0"
+											>
+												<PopoverClose className="flex h-full w-full px-2 py-1.5">
+													<CheckIcon
+														className={cn(
+															'mr-2 h-4 w-4',
+															category.id ===
+																field.value
+																? 'opacity-100'
+																: 'opacity-0',
+														)}
+													/>
+													{category.name}
+												</PopoverClose>
+											</CommandItem>
+										),
+									)}
+								</CommandGroup>
+							</Command>
+						</PopoverContent>
+					</Popover>
+					<FormMessage />
+				</FormItem>
+			)}
+		/>
 	)
 }
