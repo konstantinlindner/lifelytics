@@ -114,6 +114,7 @@ export async function InitializeStore() {
 	const setHomeCategories = useDatabase.getState().setHomeCategories
 	const setAccommodationCategories =
 		useDatabase.getState().setAccommodationCategories
+	const setShoppingCategories = useDatabase.getState().setShoppingCategories
 
 	const [
 		cities,
@@ -133,6 +134,7 @@ export async function InitializeStore() {
 		healthAndWellnessCategories,
 		homeCategories,
 		accommodationCategories,
+		shoppingCategories,
 	] = await Promise.all([
 		fetchCities(),
 		fetchCountries(),
@@ -151,6 +153,7 @@ export async function InitializeStore() {
 		fetchHealthAndWellnessCategories(),
 		fetchHomeCategories(),
 		fetchAccommodationCategories(),
+		fetchShoppingCategories(),
 	])
 
 	if (cities) setCities(cities)
@@ -176,6 +179,7 @@ export async function InitializeStore() {
 	if (homeCategories) setHomeCategories(homeCategories)
 	if (accommodationCategories)
 		setAccommodationCategories(accommodationCategories)
+	if (shoppingCategories) setShoppingCategories(shoppingCategories)
 
 	// set user
 	const setId = useUser.getState().setId
@@ -1134,22 +1138,22 @@ async function fetchAccommodationCategories() {
 	}
 }
 
-async function fetchAccommodationTypes() {
+async function fetchShoppingCategories() {
 	try {
-		const { data: accommodationTypes, error } = await supabase
-			.from('accommodationTypes')
+		const { data: shoppingCategories, error } = await supabase
+			.from('shoppingCategories')
 			.select()
 
 		if (error) throw error
 
-		if (!accommodationTypes) {
-			console.error('No accommodation types found')
+		if (!shoppingCategories) {
+			console.error('No shopping categories found')
 			return
 		}
 
-		return accommodationTypes
+		return shoppingCategories
 	} catch (error) {
-		console.error('Error fetching accommodation types:', error)
+		console.error('Error fetching shopping categories:', error)
 	}
 }
 
