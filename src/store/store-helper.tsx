@@ -117,6 +117,7 @@ export async function InitializeStore() {
 	const setShoppingCategories = useDatabase.getState().setShoppingCategories
 	const setTransportationCategories =
 		useDatabase.getState().setTransportationCategories
+	const setCarCategories = useDatabase.getState().setCarCategories
 
 	const [
 		cities,
@@ -138,6 +139,7 @@ export async function InitializeStore() {
 		accommodationCategories,
 		shoppingCategories,
 		transportationCategories,
+		carCategories,
 	] = await Promise.all([
 		fetchCities(),
 		fetchCountries(),
@@ -158,6 +160,7 @@ export async function InitializeStore() {
 		fetchAccommodationCategories(),
 		fetchShoppingCategories(),
 		fetchTransportationCategories(),
+		fetchCarCategories(),
 	])
 
 	if (cities) setCities(cities)
@@ -186,6 +189,7 @@ export async function InitializeStore() {
 	if (shoppingCategories) setShoppingCategories(shoppingCategories)
 	if (transportationCategories)
 		setTransportationCategories(transportationCategories)
+	if (carCategories) setCarCategories(carCategories)
 
 	// set user
 	const setId = useUser.getState().setId
@@ -1182,8 +1186,26 @@ async function fetchTransportationCategories() {
 	}
 }
 
-// helper functions
+async function fetchCarCategories() {
+	try {
+		const { data: carCategories, error } = await supabase
+			.from('carCategories')
+			.select()
 
+		if (error) throw error
+
+		if (!carCategories) {
+			console.error('No car categories found')
+			return
+		}
+
+		return carCategories
+	} catch (error) {
+		console.error('Error fetching car categories:', error)
+	}
+}
+
+// helper functions
 type UpdateEmailProps = {
 	email: string
 }
