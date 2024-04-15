@@ -206,10 +206,6 @@ export default function AddTransactionInput({
 	const transactionCategories = useDatabase(
 		(state) => state.transactionCategories,
 	)
-	const foodAndDrinkPlaceCategories = useDatabase(
-		(state) => state.foodAndDrinkPlaceCategories,
-	)
-	const homeCategories = useDatabase((state) => state.homeCategories)
 
 	const form = useForm<z.infer<typeof FormSchema>>({
 		resolver: zodResolver(FormSchema),
@@ -232,31 +228,12 @@ export default function AddTransactionInput({
 	})
 
 	const selectedCategoryId = form.watch('category')
-	const selectedFoodAndDrinkPlaceCategoryId = form.watch(
-		'foodAndDrinkTransaction.placeCategoryId',
-	)
-	const selectedHomeCategoryId = form.watch('homeTransaction.categoryId')
 
 	const [selectedCategory, setSelectedCategory] = useState<
 		TransactionCategory | undefined
 	>(
 		transactionCategories?.find(
 			(category) => category.id === selectedCategoryId,
-		),
-	)
-	const [
-		selectedFoodAndDrinkPlaceCategory,
-		setSelectedFoodAndDrinkPlaceCategory,
-	] = useState<FoodAndDrinkPlaceCategory | undefined>(
-		foodAndDrinkPlaceCategories?.find(
-			(category) => category.id === selectedFoodAndDrinkPlaceCategoryId,
-		),
-	)
-	const [selectedHomeCategory, setSelectedHomeCategory] = useState<
-		HomeCategory | undefined
-	>(
-		homeCategories?.find(
-			(category) => category.id === selectedHomeCategoryId,
 		),
 	)
 
@@ -267,21 +244,6 @@ export default function AddTransactionInput({
 			),
 		)
 	}, [selectedCategoryId, transactionCategories])
-	useEffect(() => {
-		setSelectedFoodAndDrinkPlaceCategory(
-			foodAndDrinkPlaceCategories?.find(
-				(category) =>
-					category.id === selectedFoodAndDrinkPlaceCategoryId,
-			),
-		)
-	}, [selectedFoodAndDrinkPlaceCategoryId, foodAndDrinkPlaceCategories])
-	useEffect(() => {
-		setSelectedHomeCategory(
-			homeCategories?.find(
-				(category) => category.id === selectedHomeCategoryId,
-			),
-		)
-	}, [selectedHomeCategoryId, homeCategories])
 
 	// register and unregister fields
 	useEffect(() => {
@@ -496,9 +458,6 @@ export default function AddTransactionInput({
 								{selectedCategory.name === 'Food and drink' && (
 									<FoodAndDrinkCategoryFormFields
 										form={form}
-										selectedFoodAndDrinkPlaceCategory={
-											selectedFoodAndDrinkPlaceCategory
-										}
 									/>
 								)}
 
@@ -512,12 +471,7 @@ export default function AddTransactionInput({
 
 								{/* Home */}
 								{selectedCategory.name === 'Home' && (
-									<HomeCategoryFormFields
-										form={form}
-										selectedHomeCategory={
-											selectedHomeCategory
-										}
-									/>
+									<HomeCategoryFormFields form={form} />
 								)}
 
 								{/* Shopping */}
@@ -960,16 +914,12 @@ export default function AddTransactionInput({
 	)
 }
 
-type FoodAndDrinkCategoryFormFieldsProps = {
+type CategoryFormFieldsProps = {
 	// todo fix any
 	form: UseFormReturn<any>
-	selectedFoodAndDrinkPlaceCategory?: FoodAndDrinkPlaceCategory
 }
 
-function FoodAndDrinkCategoryFormFields({
-	form,
-	selectedFoodAndDrinkPlaceCategory,
-}: FoodAndDrinkCategoryFormFieldsProps) {
+function FoodAndDrinkCategoryFormFields({ form }: CategoryFormFieldsProps) {
 	const foodAndDrinkPlaceCategories = useDatabase(
 		(state) => state.foodAndDrinkPlaceCategories,
 	)
@@ -980,6 +930,28 @@ function FoodAndDrinkCategoryFormFields({
 	const selectedEatInTakeAway = form.watch(
 		'foodAndDrinkTransaction.eatInTakeAway',
 	)
+
+	const selectedFoodAndDrinkPlaceCategoryId = form.watch(
+		'foodAndDrinkTransaction.placeCategoryId',
+	)
+
+	const [
+		selectedFoodAndDrinkPlaceCategory,
+		setSelectedFoodAndDrinkPlaceCategory,
+	] = useState<FoodAndDrinkPlaceCategory | undefined>(
+		foodAndDrinkPlaceCategories?.find(
+			(category) => category.id === selectedFoodAndDrinkPlaceCategoryId,
+		),
+	)
+
+	useEffect(() => {
+		setSelectedFoodAndDrinkPlaceCategory(
+			foodAndDrinkPlaceCategories?.find(
+				(category) =>
+					category.id === selectedFoodAndDrinkPlaceCategoryId,
+			),
+		)
+	}, [selectedFoodAndDrinkPlaceCategoryId, foodAndDrinkPlaceCategories])
 
 	return (
 		<>
@@ -1281,14 +1253,9 @@ function FoodAndDrinkCategoryFormFields({
 	)
 }
 
-type HealthAndWellnessCategoryFormFieldsProps = {
-	// todo fix any
-	form: UseFormReturn<any>
-}
-
 function HealthAndWellnessCategoryFormFields({
 	form,
-}: HealthAndWellnessCategoryFormFieldsProps) {
+}: CategoryFormFieldsProps) {
 	const healthAndWellnessCategories = useDatabase(
 		(state) => state.healthAndWellnessCategories,
 	)
@@ -1364,16 +1331,7 @@ function HealthAndWellnessCategoryFormFields({
 	)
 }
 
-type HomeCategoryFormFieldsProps = {
-	// todo fix any
-	form: UseFormReturn<any>
-	selectedHomeCategory: HomeCategory | undefined
-}
-
-function HomeCategoryFormFields({
-	form,
-	selectedHomeCategory,
-}: HomeCategoryFormFieldsProps) {
+function HomeCategoryFormFields({ form }: CategoryFormFieldsProps) {
 	const homeCategories = useDatabase((state) => state.homeCategories)
 	const accommodationCategories = useDatabase(
 		(state) => state.accommodationCategories,
@@ -1382,6 +1340,24 @@ function HomeCategoryFormFields({
 	const selectedAccommodationType = form.watch(
 		'homeTransaction.accommodationTransaction.type',
 	)
+
+	const selectedHomeCategoryId = form.watch('homeTransaction.categoryId')
+
+	const [selectedHomeCategory, setSelectedHomeCategory] = useState<
+		HomeCategory | undefined
+	>(
+		homeCategories?.find(
+			(category) => category.id === selectedHomeCategoryId,
+		),
+	)
+
+	useEffect(() => {
+		setSelectedHomeCategory(
+			homeCategories?.find(
+				(category) => category.id === selectedHomeCategoryId,
+			),
+		)
+	}, [selectedHomeCategoryId, homeCategories])
 
 	return (
 		<>
@@ -1587,12 +1563,7 @@ function HomeCategoryFormFields({
 	)
 }
 
-type ShoppingCategoryFormFieldsProps = {
-	// todo fix any
-	form: UseFormReturn<any>
-}
-
-function ShoppingCategoryFormFields({ form }: ShoppingCategoryFormFieldsProps) {
+function ShoppingCategoryFormFields({ form }: CategoryFormFieldsProps) {
 	const shoppingCategories = useDatabase((state) => state.shoppingCategories)
 
 	return (
