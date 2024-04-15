@@ -1,4 +1,5 @@
 import {
+	AccommodationType,
 	City,
 	Currency,
 	EatInTakeAway,
@@ -110,6 +111,9 @@ export async function InitializeStore() {
 		useDatabase.getState().setFoodAndDrinkTypeCategories
 	const setHealthAndWellnessCategories =
 		useDatabase.getState().setHealthAndWellnessCategories
+	const setHomeCategories = useDatabase.getState().setHomeCategories
+	const setAccommodationCategories =
+		useDatabase.getState().setAccommodationCategories
 
 	const [
 		cities,
@@ -127,6 +131,8 @@ export async function InitializeStore() {
 		foodAndDrinkPlaceCategories,
 		foodAndDrinkTypeCategories,
 		healthAndWellnessCategories,
+		homeCategories,
+		accommodationCategories,
 	] = await Promise.all([
 		fetchCities(),
 		fetchCountries(),
@@ -143,6 +149,8 @@ export async function InitializeStore() {
 		fetchFoodAndDrinkPlaceCategories(),
 		fetchFoodAndDrinkTypeCategories(),
 		fetchHealthAndWellnessCategories(),
+		fetchHomeCategories(),
+		fetchAccommodationCategories(),
 	])
 
 	if (cities) setCities(cities)
@@ -165,6 +173,9 @@ export async function InitializeStore() {
 		setFoodAndDrinkTypeCategories(foodAndDrinkTypeCategories)
 	if (healthAndWellnessCategories)
 		setHealthAndWellnessCategories(healthAndWellnessCategories)
+	if (homeCategories) setHomeCategories(homeCategories)
+	if (accommodationCategories)
+		setAccommodationCategories(accommodationCategories)
 
 	// set user
 	const setId = useUser.getState().setId
@@ -339,9 +350,6 @@ export async function InitializeStore() {
 							if (accommodationTransaction) {
 								return {
 									id: accommodationTransaction.id,
-									type: getAccommodationTypeFromId(
-										accommodationTransaction.type,
-									),
 									category: getAccommodationCategoryFromId(
 										accommodationTransaction.category,
 									),
@@ -1088,6 +1096,63 @@ async function fetchHealthAndWellnessCategories() {
 	}
 }
 
+async function fetchHomeCategories() {
+	try {
+		const { data: homeCategories, error } = await supabase
+			.from('homeCategories')
+			.select()
+
+		if (error) throw error
+
+		if (!homeCategories) {
+			console.error('No home categories found')
+			return
+		}
+
+		return homeCategories
+	} catch (error) {
+		console.error('Error fetching home categories:', error)
+	}
+}
+
+async function fetchAccommodationCategories() {
+	try {
+		const { data: accommodationCategories, error } = await supabase
+			.from('accommodationCategories')
+			.select()
+
+		if (error) throw error
+
+		if (!accommodationCategories) {
+			console.error('No accommodation categories found')
+			return
+		}
+
+		return accommodationCategories
+	} catch (error) {
+		console.error('Error fetching accommodation categories:', error)
+	}
+}
+
+async function fetchAccommodationTypes() {
+	try {
+		const { data: accommodationTypes, error } = await supabase
+			.from('accommodationTypes')
+			.select()
+
+		if (error) throw error
+
+		if (!accommodationTypes) {
+			console.error('No accommodation types found')
+			return
+		}
+
+		return accommodationTypes
+	} catch (error) {
+		console.error('Error fetching accommodation types:', error)
+	}
+}
+
 // helper functions
 
 type UpdateEmailProps = {
@@ -1689,20 +1754,20 @@ async function addHealthAndWellnessTransaction({
 }
 
 type AccommodationTransactionInput = {
-	typeId: number
+	type: AccommodationType
 	categoryId: number
 }
 
 type AccommodationTransactionProps = {
 	parentHomeTransactionId: string
-	homeTransaction?: AccommodationTransactionInput
+	accommodationTransaction?: AccommodationTransactionInput
 }
 
 async function addAccommodationTransaction({
 	parentHomeTransactionId,
-	homeTransaction,
+	accommodationTransaction,
 }: AccommodationTransactionProps) {
-	if (!homeTransaction) {
+	if (!accommodationTransaction) {
 		return null
 	}
 
@@ -1711,28 +1776,23 @@ async function addAccommodationTransaction({
 			.from('accommodationTransactions')
 			.insert({
 				homeTransaction: parentHomeTransactionId,
-				type: homeTransaction.typeId,
-				category: homeTransaction.categoryId,
+				category: accommodationTransaction.categoryId,
 			})
 			.select()
 
 		if (error) throw error
 
-		const type = getAccommodationTypeFromId(
-			newAccommodationTransaction[0].type,
-		)
 		const category = getAccommodationCategoryFromId(
 			newAccommodationTransaction[0].category,
 		)
 
-		if (!type || !category) {
+		if (!category) {
 			console.error('Accommodation transaction data is incomplete')
 			return null
 		}
 
 		const formattedAccommodationTransaction = {
 			id: newAccommodationTransaction[0].id,
-			type: type,
 			category: category,
 			createdAt: newAccommodationTransaction[0].createdAt,
 			updatedAt: newAccommodationTransaction[0].updatedAt,
@@ -1783,7 +1843,7 @@ async function addHomeTransaction({
 
 		const newAccommodationTransaction = await addAccommodationTransaction({
 			parentHomeTransactionId: newHomeTransaction[0].id,
-			homeTransaction: homeTransaction.accommodationTransaction,
+			accommodationTransaction: homeTransaction.accommodationTransaction,
 		})
 
 		const formattedHomeTransaction = {
@@ -2392,19 +2452,6 @@ export function getAccommodationCategoryFromId(id: number) {
 	}
 
 	return category
-}
-
-export function getAccommodationTypeFromId(id: number) {
-	const type = useDatabase
-		.getState()
-		.accommodationTypes?.find((type) => type.id === id)
-
-	if (!type) {
-		console.error('Accommodation type not found')
-		return null
-	}
-
-	return type
 }
 
 export function getAirlineAllianceFromId(id: number) {
