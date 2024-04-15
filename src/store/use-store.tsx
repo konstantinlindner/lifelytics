@@ -31,8 +31,6 @@ type Database = {
 	setAccommodationCategories: (
 		accommodationCategories: AccommodationCategory[],
 	) => void
-	accommodationTypes: AccommodationType[]
-	setAccommodationTypes: (accommodationTypes: AccommodationType[]) => void
 	airlineAlliances: AirlineAlliance[]
 	setAirlineAlliances: (airlineAlliances: AirlineAlliance[]) => void
 	airlines: Airline[]
@@ -190,7 +188,6 @@ type HomeTransaction = {
 
 type AccommodationTransaction = {
 	id: string
-	type: AccommodationType
 	category: AccommodationCategory
 	createdAt: string
 	updatedAt: string
@@ -245,10 +242,6 @@ export const useDatabase = create<Database>()((set) => ({
 		accommodationCategories: AccommodationCategory[],
 	) => {
 		set({ accommodationCategories })
-	},
-	accommodationTypes: [],
-	setAccommodationTypes: (accommodationTypes: AccommodationType[]) => {
-		set({ accommodationTypes })
 	},
 	airlineAlliances: [],
 	setAirlineAlliances: (airlineAlliances: AirlineAlliance[]) => {
