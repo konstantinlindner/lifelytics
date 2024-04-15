@@ -910,8 +910,7 @@ export default function AddTransactionInput({
 }
 
 type CategoryFormFieldsProps = {
-	// todo fix any
-	form: UseFormReturn<any>
+	form: UseFormReturn<z.infer<typeof FormSchema>>
 }
 
 function FoodAndDrinkCategoryFormFields({ form }: CategoryFormFieldsProps) {
