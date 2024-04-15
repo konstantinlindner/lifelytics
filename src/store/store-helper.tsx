@@ -108,6 +108,8 @@ export async function InitializeStore() {
 		useDatabase.getState().setFoodAndDrinkPlaceCategories
 	const setFoodAndDrinkTypeCategories =
 		useDatabase.getState().setFoodAndDrinkTypeCategories
+	const setHealthAndWellnessCategories =
+		useDatabase.getState().setHealthAndWellnessCategories
 
 	const [
 		cities,
@@ -124,6 +126,7 @@ export async function InitializeStore() {
 		transactionCategories,
 		foodAndDrinkPlaceCategories,
 		foodAndDrinkTypeCategories,
+		healthAndWellnessCategories,
 	] = await Promise.all([
 		fetchCities(),
 		fetchCountries(),
@@ -139,6 +142,7 @@ export async function InitializeStore() {
 		fetchTransactionCategories(),
 		fetchFoodAndDrinkPlaceCategories(),
 		fetchFoodAndDrinkTypeCategories(),
+		fetchHealthAndWellnessCategories(),
 	])
 
 	if (cities) setCities(cities)
@@ -159,6 +163,8 @@ export async function InitializeStore() {
 		setFoodAndDrinkPlaceCategories(foodAndDrinkPlaceCategories)
 	if (foodAndDrinkTypeCategories)
 		setFoodAndDrinkTypeCategories(foodAndDrinkTypeCategories)
+	if (healthAndWellnessCategories)
+		setHealthAndWellnessCategories(healthAndWellnessCategories)
 
 	// set user
 	const setId = useUser.getState().setId
@@ -1060,6 +1066,25 @@ async function fetchFoodAndDrinkTypeCategories() {
 		return foodAndDrinkTypeCategories
 	} catch (error) {
 		console.error('Error fetching food and drink type categories:', error)
+	}
+}
+
+async function fetchHealthAndWellnessCategories() {
+	try {
+		const { data: healthAndWellnessCategories, error } = await supabase
+			.from('healthAndWellnessCategories')
+			.select()
+
+		if (error) throw error
+
+		if (!healthAndWellnessCategories) {
+			console.error('No health and wellness categories found')
+			return
+		}
+
+		return healthAndWellnessCategories
+	} catch (error) {
+		console.error('Error fetching health and wellness categories:', error)
 	}
 }
 
