@@ -5,8 +5,6 @@ export type AccommodationCategory =
 	Database['public']['Tables']['accommodationCategories']['Row']
 export type AccommodationTransaction =
 	Database['public']['Tables']['accommodationTransactions']['Row']
-export type AccommodationType =
-	Database['public']['Tables']['accommodationTypes']['Row']
 export type AirlineAlliance =
 	Database['public']['Tables']['airlineAlliances']['Row']
 export type Airline = Database['public']['Tables']['airlines']['Row']
@@ -60,5 +58,7 @@ export type TransportationTransaction =
 	Database['public']['Tables']['transportationTransactions']['Row']
 
 // enums
-export type Continent = Database['public']['Enums']['continents']
 export type EatInTakeAway = Database['public']['Enums']['eatInTakeAway']
+export type AccommodationType =
+	Database['public']['Enums']['accommodationTypes']
+export type Continent = Database['public']['Enums']['continents']
