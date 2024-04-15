@@ -481,9 +481,10 @@ export default function AddTransactionInput({
 							'Food and drink',
 							'Health and wellness',
 							'Home',
+							'Shopping',
 						].includes(selectedCategory.name) && (
 							<Card className="space-y-5 p-6">
-								<div className="flex items-center gap-4">
+								<div className="flex items-center gap-4 pb-2">
 									{getTransactionCategoryIcon({
 										transactionCategory: selectedCategory,
 									})}
@@ -518,6 +519,13 @@ export default function AddTransactionInput({
 										}
 									/>
 								)}
+
+								{/* Shopping */}
+								{selectedCategory.name === 'Shopping' && (
+									<ShoppingCategoryFormFields form={form} />
+								)}
+
+								{/* Transportation */}
 							</Card>
 						)}
 
@@ -1576,5 +1584,83 @@ function HomeCategoryFormFields({
 				</>
 			)}
 		</>
+	)
+}
+
+type ShoppingCategoryFormFieldsProps = {
+	// todo fix any
+	form: UseFormReturn<any>
+}
+
+function ShoppingCategoryFormFields({ form }: ShoppingCategoryFormFieldsProps) {
+	const shoppingCategories = useDatabase((state) => state.shoppingCategories)
+
+	return (
+		<FormField
+			control={form.control}
+			name="shoppingTransaction.categoryId"
+			render={({ field }) => (
+				<FormItem className="flex flex-col">
+					<FormLabel className="max-w-fit">Category</FormLabel>
+					<Popover>
+						<PopoverTrigger asChild>
+							<FormControl>
+								<Button
+									variant="outline"
+									role="combobox"
+									className={cn(
+										'w-[200px] justify-between',
+										!field.value && 'text-muted-foreground',
+									)}
+								>
+									{field.value
+										? shoppingCategories?.find(
+												(category) =>
+													category.id === field.value,
+										  )?.name
+										: 'Select category'}
+									<ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+								</Button>
+							</FormControl>
+						</PopoverTrigger>
+						<PopoverContent className="w-[200px] p-0">
+							<Command>
+								<CommandInput placeholder="Search category..." />
+								<CommandEmpty>No category found.</CommandEmpty>
+								<CommandGroup className="max-h-[20rem] overflow-y-auto">
+									{shoppingCategories?.map((category) => (
+										<CommandItem
+											value={category.name}
+											key={category.id}
+											onSelect={() => {
+												form.setValue(
+													'shoppingTransaction.categoryId',
+													category.id ?? '',
+												)
+											}}
+											className="p-0"
+										>
+											<PopoverClose className="flex h-full w-full px-2 py-1.5">
+												<CheckIcon
+													className={cn(
+														'mr-2 h-4 w-4',
+														category.id ===
+															field.value
+															? 'opacity-100'
+															: 'opacity-0',
+													)}
+												/>
+												{category.name}
+											</PopoverClose>
+										</CommandItem>
+									))}
+								</CommandGroup>
+							</Command>
+						</PopoverContent>
+					</Popover>
+					<FormMessage />
+				</FormItem>
+			)}
+		/>
 	)
 }
