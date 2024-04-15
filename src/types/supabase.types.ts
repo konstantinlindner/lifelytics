@@ -14,32 +14,24 @@ export type Database = {
 					createdAt: string
 					id: number
 					name: string
-					type: number
+					type: Database['public']['Enums']['accommodationTypes']
 					updatedAt: string
 				}
 				Insert: {
 					createdAt?: string
 					id?: number
 					name: string
-					type: number
+					type: Database['public']['Enums']['accommodationTypes']
 					updatedAt?: string
 				}
 				Update: {
 					createdAt?: string
 					id?: number
 					name?: string
-					type?: number
+					type?: Database['public']['Enums']['accommodationTypes']
 					updatedAt?: string
 				}
-				Relationships: [
-					{
-						foreignKeyName: 'public_accommodationCategories_type_fkey'
-						columns: ['type']
-						isOneToOne: false
-						referencedRelation: 'accommodationTypes'
-						referencedColumns: ['id']
-					},
-				]
+				Relationships: []
 			}
 			accommodationTransactions: {
 				Row: {
@@ -47,7 +39,6 @@ export type Database = {
 					createdAt: string
 					homeTransaction: string
 					id: string
-					type: number
 					updatedAt: string
 				}
 				Insert: {
@@ -55,7 +46,6 @@ export type Database = {
 					createdAt?: string
 					homeTransaction: string
 					id?: string
-					type: number
 					updatedAt?: string
 				}
 				Update: {
@@ -63,7 +53,6 @@ export type Database = {
 					createdAt?: string
 					homeTransaction?: string
 					id?: string
-					type?: number
 					updatedAt?: string
 				}
 				Relationships: [
@@ -81,35 +70,7 @@ export type Database = {
 						referencedRelation: 'homeTransactions'
 						referencedColumns: ['id']
 					},
-					{
-						foreignKeyName: 'public_accommodationTransactions_type_fkey'
-						columns: ['type']
-						isOneToOne: false
-						referencedRelation: 'accommodationTypes'
-						referencedColumns: ['id']
-					},
 				]
-			}
-			accommodationTypes: {
-				Row: {
-					createdAt: string
-					id: number
-					name: string
-					updatedAt: string
-				}
-				Insert: {
-					createdAt?: string
-					id?: number
-					name: string
-					updatedAt?: string
-				}
-				Update: {
-					createdAt?: string
-					id?: number
-					name?: string
-					updatedAt?: string
-				}
-				Relationships: []
 			}
 			airlineAlliances: {
 				Row: {
@@ -1258,6 +1219,7 @@ export type Database = {
 			[_ in never]: never
 		}
 		Enums: {
+			accommodationTypes: 'rent' | 'own' | 'short-term'
 			continents:
 				| 'Africa'
 				| 'Antarctica'
