@@ -211,8 +211,7 @@ export default function AddTransactionInput({
 		resolver: zodResolver(FormSchema),
 		defaultValues: {
 			transactionDate: new Date(),
-			// todo TS
-			category: screen.transactionCategoryId!,
+			category: screen.transactionCategoryId ?? 0,
 			currency: defaultCurrency?.id,
 			foodAndDrinkTransaction: {
 				eatInTakeAway: 'eat-in',
