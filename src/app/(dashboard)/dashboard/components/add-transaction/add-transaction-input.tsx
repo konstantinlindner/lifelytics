@@ -3,8 +3,8 @@
 import { useEffect, useState } from 'react'
 
 import {
-	EatInTakeAway,
 	FoodAndDrinkPlaceCategory,
+	HomeCategory,
 	TransactionCategory,
 } from '@/types/globals.types'
 
@@ -127,9 +127,11 @@ const FormSchema = z.object({
 			}),
 			accommodationTransaction: z
 				.object({
-					typeId: z.coerce.number({
-						invalid_type_error: 'Select the type',
-					}),
+					type: z.union([
+						z.literal('rent'),
+						z.literal('own'),
+						z.literal('short-term'),
+					]),
 					categoryId: z.coerce.number({
 						invalid_type_error: 'Select a category',
 					}),
@@ -207,6 +209,7 @@ export default function AddTransactionInput({
 	const foodAndDrinkPlaceCategories = useDatabase(
 		(state) => state.foodAndDrinkPlaceCategories,
 	)
+	const homeCategories = useDatabase((state) => state.homeCategories)
 
 	const form = useForm<z.infer<typeof FormSchema>>({
 		resolver: zodResolver(FormSchema),
@@ -220,6 +223,11 @@ export default function AddTransactionInput({
 				isDelivery: false,
 				isWorked: false,
 			},
+			homeTransaction: {
+				accommodationTransaction: {
+					type: 'rent',
+				},
+			},
 		},
 	})
 
@@ -227,9 +235,7 @@ export default function AddTransactionInput({
 	const selectedFoodAndDrinkPlaceCategoryId = form.watch(
 		'foodAndDrinkTransaction.placeCategoryId',
 	)
-	const selectedEatInTakeAway = form.watch(
-		'foodAndDrinkTransaction.eatInTakeAway',
-	)
+	const selectedHomeCategoryId = form.watch('homeTransaction.categoryId')
 
 	const [selectedCategory, setSelectedCategory] = useState<
 		TransactionCategory | undefined
@@ -244,6 +250,13 @@ export default function AddTransactionInput({
 	] = useState<FoodAndDrinkPlaceCategory | undefined>(
 		foodAndDrinkPlaceCategories?.find(
 			(category) => category.id === selectedFoodAndDrinkPlaceCategoryId,
+		),
+	)
+	const [selectedHomeCategory, setSelectedHomeCategory] = useState<
+		HomeCategory | undefined
+	>(
+		homeCategories?.find(
+			(category) => category.id === selectedHomeCategoryId,
 		),
 	)
 
@@ -262,6 +275,13 @@ export default function AddTransactionInput({
 			),
 		)
 	}, [selectedFoodAndDrinkPlaceCategoryId, foodAndDrinkPlaceCategories])
+	useEffect(() => {
+		setSelectedHomeCategory(
+			homeCategories?.find(
+				(category) => category.id === selectedHomeCategoryId,
+			),
+		)
+	}, [selectedHomeCategoryId, homeCategories])
 
 	// register and unregister fields
 	useEffect(() => {
@@ -455,11 +475,13 @@ export default function AddTransactionInput({
 						)}
 					/>
 
-					{/* Custom fields depending on category */}
+					{/* Custom fields that only show for some categories */}
 					{selectedCategory &&
-						['Food and drink', 'Health and wellness'].includes(
-							selectedCategory.name,
-						) && (
+						[
+							'Food and drink',
+							'Health and wellness',
+							'Home',
+						].includes(selectedCategory.name) && (
 							<Card className="space-y-5 p-6">
 								<div className="flex items-center gap-4">
 									{getTransactionCategoryIcon({
@@ -476,9 +498,6 @@ export default function AddTransactionInput({
 										selectedFoodAndDrinkPlaceCategory={
 											selectedFoodAndDrinkPlaceCategory
 										}
-										selectedEatInTakeAway={
-											selectedEatInTakeAway
-										}
 									/>
 								)}
 
@@ -487,6 +506,16 @@ export default function AddTransactionInput({
 									'Health and wellness' && (
 									<HealthAndWellnessCategoryFormFields
 										form={form}
+									/>
+								)}
+
+								{/* Home */}
+								{selectedCategory.name === 'Home' && (
+									<HomeCategoryFormFields
+										form={form}
+										selectedHomeCategory={
+											selectedHomeCategory
+										}
 									/>
 								)}
 							</Card>
@@ -927,19 +956,21 @@ type FoodAndDrinkCategoryFormFieldsProps = {
 	// todo fix any
 	form: UseFormReturn<any>
 	selectedFoodAndDrinkPlaceCategory?: FoodAndDrinkPlaceCategory
-	selectedEatInTakeAway: EatInTakeAway
 }
 
 function FoodAndDrinkCategoryFormFields({
 	form,
 	selectedFoodAndDrinkPlaceCategory,
-	selectedEatInTakeAway,
 }: FoodAndDrinkCategoryFormFieldsProps) {
 	const foodAndDrinkPlaceCategories = useDatabase(
 		(state) => state.foodAndDrinkPlaceCategories,
 	)
 	const foodAndDrinkTypeCategories = useDatabase(
 		(state) => state.foodAndDrinkTypeCategories,
+	)
+
+	const selectedEatInTakeAway = form.watch(
+		'foodAndDrinkTransaction.eatInTakeAway',
 	)
 
 	return (
@@ -1322,5 +1353,228 @@ function HealthAndWellnessCategoryFormFields({
 				</FormItem>
 			)}
 		/>
+	)
+}
+
+type HomeCategoryFormFieldsProps = {
+	// todo fix any
+	form: UseFormReturn<any>
+	selectedHomeCategory: HomeCategory | undefined
+}
+
+function HomeCategoryFormFields({
+	form,
+	selectedHomeCategory,
+}: HomeCategoryFormFieldsProps) {
+	const homeCategories = useDatabase((state) => state.homeCategories)
+	const accommodationCategories = useDatabase(
+		(state) => state.accommodationCategories,
+	)
+
+	const selectedAccommodationType = form.watch(
+		'homeTransaction.accommodationTransaction.type',
+	)
+
+	return (
+		<>
+			<FormField
+				control={form.control}
+				name="homeTransaction.categoryId"
+				render={({ field }) => (
+					<FormItem className="flex flex-col">
+						<FormLabel className="max-w-fit">Category</FormLabel>
+						<Popover>
+							<PopoverTrigger asChild>
+								<FormControl>
+									<Button
+										variant="outline"
+										role="combobox"
+										className={cn(
+											'w-[200px] justify-between',
+											!field.value &&
+												'text-muted-foreground',
+										)}
+									>
+										{field.value
+											? homeCategories?.find(
+													(category) =>
+														category.id ===
+														field.value,
+											  )?.name
+											: 'Select category'}
+										<ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+									</Button>
+								</FormControl>
+							</PopoverTrigger>
+							<PopoverContent className="w-[200px] p-0">
+								<Command>
+									<CommandInput placeholder="Search category..." />
+									<CommandEmpty>
+										No category found.
+									</CommandEmpty>
+									<CommandGroup className="max-h-[20rem] overflow-y-auto">
+										{homeCategories?.map((category) => (
+											<CommandItem
+												value={category.name}
+												key={category.id}
+												onSelect={() => {
+													form.setValue(
+														'homeTransaction.categoryId',
+														category.id ?? '',
+													)
+												}}
+												className="p-0"
+											>
+												<PopoverClose className="flex h-full w-full px-2 py-1.5">
+													<CheckIcon
+														className={cn(
+															'mr-2 h-4 w-4',
+															category.id ===
+																field.value
+																? 'opacity-100'
+																: 'opacity-0',
+														)}
+													/>
+													{category.name}
+												</PopoverClose>
+											</CommandItem>
+										))}
+									</CommandGroup>
+								</Command>
+							</PopoverContent>
+						</Popover>
+						<FormMessage />
+					</FormItem>
+				)}
+			/>
+
+			{selectedHomeCategory?.name === 'Accommodation' && (
+				<>
+					<FormField
+						control={form.control}
+						name="homeTransaction.accommodationTransaction.type"
+						render={({ field }) => (
+							<FormItem className="space-y-3 rounded-md border p-4">
+								<FormControl>
+									<RadioGroup
+										onValueChange={field.onChange}
+										defaultValue={field.value ?? undefined}
+										className="flex flex-col space-y-1"
+									>
+										<FormItem className="flex items-center space-x-3 space-y-0">
+											<FormControl>
+												<RadioGroupItem value="rent" />
+											</FormControl>
+											<FormLabel className="font-normal">
+												Rent
+											</FormLabel>
+										</FormItem>
+										<FormItem className="flex items-center space-x-3 space-y-0">
+											<FormControl>
+												<RadioGroupItem value="own" />
+											</FormControl>
+											<FormLabel className="font-normal">
+												Own
+											</FormLabel>
+										</FormItem>
+										<FormItem className="flex items-center space-x-3 space-y-0">
+											<FormControl>
+												<RadioGroupItem value="short-term" />
+											</FormControl>
+											<FormLabel className="font-normal">
+												Short term
+											</FormLabel>
+										</FormItem>
+									</RadioGroup>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+
+					<FormField
+						control={form.control}
+						name="homeTransaction.accommodationTransaction.categoryId"
+						render={({ field }) => (
+							<FormItem className="flex flex-col">
+								<FormLabel className="max-w-fit">
+									Accommodation category
+								</FormLabel>
+								<Popover>
+									<PopoverTrigger asChild>
+										<FormControl>
+											<Button
+												variant="outline"
+												role="combobox"
+												className={cn(
+													'w-[200px] justify-between',
+													!field.value &&
+														'text-muted-foreground',
+												)}
+											>
+												{field.value
+													? accommodationCategories?.find(
+															(category) =>
+																category.id ===
+																field.value,
+													  )?.name
+													: 'Select category'}
+												<ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+											</Button>
+										</FormControl>
+									</PopoverTrigger>
+									<PopoverContent className="w-[200px] p-0">
+										<Command>
+											<CommandInput placeholder="Search category..." />
+											<CommandEmpty>
+												No category found.
+											</CommandEmpty>
+											<CommandGroup className="max-h-[20rem] overflow-y-auto">
+												{accommodationCategories
+													?.filter(
+														(category) =>
+															category.type ===
+															selectedAccommodationType,
+													)
+													.map((category) => (
+														<CommandItem
+															value={
+																category.name
+															}
+															key={category.id}
+															onSelect={() => {
+																form.setValue(
+																	'homeTransaction.accommodationTransaction.categoryId',
+																	category.id ??
+																		'',
+																)
+															}}
+															className="p-0"
+														>
+															<PopoverClose className="flex h-full w-full px-2 py-1.5">
+																<CheckIcon
+																	className={cn(
+																		'mr-2 h-4 w-4',
+																		category.id ===
+																			field.value
+																			? 'opacity-100'
+																			: 'opacity-0',
+																	)}
+																/>
+																{category.name}
+															</PopoverClose>
+														</CommandItem>
+													))}
+											</CommandGroup>
+										</Command>
+									</PopoverContent>
+								</Popover>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+				</>
+			)}
+		</>
 	)
 }
