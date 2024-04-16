@@ -23,7 +23,7 @@ import { PopoverClose } from '@radix-ui/react-popover'
 import dayjs from 'dayjs'
 import { UseFormReturn, useFieldArray, useForm } from 'react-hook-form'
 import { toast } from 'sonner'
-import * as z from 'zod'
+import { z } from 'zod'
 
 import {
 	CheckIcon,
