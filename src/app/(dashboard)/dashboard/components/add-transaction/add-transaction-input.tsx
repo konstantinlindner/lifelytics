@@ -1741,6 +1741,38 @@ function TransportationCategoryFormFields({ form }: CategoryFormFieldsProps) {
 		}
 	}, [fields, append])
 
+	function getSegmentAirlineId(segmentIndex: number) {
+		const segmentAirlineId = form.watch(
+			`transportationTransaction.flightTransaction.segments.${segmentIndex}.airlineId`,
+		)
+
+		return segmentAirlineId
+	}
+
+	function getSegmentArrivalAirportId(segmentIndex: number) {
+		const segmentArrivalAirportId = form.watch(
+			`transportationTransaction.flightTransaction.segments.${segmentIndex}.arrivalAirportId`,
+		)
+
+		return segmentArrivalAirportId
+	}
+
+	function getSegmentClassId(segmentIndex: number) {
+		const segmentClassId = form.watch(
+			`transportationTransaction.flightTransaction.segments.${segmentIndex}.classId`,
+		)
+
+		return segmentClassId
+	}
+
+	function getSegmentSeatCategoryId(segmentIndex: number) {
+		const segmentSeatCategoryId = form.watch(
+			`transportationTransaction.flightTransaction.segments.${segmentIndex}.seatCategoryId`,
+		)
+
+		return segmentSeatCategoryId
+	}
+
 	return (
 		<>
 			<FormField
@@ -1920,7 +1952,7 @@ function TransportationCategoryFormFields({ form }: CategoryFormFieldsProps) {
 							key={segment.id}
 							className="space-y-3 rounded-md border p-4"
 						>
-							<div className="flex justify-between">
+							<div className="flex justify-between pb-2">
 								<h4>Flight segment {index + 1}</h4>
 
 								{index > 0 && (
@@ -1936,6 +1968,88 @@ function TransportationCategoryFormFields({ form }: CategoryFormFieldsProps) {
 									</button>
 								)}
 							</div>
+
+							<FormField
+								control={form.control}
+								name={`transportationTransaction.flightTransaction.segments.${index}.airlineId`}
+								render={({ field }) => (
+									<FormItem className="flex flex-col">
+										<FormLabel className="max-w-fit">
+											Airline
+										</FormLabel>
+										<Popover>
+											<PopoverTrigger asChild>
+												<FormControl>
+													<Button
+														variant="outline"
+														role="combobox"
+														className={cn(
+															'w-[290px] justify-between',
+															!field.value &&
+																'text-muted-foreground',
+														)}
+													>
+														{field.value
+															? airlines?.find(
+																	(airline) =>
+																		airline.id ===
+																		field.value,
+															  )?.name
+															: 'Select airline'}
+														<ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+													</Button>
+												</FormControl>
+											</PopoverTrigger>
+											<PopoverContent className="w-[290px] p-0">
+												<Command>
+													<CommandInput placeholder="Search airline..." />
+													<CommandEmpty>
+														No airline found.
+													</CommandEmpty>
+													<CommandGroup className="max-h-[20rem] overflow-y-auto">
+														{airlines?.map(
+															(airline) => (
+																<CommandItem
+																	value={
+																		airline.name
+																	}
+																	key={
+																		airline.id
+																	}
+																	onSelect={() => {
+																		form.setValue(
+																			`transportationTransaction.flightTransaction.segments.${index}.airlineId`,
+																			airline.id ??
+																				'',
+																		)
+																	}}
+																	className="p-0"
+																>
+																	<PopoverClose className="flex h-full w-full px-2 py-1.5">
+																		<CheckIcon
+																			className={cn(
+																				'mr-2 h-4 w-4',
+																				airline.id ===
+																					field.value
+																					? 'opacity-100'
+																					: 'opacity-0',
+																			)}
+																		/>
+																		{
+																			airline.name
+																		}
+																	</PopoverClose>
+																</CommandItem>
+															),
+														)}
+													</CommandGroup>
+												</Command>
+											</PopoverContent>
+										</Popover>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
 
 							<FormField
 								control={form.control}
@@ -1962,7 +2076,7 @@ function TransportationCategoryFormFields({ form }: CategoryFormFieldsProps) {
 																	(airport) =>
 																		airport.id ===
 																		field.value,
-															  )?.name
+															  )?.IATA
 															: 'Select airport'}
 														<ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
 													</Button>
@@ -2044,7 +2158,7 @@ function TransportationCategoryFormFields({ form }: CategoryFormFieldsProps) {
 																	(airport) =>
 																		airport.id ===
 																		field.value,
-															  )?.name
+															  )?.IATA
 															: 'Select airport'}
 														<ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
 													</Button>
@@ -2087,88 +2201,6 @@ function TransportationCategoryFormFields({ form }: CategoryFormFieldsProps) {
 																		/>
 																		{
 																			airport.name
-																		}
-																	</PopoverClose>
-																</CommandItem>
-															),
-														)}
-													</CommandGroup>
-												</Command>
-											</PopoverContent>
-										</Popover>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-
-							<FormField
-								control={form.control}
-								name={`transportationTransaction.flightTransaction.segments.${index}.airlineId`}
-								render={({ field }) => (
-									<FormItem className="flex flex-col">
-										<FormLabel className="max-w-fit">
-											Airline
-										</FormLabel>
-										<Popover>
-											<PopoverTrigger asChild>
-												<FormControl>
-													<Button
-														variant="outline"
-														role="combobox"
-														className={cn(
-															'w-[290px] justify-between',
-															!field.value &&
-																'text-muted-foreground',
-														)}
-													>
-														{field.value
-															? airlines?.find(
-																	(airline) =>
-																		airline.id ===
-																		field.value,
-															  )?.name
-															: 'Select airline'}
-														<ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-													</Button>
-												</FormControl>
-											</PopoverTrigger>
-											<PopoverContent className="w-[290px] p-0">
-												<Command>
-													<CommandInput placeholder="Search airline..." />
-													<CommandEmpty>
-														No airline found.
-													</CommandEmpty>
-													<CommandGroup className="max-h-[20rem] overflow-y-auto">
-														{airlines?.map(
-															(airline) => (
-																<CommandItem
-																	value={
-																		airline.name
-																	}
-																	key={
-																		airline.id
-																	}
-																	onSelect={() => {
-																		form.setValue(
-																			`transportationTransaction.flightTransaction.segments.${index}.airlineId`,
-																			airline.id ??
-																				'',
-																		)
-																	}}
-																	className="p-0"
-																>
-																	<PopoverClose className="flex h-full w-full px-2 py-1.5">
-																		<CheckIcon
-																			className={cn(
-																				'mr-2 h-4 w-4',
-																				airline.id ===
-																					field.value
-																					? 'opacity-100'
-																					: 'opacity-0',
-																			)}
-																		/>
-																		{
-																			airline.name
 																		}
 																	</PopoverClose>
 																</CommandItem>
@@ -2360,11 +2392,17 @@ function TransportationCategoryFormFields({ form }: CategoryFormFieldsProps) {
 						onClick={() =>
 							append({
 								order: fields.length + 1,
-								departureAirportId: 0,
+								airlineId: getSegmentAirlineId(
+									fields.length - 1,
+								),
+								departureAirportId: getSegmentArrivalAirportId(
+									fields.length - 1,
+								),
 								arrivalAirportId: 0,
-								airlineId: 0,
-								classId: 0,
-								seatCategoryId: 0,
+								classId: getSegmentClassId(fields.length - 1),
+								seatCategoryId: getSegmentSeatCategoryId(
+									fields.length - 1,
+								),
 							})
 						}
 						className="h-8"
