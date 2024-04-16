@@ -458,7 +458,7 @@ export default function AddTransactionInput({
 						)}
 					/>
 
-					{/* Custom fields that only show for some categories */}
+					{/* Custom fields depending on category */}
 					{selectedCategory &&
 						[
 							'Food and drink',
@@ -548,7 +548,7 @@ export default function AddTransactionInput({
 						)}
 					/>
 
-					{/* TODO add autocomplete and suggestions */}
+					{/* todo add autocomplete and suggestions */}
 					<FormField
 						control={form.control}
 						name="counterpart"
@@ -1894,7 +1894,6 @@ function TransportationCategoryFormFields({ form }: CategoryFormFieldsProps) {
 					/>
 
 					{/* segments */}
-
 					{fields.map((segment, index) => (
 						<div
 							key={segment.id}
@@ -2356,7 +2355,6 @@ function TransportationCategoryFormFields({ form }: CategoryFormFieldsProps) {
 			)}
 
 			{/* car transaction */}
-
 			{selectedTransportationCategory?.name === 'Car' && (
 				<FormField
 					control={form.control}
