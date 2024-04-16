@@ -1642,20 +1642,23 @@ async function addCounterpart({
 		existingMatchingCounterpart.isIncome !== isIncome ||
 		existingMatchingCounterpart.isExpense !== isExpense
 	) {
-		const updateData: { isIncome?: boolean; isExpense?: boolean } = {}
-
-		if (existingMatchingCounterpart.isIncome !== isIncome) {
-			updateData.isIncome = isIncome
+		const data = {
+			isIncome: existingMatchingCounterpart.isIncome,
+			isExpense: existingMatchingCounterpart.isExpense,
 		}
 
-		if (existingMatchingCounterpart.isExpense !== isExpense) {
-			updateData.isExpense = isExpense
+		if (!data.isIncome && isIncome) {
+			data.isIncome = isIncome
+		}
+
+		if (!data.isExpense && isExpense) {
+			data.isExpense = isExpense
 		}
 
 		try {
 			const { data: updatedCounterpart, error } = await supabase
 				.from('counterparts')
-				.update(updateData)
+				.update(data)
 				.eq('id', existingMatchingCounterpart.id)
 				.select()
 
