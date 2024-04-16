@@ -674,98 +674,100 @@ export default function AddTransactionInput({
 						)}
 					/>
 
-					<FormField
-						control={form.control}
-						name="tip"
-						render={({ field }) => (
-							<FormItem>
-								<div className="space-x-2">
-									<FormLabel>Tip amount</FormLabel>
+					{selectedCategory?.name === 'Food and drink' && (
+						<FormField
+							control={form.control}
+							name="tip"
+							render={({ field }) => (
+								<FormItem>
+									<div className="space-x-2">
+										<FormLabel>Tip amount</FormLabel>
 
-									<Button
-										onClick={() => {
-											setTipAmount(0.1)
-										}}
-										type="button"
-										variant="link"
-										className="h-0 p-0"
-									>
-										10%
-									</Button>
-									<Button
-										onClick={() => {
-											setTipAmount(0.15)
-										}}
-										type="button"
-										variant="link"
-										className="h-0 p-0"
-									>
-										15%
-									</Button>
-									<Button
-										onClick={() => {
-											setTipAmount(0.18)
-										}}
-										type="button"
-										variant="link"
-										className="h-0 p-0"
-									>
-										18%
-									</Button>
-									<Button
-										onClick={() => {
-											setTipAmount(0.2)
-										}}
-										type="button"
-										variant="link"
-										className="h-0 p-0"
-									>
-										20%
-									</Button>
-									<Button
-										onClick={() => {
-											setTipAmount(0.22)
-										}}
-										type="button"
-										variant="link"
-										className="h-0 p-0"
-									>
-										22%
-									</Button>
-									<Button
-										onClick={() => {
-											setTipAmount(0.25)
-										}}
-										type="button"
-										variant="link"
-										className="h-0 p-0"
-									>
-										25%
-									</Button>
-									<Button
-										onClick={() => {
-											setTipAmount(0.3)
-										}}
-										type="button"
-										variant="link"
-										className="h-0 p-0"
-									>
-										30%
-									</Button>
-								</div>
-								<FormControl>
-									<Input
-										placeholder="12.34"
-										type="number"
-										{...field}
-										value={field.value}
-										className="w-[150px]"
-									/>
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
+										<Button
+											onClick={() => {
+												setTipAmount(0.1)
+											}}
+											type="button"
+											variant="link"
+											className="h-0 p-0"
+										>
+											10%
+										</Button>
+										<Button
+											onClick={() => {
+												setTipAmount(0.15)
+											}}
+											type="button"
+											variant="link"
+											className="h-0 p-0"
+										>
+											15%
+										</Button>
+										<Button
+											onClick={() => {
+												setTipAmount(0.18)
+											}}
+											type="button"
+											variant="link"
+											className="h-0 p-0"
+										>
+											18%
+										</Button>
+										<Button
+											onClick={() => {
+												setTipAmount(0.2)
+											}}
+											type="button"
+											variant="link"
+											className="h-0 p-0"
+										>
+											20%
+										</Button>
+										<Button
+											onClick={() => {
+												setTipAmount(0.22)
+											}}
+											type="button"
+											variant="link"
+											className="h-0 p-0"
+										>
+											22%
+										</Button>
+										<Button
+											onClick={() => {
+												setTipAmount(0.25)
+											}}
+											type="button"
+											variant="link"
+											className="h-0 p-0"
+										>
+											25%
+										</Button>
+										<Button
+											onClick={() => {
+												setTipAmount(0.3)
+											}}
+											type="button"
+											variant="link"
+											className="h-0 p-0"
+										>
+											30%
+										</Button>
+									</div>
+									<FormControl>
+										<Input
+											placeholder="12.34"
+											type="number"
+											{...field}
+											value={field.value}
+											className="w-[150px]"
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+					)}
 
 					<FormField
 						control={form.control}
