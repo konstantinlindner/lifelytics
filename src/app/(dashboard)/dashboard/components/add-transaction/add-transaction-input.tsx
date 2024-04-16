@@ -251,15 +251,6 @@ export default function AddTransactionInput({
 					type: 'rent',
 				},
 			},
-			// transportationTransaction: {
-			// 	flightTransaction: {
-			// 		segments: [
-			// 			{
-			// 				order: 1,
-			// 			},
-			// 		],
-			// 	},
-			// },
 		},
 	})
 
