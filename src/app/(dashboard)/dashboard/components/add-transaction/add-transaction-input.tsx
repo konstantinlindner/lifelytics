@@ -324,28 +324,28 @@ export default function AddTransactionInput({
 		// todo remove console log
 		console.log(JSON.stringify(data))
 
-		// const error = await addTransaction({
-		// 	date: data.transactionDate,
-		// 	item: data.item,
-		// 	amount: data.amount,
-		// 	tip: data.tip ?? 0,
-		// 	counterpartName: data.counterpart,
-		// 	currencyId: data.currency,
-		// 	paymentMethodId: data.paymentMethod,
-		// 	cityId: data.city,
-		// 	categoryId: data.category,
-		// 	description: data.description ?? null,
-		// 	foodAndDrinkTransaction: data.foodAndDrinkTransaction,
-		// 	healthAndWellnessTransaction: data.healthAndWellnessTransaction,
-		// 	homeTransaction: data.homeTransaction,
-		// 	shoppingTransaction: data.shoppingTransaction,
-		// 	transportationTransaction: data.transportationTransaction,
-		// })
+		const error = await addTransaction({
+			date: data.transactionDate,
+			item: data.item,
+			amount: data.amount,
+			tip: data.tip ?? 0,
+			counterpartName: data.counterpart,
+			currencyId: data.currency,
+			paymentMethodId: data.paymentMethod,
+			cityId: data.city,
+			categoryId: data.category,
+			description: data.description ?? null,
+			foodAndDrinkTransaction: data.foodAndDrinkTransaction,
+			healthAndWellnessTransaction: data.healthAndWellnessTransaction,
+			homeTransaction: data.homeTransaction,
+			shoppingTransaction: data.shoppingTransaction,
+			transportationTransaction: data.transportationTransaction,
+		})
 
-		// if (error) {
-		// 	toast(error.message)
-		// 	return
-		// }
+		if (error) {
+			toast(error.message)
+			return
+		}
 
 		toast('Transaction added successfully')
 	}
