@@ -160,6 +160,9 @@ const FormSchema = z.object({
 			}),
 			flightTransaction: z
 				.object({
+					flyOutDate: z.date({
+						required_error: 'Select a date',
+					}),
 					luggageCategoryId: z.coerce.number({
 						invalid_type_error: 'Select a category',
 					}),
@@ -1815,6 +1818,24 @@ function TransportationCategoryFormFields({ form }: CategoryFormFieldsProps) {
 
 			{selectedTransportationCategory?.name === 'Flight' && (
 				<>
+					<FormField
+						control={form.control}
+						name="transportationTransaction.flightTransaction.flyOutDate"
+						render={({ field }) => (
+							<FormItem className="flex flex-col">
+								<FormLabel>Fly out date</FormLabel>
+								<DatePicker
+									fromYear={1900}
+									toYear={dayjs().year()}
+									handleDateChange={(date) => {
+										field.onChange(date)
+									}}
+								/>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+
 					<FormField
 						control={form.control}
 						name="transportationTransaction.flightTransaction.luggageCategoryId"
