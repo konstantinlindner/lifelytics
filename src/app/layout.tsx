@@ -11,6 +11,7 @@ import '@/styles/globals.css'
 
 import { ThemeProvider } from '@/components/theme-provider'
 
+// todo move this once we remove theming from root
 export const dynamic = 'force-dynamic'
 
 const fontSans = FontSans({
