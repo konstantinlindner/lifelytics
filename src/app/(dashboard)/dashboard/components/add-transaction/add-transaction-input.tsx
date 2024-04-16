@@ -6,6 +6,7 @@ import {
 	FoodAndDrinkPlaceCategory,
 	HomeCategory,
 	TransactionCategory,
+	TransportationCategory,
 } from '@/types/globals.types'
 
 import {
@@ -24,7 +25,13 @@ import { UseFormReturn, useFieldArray, useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import * as z from 'zod'
 
-import { CheckIcon, ChevronsUpDownIcon, InfoIcon } from 'lucide-react'
+import {
+	CheckIcon,
+	ChevronsUpDownIcon,
+	InfoIcon,
+	PlusIcon,
+	XIcon,
+} from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
@@ -184,7 +191,7 @@ const FormSchema = z.object({
 			carTransaction: z
 				.object({
 					categoryId: z.coerce.number({
-						invalid_type_error: 'Select a category',
+						invalid_type_error: 'Select a car category',
 					}),
 				})
 				.optional(),
@@ -278,12 +285,6 @@ export default function AddTransactionInput({
 		}
 	}, [form, selectedCategory])
 
-	// append and remove flight segments
-	// const { append, remove, fields } = useFieldArray({
-	// 	control: form.control,
-	// 	name: 'transportationTransaction.flightTransaction.segments',
-	// })
-
 	function setTipAmount(tipPercentage: number) {
 		const amount = form.watch('amount')
 
@@ -295,7 +296,7 @@ export default function AddTransactionInput({
 	}
 
 	// todo remove console log
-	console.log(form.formState.errors)
+	// console.log(form.formState.errors)
 
 	async function onSubmit(data: z.infer<typeof FormSchema>) {
 		toast(JSON.stringify(data))
@@ -303,28 +304,28 @@ export default function AddTransactionInput({
 		// todo remove console log
 		console.log(JSON.stringify(data))
 
-		const error = await addTransaction({
-			date: data.transactionDate,
-			item: data.item,
-			amount: data.amount,
-			tip: data.tip ?? 0,
-			counterpartName: data.counterpart,
-			currencyId: data.currency,
-			paymentMethodId: data.paymentMethod,
-			cityId: data.city,
-			categoryId: data.category,
-			description: data.description ?? null,
-			foodAndDrinkTransaction: data.foodAndDrinkTransaction,
-			healthAndWellnessTransaction: data.healthAndWellnessTransaction,
-			homeTransaction: data.homeTransaction,
-			shoppingTransaction: data.shoppingTransaction,
-			transportationTransaction: data.transportationTransaction,
-		})
+		// const error = await addTransaction({
+		// 	date: data.transactionDate,
+		// 	item: data.item,
+		// 	amount: data.amount,
+		// 	tip: data.tip ?? 0,
+		// 	counterpartName: data.counterpart,
+		// 	currencyId: data.currency,
+		// 	paymentMethodId: data.paymentMethod,
+		// 	cityId: data.city,
+		// 	categoryId: data.category,
+		// 	description: data.description ?? null,
+		// 	foodAndDrinkTransaction: data.foodAndDrinkTransaction,
+		// 	healthAndWellnessTransaction: data.healthAndWellnessTransaction,
+		// 	homeTransaction: data.homeTransaction,
+		// 	shoppingTransaction: data.shoppingTransaction,
+		// 	transportationTransaction: data.transportationTransaction,
+		// })
 
-		if (error) {
-			toast(error.message)
-			return
-		}
+		// if (error) {
+		// 	toast(error.message)
+		// 	return
+		// }
 
 		toast('Transaction added successfully')
 	}
@@ -444,6 +445,7 @@ export default function AddTransactionInput({
 							'Health and wellness',
 							'Home',
 							'Shopping',
+							'Transportation',
 						].includes(selectedCategory.name) && (
 							<Card className="space-y-5 p-6">
 								<div className="flex items-center gap-4 pb-2">
@@ -453,12 +455,14 @@ export default function AddTransactionInput({
 
 									<h3>{selectedCategory.name}</h3>
 								</div>
+
 								{/* Food and drink */}
 								{selectedCategory.name === 'Food and drink' && (
 									<FoodAndDrinkCategoryFormFields
 										form={form}
 									/>
 								)}
+
 								{/* Health and wellness */}
 								{selectedCategory.name ===
 									'Health and wellness' && (
@@ -466,13 +470,22 @@ export default function AddTransactionInput({
 										form={form}
 									/>
 								)}
+
 								{/* Home */}
 								{selectedCategory.name === 'Home' && (
 									<HomeCategoryFormFields form={form} />
 								)}
+
 								{/* Shopping */}
 								{selectedCategory.name === 'Shopping' && (
 									<ShoppingCategoryFormFields form={form} />
+								)}
+
+								{/* Transportation */}
+								{selectedCategory.name === 'Transportation' && (
+									<TransportationCategoryFormFields
+										form={form}
+									/>
 								)}
 							</Card>
 						)}
@@ -1352,6 +1365,14 @@ function HomeCategoryFormFields({ form }: CategoryFormFieldsProps) {
 		)
 	}, [selectedHomeCategoryId, homeCategories])
 
+	useEffect(() => {
+		if (selectedHomeCategory?.name === 'Accommodation') {
+			form.register('homeTransaction.accommodationTransaction')
+		} else {
+			form.unregister('homeTransaction.accommodationTransaction')
+		}
+	}, [form, selectedHomeCategory])
+
 	return (
 		<>
 			<FormField
@@ -1626,5 +1647,672 @@ function ShoppingCategoryFormFields({ form }: CategoryFormFieldsProps) {
 				</FormItem>
 			)}
 		/>
+	)
+}
+
+function TransportationCategoryFormFields({ form }: CategoryFormFieldsProps) {
+	const transportationCategories = useDatabase(
+		(state) => state.transportationCategories,
+	)
+	const flightLuggageCategories = useDatabase(
+		(state) => state.flightLuggageCategories,
+	)
+	const airports = useDatabase((state) => state.airports)
+	const flightClasses = useDatabase((state) => state.flightClasses)
+	const flightSeatCategories = useDatabase(
+		(state) => state.flightSeatCategories,
+	)
+	const carCategories = useDatabase((state) => state.carCategories)
+
+	const selectedTransportationCategoryId = form.watch(
+		'transportationTransaction.categoryId',
+	)
+
+	const [selectedTransportationCategory, setSelectedTransportationCategory] =
+		useState<TransportationCategory | undefined>(
+			transportationCategories?.find(
+				(category) => category.id === selectedTransportationCategoryId,
+			),
+		)
+
+	useEffect(() => {
+		setSelectedTransportationCategory(
+			transportationCategories?.find(
+				(category) => category.id === selectedTransportationCategoryId,
+			),
+		)
+	}, [selectedTransportationCategoryId, transportationCategories])
+
+	useEffect(() => {
+		if (selectedTransportationCategory?.name === 'Flight') {
+			form.register('transportationTransaction.flightTransaction')
+		} else {
+			form.unregister('transportationTransaction.flightTransaction')
+		}
+
+		if (selectedTransportationCategory?.name === 'Car') {
+			form.register('transportationTransaction.carTransaction')
+		} else {
+			form.unregister('transportationTransaction.carTransaction')
+		}
+	}, [form, selectedTransportationCategory])
+
+	const { append, remove, fields } = useFieldArray({
+		control: form.control,
+		name: 'transportationTransaction.flightTransaction.segments',
+	})
+
+	return (
+		<>
+			<FormField
+				control={form.control}
+				name="transportationTransaction.categoryId"
+				render={({ field }) => (
+					<FormItem className="flex flex-col">
+						<FormLabel className="max-w-fit">Category</FormLabel>
+						<Popover>
+							<PopoverTrigger asChild>
+								<FormControl>
+									<Button
+										variant="outline"
+										role="combobox"
+										className={cn(
+											'w-[200px] justify-between',
+											!field.value &&
+												'text-muted-foreground',
+										)}
+									>
+										{field.value
+											? transportationCategories?.find(
+													(category) =>
+														category.id ===
+														field.value,
+											  )?.name
+											: 'Select category'}
+										<ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+									</Button>
+								</FormControl>
+							</PopoverTrigger>
+							<PopoverContent className="w-[200px] p-0">
+								<Command>
+									<CommandInput placeholder="Search category..." />
+									<CommandEmpty>
+										No category found.
+									</CommandEmpty>
+									<CommandGroup className="max-h-[20rem] overflow-y-auto">
+										{transportationCategories?.map(
+											(category) => (
+												<CommandItem
+													value={category.name}
+													key={category.id}
+													onSelect={() => {
+														form.setValue(
+															'transportationTransaction.categoryId',
+															category.id ?? '',
+														)
+													}}
+													className="p-0"
+												>
+													<PopoverClose className="flex h-full w-full px-2 py-1.5">
+														<CheckIcon
+															className={cn(
+																'mr-2 h-4 w-4',
+																category.id ===
+																	field.value
+																	? 'opacity-100'
+																	: 'opacity-0',
+															)}
+														/>
+														{category.name}
+													</PopoverClose>
+												</CommandItem>
+											),
+										)}
+									</CommandGroup>
+								</Command>
+							</PopoverContent>
+						</Popover>
+						<FormMessage />
+					</FormItem>
+				)}
+			/>
+
+			{selectedTransportationCategory?.name === 'Flight' && (
+				<>
+					<FormField
+						control={form.control}
+						name="transportationTransaction.flightTransaction.luggageCategoryId"
+						render={({ field }) => (
+							<FormItem className="flex flex-col">
+								<FormLabel className="max-w-fit">
+									Luggage category
+								</FormLabel>
+								<Popover>
+									<PopoverTrigger asChild>
+										<FormControl>
+											<Button
+												variant="outline"
+												role="combobox"
+												className={cn(
+													'w-[200px] justify-between',
+													!field.value &&
+														'text-muted-foreground',
+												)}
+											>
+												{field.value
+													? flightLuggageCategories?.find(
+															(category) =>
+																category.id ===
+																field.value,
+													  )?.name
+													: 'Select category'}
+												<ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+											</Button>
+										</FormControl>
+									</PopoverTrigger>
+									<PopoverContent className="w-[200px] p-0">
+										<Command>
+											<CommandInput placeholder="Search category..." />
+											<CommandEmpty>
+												No category found.
+											</CommandEmpty>
+											<CommandGroup className="max-h-[20rem] overflow-y-auto">
+												{flightLuggageCategories?.map(
+													(category) => (
+														<CommandItem
+															value={
+																category.name
+															}
+															key={category.id}
+															onSelect={() => {
+																form.setValue(
+																	'transportationTransaction.flightTransaction.luggageCategoryId',
+																	category.id ??
+																		'',
+																)
+															}}
+															className="p-0"
+														>
+															<PopoverClose className="flex h-full w-full px-2 py-1.5">
+																<CheckIcon
+																	className={cn(
+																		'mr-2 h-4 w-4',
+																		category.id ===
+																			field.value
+																			? 'opacity-100'
+																			: 'opacity-0',
+																	)}
+																/>
+																{category.name}
+															</PopoverClose>
+														</CommandItem>
+													),
+												)}
+											</CommandGroup>
+										</Command>
+									</PopoverContent>
+								</Popover>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+
+					{/* segments */}
+
+					{fields.map((segment, index) => (
+						<div
+							key={segment.id}
+							className="space-y-3 rounded-md border p-4"
+						>
+							<div className="flex justify-between">
+								<h4>Flight segment {index + 1}</h4>
+
+								{index > 0 && (
+									<button
+										type="button"
+										onClick={() => remove(index)}
+										className="h-4 w-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+									>
+										<XIcon className="h-4 w-4" />
+										<span className="sr-only">
+											Remove segment
+										</span>
+									</button>
+								)}
+							</div>
+
+							<FormField
+								control={form.control}
+								name={`transportationTransaction.flightTransaction.segments.${index}.departureAirportId`}
+								render={({ field }) => (
+									<FormItem className="flex flex-col">
+										<FormLabel className="max-w-fit">
+											Departure airport
+										</FormLabel>
+										<Popover>
+											<PopoverTrigger asChild>
+												<FormControl>
+													<Button
+														variant="outline"
+														role="combobox"
+														className={cn(
+															'w-[350px] justify-between',
+															!field.value &&
+																'text-muted-foreground',
+														)}
+													>
+														{field.value
+															? airports?.find(
+																	(airport) =>
+																		airport.id ===
+																		field.value,
+															  )?.name
+															: 'Select airport'}
+														<ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+													</Button>
+												</FormControl>
+											</PopoverTrigger>
+											<PopoverContent className="w-[350px] p-0">
+												<Command>
+													<CommandInput placeholder="Search airport..." />
+													<CommandEmpty>
+														No airport found.
+													</CommandEmpty>
+													<CommandGroup className="max-h-[20rem] overflow-y-auto">
+														{airports?.map(
+															(airport) => (
+																<CommandItem
+																	value={
+																		airport.name
+																	}
+																	key={
+																		airport.id
+																	}
+																	onSelect={() => {
+																		form.setValue(
+																			`transportationTransaction.flightTransaction.segments.${index}.departureAirportId`,
+																			airport.id ??
+																				'',
+																		)
+																	}}
+																	className="p-0"
+																>
+																	<PopoverClose className="flex h-full w-full px-2 py-1.5">
+																		<CheckIcon
+																			className={cn(
+																				'mr-2 h-4 w-4',
+																				airport.id ===
+																					field.value
+																					? 'opacity-100'
+																					: 'opacity-0',
+																			)}
+																		/>
+																		{
+																			airport.name
+																		}
+																	</PopoverClose>
+																</CommandItem>
+															),
+														)}
+													</CommandGroup>
+												</Command>
+											</PopoverContent>
+										</Popover>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+
+							<FormField
+								control={form.control}
+								name={`transportationTransaction.flightTransaction.segments.${index}.arrivalAirportId`}
+								render={({ field }) => (
+									<FormItem className="flex flex-col">
+										<FormLabel className="max-w-fit">
+											Arrival airport
+										</FormLabel>
+										<Popover>
+											<PopoverTrigger asChild>
+												<FormControl>
+													<Button
+														variant="outline"
+														role="combobox"
+														className={cn(
+															'w-[350px] justify-between',
+															!field.value &&
+																'text-muted-foreground',
+														)}
+													>
+														{field.value
+															? airports?.find(
+																	(airport) =>
+																		airport.id ===
+																		field.value,
+															  )?.name
+															: 'Select airport'}
+														<ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+													</Button>
+												</FormControl>
+											</PopoverTrigger>
+											<PopoverContent className="w-[350px] p-0">
+												<Command>
+													<CommandInput placeholder="Search airport..." />
+													<CommandEmpty>
+														No airport found.
+													</CommandEmpty>
+													<CommandGroup className="max-h-[20rem] overflow-y-auto">
+														{airports?.map(
+															(airport) => (
+																<CommandItem
+																	value={
+																		airport.name
+																	}
+																	key={
+																		airport.id
+																	}
+																	onSelect={() => {
+																		form.setValue(
+																			`transportationTransaction.flightTransaction.segments.${index}.arrivalAirportId`,
+																			airport.id ??
+																				'',
+																		)
+																	}}
+																	className="p-0"
+																>
+																	<PopoverClose className="flex h-full w-full px-2 py-1.5">
+																		<CheckIcon
+																			className={cn(
+																				'mr-2 h-4 w-4',
+																				airport.id ===
+																					field.value
+																					? 'opacity-100'
+																					: 'opacity-0',
+																			)}
+																		/>
+																		{
+																			airport.name
+																		}
+																	</PopoverClose>
+																</CommandItem>
+															),
+														)}
+													</CommandGroup>
+												</Command>
+											</PopoverContent>
+										</Popover>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+
+							<FormField
+								control={form.control}
+								name={`transportationTransaction.flightTransaction.segments.${index}.classId`}
+								render={({ field }) => (
+									<FormItem className="flex flex-col">
+										<FormLabel className="max-w-fit">
+											Flight class
+										</FormLabel>
+										<Popover>
+											<PopoverTrigger asChild>
+												<FormControl>
+													<Button
+														variant="outline"
+														role="combobox"
+														className={cn(
+															'w-[200px] justify-between',
+															!field.value &&
+																'text-muted-foreground',
+														)}
+													>
+														{field.value
+															? flightClasses?.find(
+																	(
+																		flightClass,
+																	) =>
+																		flightClass.id ===
+																		field.value,
+															  )?.name
+															: 'Select class'}
+														<ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+													</Button>
+												</FormControl>
+											</PopoverTrigger>
+											<PopoverContent className="w-[200px] p-0">
+												<Command>
+													<CommandInput placeholder="Search class..." />
+													<CommandEmpty>
+														No class found.
+													</CommandEmpty>
+													<CommandGroup className="max-h-[20rem] overflow-y-auto">
+														{flightClasses?.map(
+															(flightClass) => (
+																<CommandItem
+																	value={
+																		flightClass.name
+																	}
+																	key={
+																		flightClass.id
+																	}
+																	onSelect={() => {
+																		form.setValue(
+																			`transportationTransaction.flightTransaction.segments.${index}.classId`,
+																			flightClass.id ??
+																				'',
+																		)
+																	}}
+																	className="p-0"
+																>
+																	<PopoverClose className="flex h-full w-full px-2 py-1.5">
+																		<CheckIcon
+																			className={cn(
+																				'mr-2 h-4 w-4',
+																				flightClass.id ===
+																					field.value
+																					? 'opacity-100'
+																					: 'opacity-0',
+																			)}
+																		/>
+																		{
+																			flightClass.name
+																		}
+																	</PopoverClose>
+																</CommandItem>
+															),
+														)}
+													</CommandGroup>
+												</Command>
+											</PopoverContent>
+										</Popover>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+
+							<FormField
+								control={form.control}
+								name={`transportationTransaction.flightTransaction.segments.${index}.seatCategoryId`}
+								render={({ field }) => (
+									<FormItem className="flex flex-col">
+										<FormLabel className="max-w-fit">
+											Flight seat style
+										</FormLabel>
+										<Popover>
+											<PopoverTrigger asChild>
+												<FormControl>
+													<Button
+														variant="outline"
+														role="combobox"
+														className={cn(
+															'w-[200px] justify-between',
+															!field.value &&
+																'text-muted-foreground',
+														)}
+													>
+														{field.value
+															? flightSeatCategories?.find(
+																	(
+																		category,
+																	) =>
+																		category.id ===
+																		field.value,
+															  )?.name
+															: 'Select style'}
+														<ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+													</Button>
+												</FormControl>
+											</PopoverTrigger>
+											<PopoverContent className="w-[200px] p-0">
+												<Command>
+													<CommandInput placeholder="Search style..." />
+													<CommandEmpty>
+														No style found.
+													</CommandEmpty>
+													<CommandGroup className="max-h-[20rem] overflow-y-auto">
+														{flightSeatCategories?.map(
+															(category) => (
+																<CommandItem
+																	value={
+																		category.name
+																	}
+																	key={
+																		category.id
+																	}
+																	onSelect={() => {
+																		form.setValue(
+																			`transportationTransaction.flightTransaction.segments.${index}.seatCategoryId`,
+																			category.id ??
+																				'',
+																		)
+																	}}
+																	className="p-0"
+																>
+																	<PopoverClose className="flex h-full w-full px-2 py-1.5">
+																		<CheckIcon
+																			className={cn(
+																				'mr-2 h-4 w-4',
+																				category.id ===
+																					field.value
+																					? 'opacity-100'
+																					: 'opacity-0',
+																			)}
+																		/>
+																		{
+																			category.name
+																		}
+																	</PopoverClose>
+																</CommandItem>
+															),
+														)}
+													</CommandGroup>
+												</Command>
+											</PopoverContent>
+										</Popover>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+						</div>
+					))}
+
+					<Button
+						size="sm"
+						variant="outline"
+						type="button"
+						onClick={() =>
+							append({
+								order: fields.length + 1,
+								departureAirportId: 0,
+								arrivalAirportId: 0,
+								airlineId: 0,
+								classId: 0,
+								seatCategoryId: 0,
+							})
+						}
+						className="h-8"
+					>
+						<PlusIcon className="mr-2 h-5 w-5" />
+						Add segment
+					</Button>
+				</>
+			)}
+
+			{/* car transaction */}
+
+			{selectedTransportationCategory?.name === 'Car' && (
+				<FormField
+					control={form.control}
+					name="transportationTransaction.carTransaction.categoryId"
+					render={({ field }) => (
+						<FormItem className="flex flex-col">
+							<FormLabel className="max-w-fit">
+								Car category
+							</FormLabel>
+							<Popover>
+								<PopoverTrigger asChild>
+									<FormControl>
+										<Button
+											variant="outline"
+											role="combobox"
+											className={cn(
+												'w-[200px] justify-between',
+												!field.value &&
+													'text-muted-foreground',
+											)}
+										>
+											{field.value
+												? carCategories?.find(
+														(category) =>
+															category.id ===
+															field.value,
+												  )?.name
+												: 'Select category'}
+											<ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+										</Button>
+									</FormControl>
+								</PopoverTrigger>
+								<PopoverContent className="w-[200px] p-0">
+									<Command>
+										<CommandInput placeholder="Search category..." />
+										<CommandEmpty>
+											No category found.
+										</CommandEmpty>
+										<CommandGroup className="max-h-[20rem] overflow-y-auto">
+											{carCategories?.map((category) => (
+												<CommandItem
+													value={category.name}
+													key={category.id}
+													onSelect={() => {
+														form.setValue(
+															'transportationTransaction.carTransaction.categoryId',
+															category.id ?? '',
+														)
+													}}
+													className="p-0"
+												>
+													<PopoverClose className="flex h-full w-full px-2 py-1.5">
+														<CheckIcon
+															className={cn(
+																'mr-2 h-4 w-4',
+																category.id ===
+																	field.value
+																	? 'opacity-100'
+																	: 'opacity-0',
+															)}
+														/>
+														{category.name}
+													</PopoverClose>
+												</CommandItem>
+											))}
+										</CommandGroup>
+									</Command>
+								</PopoverContent>
+							</Popover>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+			)}
+		</>
 	)
 }
