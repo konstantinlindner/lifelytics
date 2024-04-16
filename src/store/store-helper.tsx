@@ -1686,10 +1686,10 @@ async function addCounterpart({
 type FoodAndDrinkTransactionInput = {
 	placeCategoryId: number
 	typeCategoryId: number
-	eatInTakeAway: EatInTakeAway | null
-	isLeftovers: boolean | null
-	isDelivery: boolean | null
-	isWorked: boolean | null
+	eatInTakeAway?: EatInTakeAway
+	isLeftovers?: boolean
+	isDelivery?: boolean
+	isWorked?: boolean
 }
 
 type AddFoodAndDrinkTransactionProps = {
