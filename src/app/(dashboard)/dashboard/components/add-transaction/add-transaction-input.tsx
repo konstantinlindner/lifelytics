@@ -1687,6 +1687,7 @@ function TransportationCategoryFormFields({ form }: CategoryFormFieldsProps) {
 		(state) => state.flightLuggageCategories,
 	)
 	const airports = useDatabase((state) => state.airports)
+	const airlines = useDatabase((state) => state.airlines)
 	const flightClasses = useDatabase((state) => state.flightClasses)
 	const flightSeatCategories = useDatabase(
 		(state) => state.flightSeatCategories,
@@ -2073,6 +2074,88 @@ function TransportationCategoryFormFields({ form }: CategoryFormFieldsProps) {
 																		/>
 																		{
 																			airport.name
+																		}
+																	</PopoverClose>
+																</CommandItem>
+															),
+														)}
+													</CommandGroup>
+												</Command>
+											</PopoverContent>
+										</Popover>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+
+							<FormField
+								control={form.control}
+								name={`transportationTransaction.flightTransaction.segments.${index}.airlineId`}
+								render={({ field }) => (
+									<FormItem className="flex flex-col">
+										<FormLabel className="max-w-fit">
+											Airline
+										</FormLabel>
+										<Popover>
+											<PopoverTrigger asChild>
+												<FormControl>
+													<Button
+														variant="outline"
+														role="combobox"
+														className={cn(
+															'w-[290px] justify-between',
+															!field.value &&
+																'text-muted-foreground',
+														)}
+													>
+														{field.value
+															? airlines?.find(
+																	(airline) =>
+																		airline.id ===
+																		field.value,
+															  )?.name
+															: 'Select airline'}
+														<ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+													</Button>
+												</FormControl>
+											</PopoverTrigger>
+											<PopoverContent className="w-[290px] p-0">
+												<Command>
+													<CommandInput placeholder="Search airline..." />
+													<CommandEmpty>
+														No airline found.
+													</CommandEmpty>
+													<CommandGroup className="max-h-[20rem] overflow-y-auto">
+														{airlines?.map(
+															(airline) => (
+																<CommandItem
+																	value={
+																		airline.name
+																	}
+																	key={
+																		airline.id
+																	}
+																	onSelect={() => {
+																		form.setValue(
+																			`transportationTransaction.flightTransaction.segments.${index}.airlineId`,
+																			airline.id ??
+																				'',
+																		)
+																	}}
+																	className="p-0"
+																>
+																	<PopoverClose className="flex h-full w-full px-2 py-1.5">
+																		<CheckIcon
+																			className={cn(
+																				'mr-2 h-4 w-4',
+																				airline.id ===
+																					field.value
+																					? 'opacity-100'
+																					: 'opacity-0',
+																			)}
+																		/>
+																		{
+																			airline.name
 																		}
 																	</PopoverClose>
 																</CommandItem>
