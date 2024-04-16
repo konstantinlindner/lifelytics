@@ -279,6 +279,15 @@ export default function AddTransactionInput({
 	useEffect(() => {
 		if (selectedCategory?.name === 'Food and drink') {
 			form.register('foodAndDrinkTransaction')
+			form.reset({
+				...form.getValues(),
+				foodAndDrinkTransaction: {
+					eatInTakeAway: 'eat-in',
+					isLeftovers: false,
+					isDelivery: false,
+					isWorked: false,
+				},
+			})
 		} else {
 			form.unregister('foodAndDrinkTransaction')
 		}
@@ -318,14 +327,12 @@ export default function AddTransactionInput({
 		form.setValue('tip', amount * tipPercentage)
 	}
 
-	// todo remove console log
-	console.log(form.formState.errors)
+	// todo console log
+	console.error('Form state errors:', form.formState.errors)
 
 	async function onSubmit(data: z.infer<typeof FormSchema>) {
-		toast(JSON.stringify(data))
-
 		// todo remove console log
-		console.log(JSON.stringify(data))
+		console.log('submitting', JSON.stringify(data))
 
 		const error = await addTransaction({
 			date: data.transactionDate,
