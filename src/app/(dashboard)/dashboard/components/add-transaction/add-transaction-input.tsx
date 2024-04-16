@@ -109,15 +109,14 @@ const FormSchema = z.object({
 				invalid_type_error: 'Select a category',
 			}),
 			typeCategoryId: z.coerce.number({
-				invalid_type_error: 'Select the type',
+				invalid_type_error: 'Select type',
 			}),
-			eatInTakeAway: z.union([
-				z.literal('eat-in'),
-				z.literal('take-away'),
-			]),
-			isLeftovers: z.boolean(),
-			isDelivery: z.boolean(),
-			isWorked: z.boolean(),
+			eatInTakeAway: z
+				.union([z.literal('eat-in'), z.literal('take-away')])
+				.optional(),
+			isLeftovers: z.boolean().optional(),
+			isDelivery: z.boolean().optional(),
+			isWorked: z.boolean().optional(),
 		})
 		.optional(),
 	healthAndWellnessTransaction: z
@@ -279,15 +278,6 @@ export default function AddTransactionInput({
 	useEffect(() => {
 		if (selectedCategory?.name === 'Food and drink') {
 			form.register('foodAndDrinkTransaction')
-			form.reset({
-				...form.getValues(),
-				foodAndDrinkTransaction: {
-					eatInTakeAway: 'eat-in',
-					isLeftovers: false,
-					isDelivery: false,
-					isWorked: false,
-				},
-			})
 		} else {
 			form.unregister('foodAndDrinkTransaction')
 		}
@@ -328,7 +318,7 @@ export default function AddTransactionInput({
 	}
 
 	// todo console log
-	console.error('Form state errors:', form.formState.errors)
+	console.log('Form state errors:', form.formState.errors)
 
 	async function onSubmit(data: z.infer<typeof FormSchema>) {
 		// todo remove console log
