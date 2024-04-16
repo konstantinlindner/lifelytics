@@ -459,6 +459,7 @@ export type Database = {
 			flightTransactions: {
 				Row: {
 					createdAt: string
+					flyOutDate: string
 					id: string
 					luggageCategory: number
 					transportationTransaction: string
@@ -466,6 +467,7 @@ export type Database = {
 				}
 				Insert: {
 					createdAt?: string
+					flyOutDate: string
 					id?: string
 					luggageCategory: number
 					transportationTransaction: string
@@ -473,6 +475,7 @@ export type Database = {
 				}
 				Update: {
 					createdAt?: string
+					flyOutDate?: string
 					id?: string
 					luggageCategory?: number
 					transportationTransaction?: string
