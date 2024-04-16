@@ -1678,6 +1678,8 @@ async function addCounterpart({
 			console.error('Error updating counterpart in db:', error)
 			return null
 		}
+	} else {
+		return existingMatchingCounterpart
 	}
 }
 
@@ -2298,7 +2300,7 @@ export async function addTransaction({
 	})
 
 	if (!counterpart) {
-		console.error('Counterpart not found')
+		console.error('Counterpart not found, returned:', counterpart)
 		return
 	}
 
@@ -2609,7 +2611,7 @@ export function getCounterpartFromId(id: string) {
 		.counterparts?.find((counterpart) => counterpart.id === id)
 
 	if (!counterpart) {
-		console.error('Counterpart not found')
+		console.error('Counterpart not found (from ID)')
 		return null
 	}
 
