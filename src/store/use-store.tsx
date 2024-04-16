@@ -211,6 +211,7 @@ type TransportationTransaction = {
 
 type FlightTransaction = {
 	id: string
+	flyOutDate: Date
 	luggageCategory: FlightLuggageCategory
 	segments: FlightTransactionSegment[]
 	createdAt: string
