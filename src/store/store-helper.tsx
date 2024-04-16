@@ -2059,6 +2059,7 @@ async function addFlightTransactionSegments({
 }
 
 type FlightTransactionInput = {
+	flyOutDate: Date
 	luggageCategoryId: number
 	segments: FlightTransactionSegmentInput
 }
@@ -2081,6 +2082,7 @@ async function addFlightTransaction({
 			.from('flightTransactions')
 			.insert({
 				transportationTransaction: parentTransportationTransactionId,
+				flyOutDate: dayjs(flightTransaction.flyOutDate).format(),
 				luggageCategory: flightTransaction.luggageCategoryId,
 			})
 			.select()
@@ -2110,6 +2112,7 @@ async function addFlightTransaction({
 
 		const formattedFlightTransaction = {
 			id: newFlightTransaction[0].id,
+			flyOutDate: flightTransaction.flyOutDate,
 			luggageCategory: luggageCategory,
 			segments: newFlightTransactionSegments,
 			createdAt: newFlightTransaction[0].createdAt,
