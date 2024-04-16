@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "preinstall": "npx only-allow pnpm",
     "dev": "next dev --turbo",
     "build": "next build",
     "start": "next start",
@@ -45,6 +46,7 @@
     "eslint": "^8.50.0",
     "eslint-config-next": "^14.0.4",
     "framer-motion": "^10.16.16",
+    "jiti": "^1.21.0",
     "lucide-react": "^0.363.0",
     "next": "^14.0.4",
     "next-themes": "^0.2.1",
