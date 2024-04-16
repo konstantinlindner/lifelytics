@@ -166,23 +166,43 @@ const FormSchema = z.object({
 					segments: z
 						.array(
 							z.object({
-								order: z.coerce.number(),
-								departureAirportId: z.coerce.number({
-									invalid_type_error: 'Select an airport',
-								}),
-								arrivalAirportId: z.coerce.number({
-									invalid_type_error: 'Select an airport',
-								}),
-								airlineId: z.coerce.number({
-									invalid_type_error: 'Select an airline',
-								}),
-								classId: z.coerce.number({
-									invalid_type_error: 'Select a class',
-								}),
-								seatCategoryId: z.coerce.number({
-									invalid_type_error:
-										'Select a seat category',
-								}),
+								order: z.coerce.number().min(1),
+								departureAirportId: z.coerce
+									.number({
+										invalid_type_error: 'Select an airport',
+									})
+									.refine((value) => value >= 1, {
+										message: 'Select an airport',
+									}),
+								arrivalAirportId: z.coerce
+									.number({
+										invalid_type_error: 'Select an airport',
+									})
+									.refine((value) => value >= 1, {
+										message: 'Select an airport',
+									}),
+								airlineId: z.coerce
+									.number({
+										invalid_type_error: 'Select an airline',
+									})
+									.refine((value) => value >= 1, {
+										message: 'Select an airline',
+									}),
+								classId: z.coerce
+									.number({
+										invalid_type_error: 'Select a class',
+									})
+									.refine((value) => value >= 1, {
+										message: 'Select a class',
+									}),
+								seatCategoryId: z.coerce
+									.number({
+										invalid_type_error:
+											'Select a seat category',
+									})
+									.refine((value) => value >= 1, {
+										message: 'Select a seat category',
+									}),
 							}),
 						)
 						.min(1),
@@ -231,6 +251,15 @@ export default function AddTransactionInput({
 					type: 'rent',
 				},
 			},
+			// transportationTransaction: {
+			// 	flightTransaction: {
+			// 		segments: [
+			// 			{
+			// 				order: 1,
+			// 			},
+			// 		],
+			// 	},
+			// },
 		},
 	})
 
@@ -296,7 +325,7 @@ export default function AddTransactionInput({
 	}
 
 	// todo remove console log
-	// console.log(form.formState.errors)
+	console.log(form.formState.errors)
 
 	async function onSubmit(data: z.infer<typeof FormSchema>) {
 		toast(JSON.stringify(data))
@@ -1701,6 +1730,19 @@ function TransportationCategoryFormFields({ form }: CategoryFormFieldsProps) {
 		control: form.control,
 		name: 'transportationTransaction.flightTransaction.segments',
 	})
+
+	useEffect(() => {
+		if (fields.length === 0) {
+			append({
+				order: 1,
+				departureAirportId: 0,
+				arrivalAirportId: 0,
+				airlineId: 0,
+				classId: 0,
+				seatCategoryId: 0,
+			})
+		}
+	}, [fields, append])
 
 	return (
 		<>
