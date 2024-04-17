@@ -41,14 +41,14 @@ export default function SignInForm() {
 	const handleSignInClick = async (values: z.infer<typeof formSchema>) => {
 		setIsLoading(true)
 
-		const error = await handleSignIn({
+		const { error } = await handleSignIn({
 			email: values.email,
 			password: values.password,
 		})
 
 		if (error) {
 			console.error('Something went wrong signing in:', error)
-			toast(error.error?.message)
+			toast(error.message)
 			setIsLoading(false)
 		}
 
