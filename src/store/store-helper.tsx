@@ -1714,23 +1714,6 @@ export async function addTransaction({
 	}
 
 	try {
-		// const { data: newTransaction, error } = await supabase
-		// 	.from('transactions')
-		// 	.insert({
-		// 		user: userId,
-		// 		item: item,
-		// 		amount: amount,
-		// 		tip: tip,
-		// 		city: cityId,
-		// 		currency: currencyId,
-		// 		transactionDate: dayjs(date).format('YYYY-MM-DD'),
-		// 		description: description,
-		// 		counterpart: counterpart.id,
-		// 		category: categoryId,
-		// 		paymentMethod: paymentMethodId,
-		// 	})
-		// 	.select()
-
 		const { newTransaction, error } = await insertTransaction({
 			userId: userId,
 			item: item,
@@ -1745,8 +1728,9 @@ export async function addTransaction({
 			paymentMethodId: paymentMethodId,
 		})
 
-		if (error || !newTransaction)
-			throw new Error('Error adding transaction to db')
+		if (error) return error
+
+		if (!newTransaction) throw new Error('No transaction returned')
 
 		const setTransactions = useUser.getState().setTransactions
 
