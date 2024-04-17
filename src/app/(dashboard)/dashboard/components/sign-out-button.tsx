@@ -20,11 +20,11 @@ export default function SignOutButton({ isMenuItem }: SignOutButtonProps) {
 	const router = useRouter()
 
 	const handleSignOutClick = async () => {
-		const error = await handleSignOut()
+		const { error } = await handleSignOut()
 
 		if (error) {
 			console.error('Something went wrong signing out', error)
-			toast(error.error?.message)
+			toast(error.message)
 			return
 		}
 
@@ -32,7 +32,10 @@ export default function SignOutButton({ isMenuItem }: SignOutButtonProps) {
 	}
 
 	return isMenuItem ? (
-		<DropdownMenuItem className="cursor-pointer" onClick={handleSignOut}>
+		<DropdownMenuItem
+			className="cursor-pointer"
+			onClick={handleSignOutClick}
+		>
 			Sign out
 			<DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
 		</DropdownMenuItem>
