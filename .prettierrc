@@ -5,7 +5,7 @@
   "useTabs": true,
   "tabWidth": 4,
   "semi": false,
-  "importOrder": ["^@/env", "^react$", "^@vercel/(.*)$", "^next", "^@supabase", "^@/types", "^@/store/(.*)$", "^@/lib/(.*)$", "^@/actions", "<THIRD_PARTY_MODULES>", "^lucide-react", "^@/components/ui/(.*)$", "^@/components/(.*)$", "^[./]" ],
+  "importOrder": ["^@/env", "^react$", "^@vercel/(.*)$", "^next", "^@supabase", "^@/types", "^@/database/(.*)$", "^@/store/(.*)$", "^@/lib/(.*)$", "^@/actions", "<THIRD_PARTY_MODULES>", "^lucide-react", "^@/components/ui/(.*)$", "^@/components/(.*)$", "^[./]" ],
   "importOrderSeparation": true,
   "importOrderSortSpecifiers": true
 }
