@@ -579,7 +579,7 @@ type HandleSignInProps = {
 	password: string
 }
 
-export async function HandleSignIn({ email, password }: HandleSignInProps) {
+export async function handleSignIn({ email, password }: HandleSignInProps) {
 	const error = await signIn({ email: email, password: password })
 
 	if (error) return error
