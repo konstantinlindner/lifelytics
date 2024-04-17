@@ -224,8 +224,11 @@ export async function InitializeStore() {
 	const setCounterparts = useUser.getState().setCounterparts
 	const setPaymentMethods = useUser.getState().setPaymentMethods
 
+	const session = await fetchSession()
+	if (!session) return
+	setEmail(session.user.email)
+
 	const [
-		session,
 		profile,
 		counterparts,
 		paymentMethods,
@@ -240,7 +243,6 @@ export async function InitializeStore() {
 		flightTransactionSegments,
 		carTransactions,
 	] = await Promise.all([
-		fetchSession(),
 		fetchProfile(),
 		fetchCounterparts(),
 		fetchPaymentMethods(),
@@ -256,7 +258,6 @@ export async function InitializeStore() {
 		fetchCarTransactions(),
 	])
 
-	if (session) setEmail(session.user.email)
 	if (profile) {
 		setId(profile.id)
 		setIsAdmin(profile.isAdmin)
@@ -580,11 +581,13 @@ type HandleSignInProps = {
 }
 
 export async function handleSignIn({ email, password }: HandleSignInProps) {
-	const error = await signIn({ email: email, password: password })
+	const { error } = await signIn({ email: email, password: password })
 
-	if (error) return error
+	if (error) return { error }
 
 	await InitializeStore()
+
+	return { error: null }
 }
 
 type HandleSignUpProps = {
@@ -600,12 +603,12 @@ export async function handleSignUp({
 	firstName,
 	lastName,
 }: HandleSignUpProps) {
-	const error = await signUp({
+	const { error } = await signUp({
 		email: email,
 		password: password,
 	})
 
-	if (error) return error
+	if (error) return { error }
 
 	await InitializeStore()
 
@@ -613,12 +616,16 @@ export async function handleSignUp({
 
 	await updateFirstName({ userId: userId ?? '', firstName: firstName })
 	await updateLastName({ userId: userId ?? '', lastName: lastName })
+
+	return { error: null }
 }
 
 export async function handleSignOut() {
-	const error = await signOut()
+	const { error } = await signOut()
 
-	if (error) return error
+	if (error) return { error }
+
+	return { error: null }
 }
 
 type HandleUpdateEmailProps = {
