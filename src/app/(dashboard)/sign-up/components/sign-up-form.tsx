@@ -67,7 +67,7 @@ function SignUpForm() {
 	const handleSignUpClick = async (values: z.infer<typeof formSchema>) => {
 		setIsLoading(true)
 
-		const error = await handleSignUp({
+		const { error } = await handleSignUp({
 			email: values.email,
 			password: values.password,
 			firstName: values.firstName,
@@ -76,7 +76,7 @@ function SignUpForm() {
 
 		if (error) {
 			console.error('Somethign went wrong signing up:', error)
-			toast(error.error?.message)
+			toast(error.message)
 			setIsLoading(false)
 		}
 
