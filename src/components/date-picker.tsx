@@ -55,6 +55,7 @@ export default function DatePicker({
 					onBlur={(e) => {
 						const parsedDate = new Date(e.target.value)
 						if (parsedDate.toString() === 'Invalid Date') {
+							// todo
 							// setErrorMessage('Invalid Date');
 							console.log('Invalid date')
 						} else {
