@@ -1,8 +1,8 @@
 'use client'
 
 import {
-	deleteTransaction,
 	getCityCountryStringFromCityId,
+	handleDeleteTransaction,
 } from '@/store/store-helper'
 import { Transaction } from '@/store/use-store'
 
@@ -267,7 +267,7 @@ export const transactionColumns: ColumnDef<Transaction>[] = [
 							<AlertDialogCancel>Cancel</AlertDialogCancel>
 							<AlertDialogAction
 								onClick={() =>
-									deleteTransaction({
+									handleDeleteTransaction({
 										transactionId: transaction.id,
 									})
 								}

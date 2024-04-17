@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 
-import { setPrimaryCurrency } from '@/store/store-helper'
+import { handleUpdatePrimaryCurrency } from '@/store/store-helper'
 import { useDatabase, useUser } from '@/store/use-store'
 
 import { cn } from '@/lib/utils'
@@ -85,7 +85,7 @@ export default function Account() {
 				values.currency &&
 				values.currency !== currency?.id
 			) {
-				await setPrimaryCurrency({ primaryCurrency })
+				await handleUpdatePrimaryCurrency({ currency: primaryCurrency })
 			}
 
 			toast('Successfully saved changes')

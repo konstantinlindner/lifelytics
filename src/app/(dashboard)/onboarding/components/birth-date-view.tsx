@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import { setBirthDate } from '@/store/store-helper'
+import { handleUpdateBirthDate } from '@/store/store-helper'
 
 import dayjs from 'dayjs'
 
@@ -31,7 +31,7 @@ export default function BirthDateView({
 
 		setIsLoading(true)
 
-		await setBirthDate({ birthDate: selectedBirthDate })
+		await handleUpdateBirthDate({ birthDate: selectedBirthDate })
 
 		setCurrentViewIndex(currentViewIndex + 1)
 	}

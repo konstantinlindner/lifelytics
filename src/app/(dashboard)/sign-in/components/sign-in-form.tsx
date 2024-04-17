@@ -4,7 +4,7 @@ import { useState } from 'react'
 
 import { useRouter } from 'next/navigation'
 
-import { SignIn } from '@/store/store-helper'
+import { handleSignIn } from '@/store/store-helper'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
@@ -38,17 +38,17 @@ export default function SignInForm() {
 		resolver: zodResolver(formSchema),
 	})
 
-	const handleSignIn = async (values: z.infer<typeof formSchema>) => {
+	const handleSignInClick = async (values: z.infer<typeof formSchema>) => {
 		setIsLoading(true)
 
-		const error = await SignIn({
+		const error = await handleSignIn({
 			email: values.email,
 			password: values.password,
 		})
 
 		if (error) {
 			console.error('Something went wrong signing in:', error)
-			toast(error.message)
+			toast(error.error?.message)
 			setIsLoading(false)
 		}
 
@@ -59,7 +59,7 @@ export default function SignInForm() {
 		<div>
 			<Form {...form}>
 				<form
-					onSubmit={form.handleSubmit(handleSignIn)}
+					onSubmit={form.handleSubmit(handleSignInClick)}
 					className="space-y-2"
 				>
 					<FormField

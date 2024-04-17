@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 import { Currency } from '@/types/globals.types'
 
-import { setPrimaryCurrency } from '@/store/store-helper'
+import { handleUpdatePrimaryCurrency } from '@/store/store-helper'
 import { useDatabase } from '@/store/use-store'
 
 import { Badge } from '@/components/ui/badge'
@@ -35,7 +35,7 @@ export default function CurrencyPickerView({
 
 		setIsLoading(true)
 
-		await setPrimaryCurrency({ primaryCurrency: selectedCurrency })
+		await handleUpdatePrimaryCurrency({ currency: selectedCurrency })
 
 		setCurrentViewIndex(currentViewIndex + 1)
 	}

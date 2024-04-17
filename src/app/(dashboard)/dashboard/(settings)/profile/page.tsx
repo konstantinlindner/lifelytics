@@ -4,12 +4,12 @@ import { useState } from 'react'
 
 import {
 	getCityCountryStringFromCityId,
-	setBirthDate,
-	setFirstName,
-	setLastName,
-	setLocation,
-	setWebsite,
-	updateEmail,
+	handleUpdateBirthDate,
+	handleUpdateEmail,
+	handleUpdateFirstName,
+	handleUpdateLastName,
+	handleUpdateLocation,
+	handleUpdateWebsite,
 } from '@/store/store-helper'
 import { useDatabase, useUser } from '@/store/use-store'
 
@@ -112,29 +112,29 @@ export default function Profile() {
 
 		try {
 			if (values.firstName !== firstName) {
-				await setFirstName({ firstName: values.firstName })
+				await handleUpdateFirstName({ firstName: values.firstName })
 			}
 
 			if (values.lastName !== lastName) {
-				await setLastName({ lastName: values.lastName })
+				await handleUpdateLastName({ lastName: values.lastName })
 			}
 
 			if (values.email !== email) {
-				await updateEmail({ email: values.email })
+				await handleUpdateEmail({ email: values.email })
 			}
 
 			if (values.birthDate && values.birthDate !== birthDate) {
-				await setBirthDate({ birthDate: values.birthDate })
+				await handleUpdateBirthDate({ birthDate: values.birthDate })
 			}
 
 			if (values.website && values.website !== website) {
-				await setWebsite({ website: values.website })
+				await handleUpdateWebsite({ website: values.website })
 			}
 
 			const location = cities.find((city) => city.id === values.city)
 
 			if (location && values.city && values.city !== city?.id) {
-				await setLocation({ city: location })
+				await handleUpdateLocation({ city: location })
 			}
 
 			// toast

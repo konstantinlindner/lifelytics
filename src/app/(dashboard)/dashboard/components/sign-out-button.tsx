@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation'
 
-import { SignOut } from '@/store/store-helper'
+import { handleSignOut } from '@/store/store-helper'
 
 import { toast } from 'sonner'
 
@@ -19,12 +19,12 @@ type SignOutButtonProps = {
 export default function SignOutButton({ isMenuItem }: SignOutButtonProps) {
 	const router = useRouter()
 
-	const handleSignOut = async () => {
-		const error = await SignOut()
+	const handleSignOutClick = async () => {
+		const error = await handleSignOut()
 
 		if (error) {
 			console.error('Something went wrong signing out', error)
-			toast(error.message)
+			toast(error.error?.message)
 			return
 		}
 
@@ -37,6 +37,6 @@ export default function SignOutButton({ isMenuItem }: SignOutButtonProps) {
 			<DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
 		</DropdownMenuItem>
 	) : (
-		<Button onClick={handleSignOut}>Sign out</Button>
+		<Button onClick={handleSignOutClick}>Sign out</Button>
 	)
 }

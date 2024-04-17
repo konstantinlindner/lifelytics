@@ -2,7 +2,7 @@
 
 import { ChangeEvent, useState } from 'react'
 
-import { setAvatarUrl } from '@/store/store-helper'
+import { handleUpdateAvatarUrl } from '@/store/store-helper'
 import { useUser } from '@/store/use-store'
 
 import { CloudinaryBase64ImageUpload } from '@/actions'
@@ -65,7 +65,7 @@ export default function ProfilePictureUpload() {
 		}
 
 		const url = await uploadPhotoToCloudinary(file)
-		setAvatarUrl({ avatarUrl: url })
+		handleUpdateAvatarUrl({ avatarUrl: url })
 
 		setIsUploading(false)
 		setOpen(false)
