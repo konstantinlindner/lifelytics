@@ -1,10 +1,71 @@
 import {
-	AccommodationType,
 	City,
 	Currency,
 	EatInTakeAway,
 	TransactionCategory,
 } from '@/types/globals.types'
+
+import {
+	deleteTransaction,
+	fetchAccommodationCategories,
+	fetchAccommodationTransactions,
+	fetchAirlineAlliances,
+	fetchAirlines,
+	fetchAirports,
+	fetchCarCategories,
+	fetchCarTransactions,
+	fetchCities,
+	fetchCounterparts,
+	fetchCountries,
+	fetchCurrencies,
+	fetchFlightClasses,
+	fetchFlightLuggageCategories,
+	fetchFlightSeatCategories,
+	fetchFlightTransactionSegments,
+	fetchFlightTransactions,
+	fetchFoodAndDrinkPlaceCategories,
+	fetchFoodAndDrinkTransactions,
+	fetchFoodAndDrinkTypeCategories,
+	fetchHealthAndWellnessCategories,
+	fetchHealthAndWellnessTransactions,
+	fetchHomeCategories,
+	fetchHomeTransactions,
+	fetchLoyaltyPrograms,
+	fetchPaymentMethodCategories,
+	fetchPaymentMethods,
+	fetchProfile,
+	fetchSession,
+	fetchShoppingCategories,
+	fetchShoppingTransactions,
+	fetchTransactionCategories,
+	fetchTransactions,
+	fetchTransportationCategories,
+	fetchTransportationTransactions,
+	insertAccommodationTransaction,
+	insertCarTransaction,
+	insertCounterpart,
+	insertFlightTransaction,
+	insertFlightTransactionSegment,
+	insertFoodAndDrinkTransaction,
+	insertHealthAndWellnessTransaction,
+	insertHomeTransaction,
+	insertShoppingTransaction,
+	insertTransaction,
+	insertTransportationTransaction,
+	signIn,
+	signOut,
+	signUp,
+	updateAvatarUrl,
+	updateBirthDate,
+	updateCity,
+	updateCounterpart,
+	updateEmail,
+	updateFirstName,
+	updateLastName,
+	updateOnboardingCompletedDate,
+	updatePrimaryCurrency,
+	updateWebsite,
+} from '@/database/queries'
 
 import {
 	FlightTransactionSegment,
@@ -14,7 +75,6 @@ import {
 	useUser,
 } from '@/store/use-store'
 
-import supabase from '@/lib/supabase'
 import { cn } from '@/lib/utils'
 
 import dayjs from 'dayjs'
@@ -37,54 +97,6 @@ import {
 	Undo2Icon,
 	UtensilsCrossedIcon,
 } from 'lucide-react'
-
-type SignInProps = {
-	email: string
-	password: string
-}
-
-export async function SignIn({ email, password }: SignInProps) {
-	const { error } = await supabase.auth.signInWithPassword({
-		email: email,
-		password: password,
-	})
-
-	if (error) return error
-
-	await InitializeStore()
-}
-
-type SignUpProps = {
-	email: string
-	password: string
-	firstName: string
-	lastName: string
-}
-
-export async function SignUp({
-	email,
-	password,
-	firstName,
-	lastName,
-}: SignUpProps) {
-	const { error } = await supabase.auth.signUp({
-		email: email,
-		password: password,
-	})
-
-	if (error) return error
-
-	await InitializeStore()
-
-	await setFirstName({ firstName: firstName })
-	await setLastName({ lastName: lastName })
-}
-
-export async function SignOut() {
-	const { error } = await supabase.auth.signOut({})
-
-	if (error) return error
-}
 
 // setup the store
 export async function InitializeStore() {
@@ -561,656 +573,59 @@ export async function InitializeStore() {
 	}
 }
 
-// fetch from DB
-async function fetchSession() {
-	try {
-		const { data, error } = await supabase.auth.getSession()
-
-		if (error) throw error
-
-		if (!data) {
-			console.error('No data for session returned')
-			return
-		}
-
-		return data.session
-	} catch (error) {
-		console.error('Error fetching session:', error)
-	}
+// helpers
+type HandleSignInProps = {
+	email: string
+	password: string
 }
 
-async function fetchProfile() {
-	try {
-		const { data: profile, error } = await supabase
-			.from('profiles')
-			.select()
-			.single()
+export async function HandleSignIn({ email, password }: HandleSignInProps) {
+	const error = await signIn({ email: email, password: password })
 
-		if (error) throw error
+	if (error) return error
 
-		if (!profile) {
-			console.error('No profile found')
-			return
-		}
-
-		return profile
-	} catch (error) {
-		console.error('Error fetching profile:', error)
-	}
+	await InitializeStore()
 }
 
-async function fetchTransactions() {
-	try {
-		const { data: transactions, error } = await supabase
-			.from('transactions')
-			.select()
-
-		if (error) throw error
-
-		if (!transactions) {
-			console.error('No transactions found')
-			return
-		}
-
-		return transactions
-	} catch (error) {
-		console.error('Error fetching transactions:', error)
-	}
+type HandleSignUpProps = {
+	email: string
+	password: string
+	firstName: string
+	lastName: string
 }
 
-async function fetchFoodAndDrinkTransactions() {
-	try {
-		const { data: foodAndDrinkTransactions, error } = await supabase
-			.from('foodAndDrinkTransactions')
-			.select()
+export async function handleSignUp({
+	email,
+	password,
+	firstName,
+	lastName,
+}: HandleSignUpProps) {
+	const error = await signUp({
+		email: email,
+		password: password,
+	})
 
-		if (error) throw error
+	if (error) return error
 
-		if (!foodAndDrinkTransactions) {
-			console.error('No food and drink transactions found')
-			return
-		}
+	await InitializeStore()
 
-		return foodAndDrinkTransactions
-	} catch (error) {
-		console.error('Error fetching food and drink transactions:', error)
-	}
+	const userId = useUser.getState().id
+
+	await updateFirstName({ userId: userId ?? '', firstName: firstName })
+	await updateLastName({ userId: userId ?? '', lastName: lastName })
 }
 
-async function fetchHealthAndWellnessTransactions() {
-	try {
-		const { data: healthAndWellnessTransactions, error } = await supabase
-			.from('healthAndWellnessTransactions')
-			.select()
+export async function handleSignOut() {
+	const error = await signOut()
 
-		if (error) throw error
-
-		if (!healthAndWellnessTransactions) {
-			console.error('No health and wellness transactions found')
-			return
-		}
-
-		return healthAndWellnessTransactions
-	} catch (error) {
-		console.error('Error fetching health and wellness transactions:', error)
-	}
+	if (error) return error
 }
 
-async function fetchHomeTransactions() {
-	try {
-		const { data: homeTransactions, error } = await supabase
-			.from('homeTransactions')
-			.select()
-
-		if (error) throw error
-
-		if (!homeTransactions) {
-			console.error('No home transactions found')
-			return
-		}
-
-		return homeTransactions
-	} catch (error) {
-		console.error('Error fetching home transactions:', error)
-	}
-}
-
-async function fetchAccommodationTransactions() {
-	try {
-		const { data: accommodationTransactions, error } = await supabase
-			.from('accommodationTransactions')
-			.select()
-
-		if (error) throw error
-
-		if (!accommodationTransactions) {
-			console.error('No accommodation transactions found')
-			return
-		}
-
-		return accommodationTransactions
-	} catch (error) {
-		console.error('Error fetching accommodation transactions:', error)
-	}
-}
-
-async function fetchShoppingTransactions() {
-	try {
-		const { data: shoppingTransactions, error } = await supabase
-			.from('shoppingTransactions')
-			.select()
-
-		if (error) throw error
-
-		if (!shoppingTransactions) {
-			console.error('No shopping transactions found')
-			return
-		}
-
-		return shoppingTransactions
-	} catch (error) {
-		console.error('Error fetching shopping transactions:', error)
-	}
-}
-
-async function fetchTransportationTransactions() {
-	try {
-		const { data: transportationTransactions, error } = await supabase
-			.from('transportationTransactions')
-			.select()
-
-		if (error) throw error
-
-		if (!transportationTransactions) {
-			console.error('No transportation transactions found')
-			return
-		}
-
-		return transportationTransactions
-	} catch (error) {
-		console.error('Error fetching transportation transactions:', error)
-	}
-}
-
-async function fetchFlightTransactions() {
-	try {
-		const { data: flightTransactions, error } = await supabase
-			.from('flightTransactions')
-			.select()
-
-		if (error) throw error
-
-		if (!flightTransactions) {
-			console.error('No flight transactions found')
-			return
-		}
-
-		return flightTransactions
-	} catch (error) {
-		console.error('Error fetching flight transactions:', error)
-	}
-}
-
-async function fetchFlightTransactionSegments() {
-	try {
-		const { data: flightTransactionSegments, error } = await supabase
-			.from('flightTransactionSegments')
-			.select()
-
-		if (error) throw error
-
-		if (!flightTransactionSegments) {
-			console.error('No flight segments found')
-			return
-		}
-
-		return flightTransactionSegments
-	} catch (error) {
-		console.error('Error fetching flight segments:', error)
-	}
-}
-
-async function fetchCarTransactions() {
-	try {
-		const { data: carTransactions, error } = await supabase
-			.from('carTransactions')
-			.select()
-
-		if (error) throw error
-
-		if (!carTransactions) {
-			console.error('No car transactions found')
-			return
-		}
-
-		return carTransactions
-	} catch (error) {
-		console.error('Error fetching car transactions:', error)
-	}
-}
-
-async function fetchCounterparts() {
-	try {
-		const { data: counterparts, error } = await supabase
-			.from('counterparts')
-			.select()
-
-		if (error) throw error
-
-		if (!counterparts) {
-			console.error('No counterparts found')
-			return
-		}
-
-		return counterparts
-	} catch (error) {
-		console.error('Error fetching counterparts:', error)
-	}
-}
-
-async function fetchPaymentMethods() {
-	try {
-		const { data: paymentMethods, error } = await supabase
-			.from('paymentMethods')
-			.select()
-
-		if (error) throw error
-
-		if (!paymentMethods) {
-			console.error('No counterparts found')
-			return
-		}
-
-		return paymentMethods
-	} catch (error) {
-		console.error('Error fetching payment methods:', error)
-	}
-}
-
-async function fetchCities() {
-	try {
-		const { data: cities, error } = await supabase.from('cities').select()
-
-		if (error) throw error
-
-		if (!cities) {
-			console.error('No cities found')
-			return
-		}
-
-		return cities
-	} catch (error) {
-		console.error('Error fetching cities:', error)
-	}
-}
-
-async function fetchCountries() {
-	try {
-		const { data: countries, error } = await supabase
-			.from('countries')
-			.select()
-
-		if (error) throw error
-
-		if (!countries) {
-			console.error('No countries found')
-			return
-		}
-
-		return countries
-	} catch (error) {
-		console.error('Error fetching countries:', error)
-	}
-}
-
-async function fetchCurrencies() {
-	try {
-		const { data: currencies, error } = await supabase
-			.from('currencies')
-			.select()
-
-		if (error) throw error
-
-		if (!currencies) {
-			console.error('No currencies found')
-			return
-		}
-
-		return currencies
-	} catch (error) {
-		console.error('Error fetching currencies:', error)
-	}
-}
-
-async function fetchAirports() {
-	try {
-		const { data: airports, error } = await supabase
-			.from('airports')
-			.select()
-
-		if (error) throw error
-
-		if (!airports) {
-			console.error('No airports found')
-			return
-		}
-
-		return airports
-	} catch (error) {
-		console.error('Error fetching airports:', error)
-	}
-}
-
-async function fetchAirlines() {
-	try {
-		const { data: airlines, error } = await supabase
-			.from('airlines')
-			.select()
-
-		if (error) throw error
-
-		if (!airlines) {
-			console.error('No airlines found')
-			return
-		}
-
-		return airlines
-	} catch (error) {
-		console.error('Error fetching airlines:', error)
-	}
-}
-
-async function fetchAirlineAlliances() {
-	try {
-		const { data: airlineAlliances, error } = await supabase
-			.from('airlineAlliances')
-			.select()
-
-		if (error) throw error
-
-		if (!airlineAlliances) {
-			console.error('No airline alliances found')
-			return
-		}
-
-		return airlineAlliances
-	} catch (error) {
-		console.error('Error fetching airline alliances:', error)
-	}
-}
-
-async function fetchFlightClasses() {
-	try {
-		const { data: flightClasses, error } = await supabase
-			.from('flightClasses')
-			.select()
-
-		if (error) throw error
-
-		if (!flightClasses) {
-			console.error('No flight classes found')
-			return
-		}
-
-		return flightClasses
-	} catch (error) {
-		console.error('Error fetching flight classes:', error)
-	}
-}
-
-async function fetchFlightLuggageCategories() {
-	try {
-		const { data: flightLuggageCategories, error } = await supabase
-			.from('flightLuggageCategories')
-			.select()
-
-		if (error) throw error
-
-		if (!flightLuggageCategories) {
-			console.error('No flight luggage categories found')
-			return
-		}
-
-		return flightLuggageCategories
-	} catch (error) {
-		console.error('Error fetching flight luggage categories:', error)
-	}
-}
-
-async function fetchFlightSeatCategories() {
-	try {
-		const { data: flightSeatCategories, error } = await supabase
-			.from('flightSeatCategories')
-			.select()
-
-		if (error) throw error
-
-		if (!flightSeatCategories) {
-			console.error('No flight seat categories found')
-			return
-		}
-
-		return flightSeatCategories
-	} catch (error) {
-		console.error('Error fetching flight seat categories:', error)
-	}
-}
-
-async function fetchLoyaltyPrograms() {
-	try {
-		const { data: loyaltyPrograms, error } = await supabase
-			.from('loyaltyPrograms')
-			.select()
-
-		if (error) throw error
-
-		if (!loyaltyPrograms) {
-			console.error('No loyalty programs found')
-			return
-		}
-
-		return loyaltyPrograms
-	} catch (error) {
-		console.error('Error fetching loyalty programs:', error)
-	}
-}
-
-async function fetchPaymentMethodCategories() {
-	try {
-		const { data: paymentMethodCategories, error } = await supabase
-			.from('paymentMethodCategories')
-			.select()
-
-		if (error) throw error
-
-		if (!paymentMethodCategories) {
-			console.error('No payment method categories found')
-			return
-		}
-
-		return paymentMethodCategories
-	} catch (error) {
-		console.error('Error fetching payment method categories:', error)
-	}
-}
-
-async function fetchTransactionCategories() {
-	try {
-		const { data: transactionCategories, error } = await supabase
-			.from('transactionCategories')
-			.select()
-
-		if (error) throw error
-
-		if (!transactionCategories) {
-			console.error('No transaction categories found')
-			return
-		}
-
-		return transactionCategories
-	} catch (error) {
-		console.error('Error fetching transaction categories:', error)
-	}
-}
-
-async function fetchFoodAndDrinkPlaceCategories() {
-	try {
-		const { data: foodAndDrinkPlaceCategories, error } = await supabase
-			.from('foodAndDrinkPlaceCategories')
-			.select()
-
-		if (error) throw error
-
-		if (!foodAndDrinkPlaceCategories) {
-			console.error('No food and drink place categories found')
-			return
-		}
-
-		return foodAndDrinkPlaceCategories
-	} catch (error) {
-		console.error('Error fetching food and drink place categories:', error)
-	}
-}
-
-async function fetchFoodAndDrinkTypeCategories() {
-	try {
-		const { data: foodAndDrinkTypeCategories, error } = await supabase
-			.from('foodAndDrinkTypeCategories')
-			.select()
-
-		if (error) throw error
-
-		if (!foodAndDrinkTypeCategories) {
-			console.error('No food and drink type categories found')
-			return
-		}
-
-		return foodAndDrinkTypeCategories
-	} catch (error) {
-		console.error('Error fetching food and drink type categories:', error)
-	}
-}
-
-async function fetchHealthAndWellnessCategories() {
-	try {
-		const { data: healthAndWellnessCategories, error } = await supabase
-			.from('healthAndWellnessCategories')
-			.select()
-
-		if (error) throw error
-
-		if (!healthAndWellnessCategories) {
-			console.error('No health and wellness categories found')
-			return
-		}
-
-		return healthAndWellnessCategories
-	} catch (error) {
-		console.error('Error fetching health and wellness categories:', error)
-	}
-}
-
-async function fetchHomeCategories() {
-	try {
-		const { data: homeCategories, error } = await supabase
-			.from('homeCategories')
-			.select()
-
-		if (error) throw error
-
-		if (!homeCategories) {
-			console.error('No home categories found')
-			return
-		}
-
-		return homeCategories
-	} catch (error) {
-		console.error('Error fetching home categories:', error)
-	}
-}
-
-async function fetchAccommodationCategories() {
-	try {
-		const { data: accommodationCategories, error } = await supabase
-			.from('accommodationCategories')
-			.select()
-
-		if (error) throw error
-
-		if (!accommodationCategories) {
-			console.error('No accommodation categories found')
-			return
-		}
-
-		return accommodationCategories
-	} catch (error) {
-		console.error('Error fetching accommodation categories:', error)
-	}
-}
-
-async function fetchShoppingCategories() {
-	try {
-		const { data: shoppingCategories, error } = await supabase
-			.from('shoppingCategories')
-			.select()
-
-		if (error) throw error
-
-		if (!shoppingCategories) {
-			console.error('No shopping categories found')
-			return
-		}
-
-		return shoppingCategories
-	} catch (error) {
-		console.error('Error fetching shopping categories:', error)
-	}
-}
-
-async function fetchTransportationCategories() {
-	try {
-		const { data: transportationCategories, error } = await supabase
-			.from('transportationCategories')
-			.select()
-
-		if (error) throw error
-
-		if (!transportationCategories) {
-			console.error('No transportation categories found')
-			return
-		}
-
-		return transportationCategories
-	} catch (error) {
-		console.error('Error fetching transportation categories:', error)
-	}
-}
-
-async function fetchCarCategories() {
-	try {
-		const { data: carCategories, error } = await supabase
-			.from('carCategories')
-			.select()
-
-		if (error) throw error
-
-		if (!carCategories) {
-			console.error('No car categories found')
-			return
-		}
-
-		return carCategories
-	} catch (error) {
-		console.error('Error fetching car categories:', error)
-	}
-}
-
-// helper functions
-type UpdateEmailProps = {
+type HandleUpdateEmailProps = {
 	email: string
 }
 
-export async function updateEmail({ email }: UpdateEmailProps) {
+export async function handleUpdateEmail({ email }: HandleUpdateEmailProps) {
 	const userId = useUser.getState().id
 
 	if (!userId) {
@@ -1230,9 +645,7 @@ export async function updateEmail({ email }: UpdateEmailProps) {
 			throw new Error('The new email is the same as the current one.')
 		}
 
-		const { error } = await supabase.auth.updateUser({
-			email: email,
-		})
+		const error = await updateEmail({ email: email })
 
 		if (error) throw error
 	} catch (error) {
@@ -1243,11 +656,13 @@ export async function updateEmail({ email }: UpdateEmailProps) {
 	}
 }
 
-type SetFirstNameProps = {
+type HandleUpdateFirstNameProps = {
 	firstName: string
 }
 
-export async function setFirstName({ firstName }: SetFirstNameProps) {
+export async function handleUpdateFirstName({
+	firstName,
+}: HandleUpdateFirstNameProps) {
 	const userId = useUser.getState().id
 
 	if (!userId) {
@@ -1276,10 +691,10 @@ export async function setFirstName({ firstName }: SetFirstNameProps) {
 			)
 		}
 
-		const { error } = await supabase
-			.from('profiles')
-			.update({ firstName: firstName })
-			.eq('id', userId)
+		const error = await updateFirstName({
+			userId: userId,
+			firstName: firstName,
+		})
 
 		if (error) throw error
 	} catch (error) {
@@ -1292,11 +707,13 @@ export async function setFirstName({ firstName }: SetFirstNameProps) {
 	}
 }
 
-type SetLastNameProps = {
+type HandleUpdateLastNameProps = {
 	lastName: string
 }
 
-export async function setLastName({ lastName }: SetLastNameProps) {
+export async function handleUpdateLastName({
+	lastName,
+}: HandleUpdateLastNameProps) {
 	const userId = useUser.getState().id
 
 	if (!userId) {
@@ -1323,10 +740,10 @@ export async function setLastName({ lastName }: SetLastNameProps) {
 			throw new Error('The new last name is the same as the current one.')
 		}
 
-		const { error } = await supabase
-			.from('profiles')
-			.update({ lastName: lastName })
-			.eq('id', userId)
+		const error = await updateLastName({
+			userId: userId,
+			lastName: lastName,
+		})
 
 		if (error) throw error
 	} catch (error) {
@@ -1339,11 +756,13 @@ export async function setLastName({ lastName }: SetLastNameProps) {
 	}
 }
 
-type SetBirthDateProps = {
+type HandleUpdateBirthDateProps = {
 	birthDate: Date | null
 }
 
-export async function setBirthDate({ birthDate }: SetBirthDateProps) {
+export async function handleUpdateBirthDate({
+	birthDate,
+}: HandleUpdateBirthDateProps) {
 	const userId = useUser.getState().id
 
 	if (!userId) {
@@ -1365,10 +784,10 @@ export async function setBirthDate({ birthDate }: SetBirthDateProps) {
 			)
 		}
 
-		const { error } = await supabase
-			.from('profiles')
-			.update({ birthDate: dayjs(birthDate).format() })
-			.eq('id', userId)
+		const error = await updateBirthDate({
+			userId: userId,
+			birthDate: dayjs(birthDate).format(),
+		})
 
 		if (error) throw error
 	} catch (error) {
@@ -1379,11 +798,13 @@ export async function setBirthDate({ birthDate }: SetBirthDateProps) {
 	}
 }
 
-type SetWebsiteProps = {
+type HandleUpdateWebsiteProps = {
 	website: string | null
 }
 
-export async function setWebsite({ website }: SetWebsiteProps) {
+export async function handleUpdateWebsite({
+	website,
+}: HandleUpdateWebsiteProps) {
 	const userId = useUser.getState().id
 
 	if (!userId) {
@@ -1403,10 +824,10 @@ export async function setWebsite({ website }: SetWebsiteProps) {
 			throw new Error('The new website is the same as the current one.')
 		}
 
-		const { error } = await supabase
-			.from('profiles')
-			.update({ website: website })
-			.eq('id', userId)
+		const error = await updateWebsite({
+			userId: userId,
+			website: website,
+		})
 
 		if (error) throw error
 	} catch (error) {
@@ -1417,11 +838,13 @@ export async function setWebsite({ website }: SetWebsiteProps) {
 	}
 }
 
-type SetAvatarUrlProps = {
+type HandleUpdateAvatarUrlProps = {
 	avatarUrl: string | null
 }
 
-export async function setAvatarUrl({ avatarUrl }: SetAvatarUrlProps) {
+export async function handleUpdateAvatarUrl({
+	avatarUrl,
+}: HandleUpdateAvatarUrlProps) {
 	const userId = useUser.getState().id
 
 	if (!userId) {
@@ -1443,10 +866,10 @@ export async function setAvatarUrl({ avatarUrl }: SetAvatarUrlProps) {
 			)
 		}
 
-		const { error } = await supabase
-			.from('profiles')
-			.update({ avatarUrl: avatarUrl })
-			.eq('id', userId)
+		const error = await updateAvatarUrl({
+			userId: userId,
+			avatarUrl: avatarUrl,
+		})
 
 		if (error) throw error
 	} catch (error) {
@@ -1485,12 +908,10 @@ export async function setIsOnboardingCompleted({
 			)
 		}
 
-		const { error } = await supabase
-			.from('profiles')
-			.update({
-				onboardingCompletedDate: value ? dayjs().toString() : null,
-			})
-			.eq('id', userId)
+		const error = await updateOnboardingCompletedDate({
+			userId: userId,
+			onboardingCompletedDate: value ? dayjs().format() : null,
+		})
 
 		if (error) throw error
 	} catch (error) {
@@ -1501,13 +922,13 @@ export async function setIsOnboardingCompleted({
 	}
 }
 
-type setPrimaryCurrencyProps = {
-	primaryCurrency: Currency
+type HandleUpdatePrimaryCurrencyProps = {
+	currency: Currency
 }
 
-export async function setPrimaryCurrency({
-	primaryCurrency,
-}: setPrimaryCurrencyProps) {
+export async function handleUpdatePrimaryCurrency({
+	currency,
+}: HandleUpdatePrimaryCurrencyProps) {
 	const userId = useUser.getState().id
 
 	if (!userId) {
@@ -1520,19 +941,19 @@ export async function setPrimaryCurrency({
 	const previousPrimaryCurrency = useUser.getState().primaryCurrency
 
 	// optimistically set the state
-	setPrimaryCurrency(primaryCurrency)
+	setPrimaryCurrency(currency)
 
 	try {
-		if (primaryCurrency === previousPrimaryCurrency) {
+		if (currency === previousPrimaryCurrency) {
 			throw new Error(
 				'The new primary currency is the same as the current one.',
 			)
 		}
 
-		const { error } = await supabase
-			.from('profiles')
-			.update({ primaryCurrency: primaryCurrency.id })
-			.eq('id', userId)
+		const error = await updatePrimaryCurrency({
+			userId: userId,
+			currencyId: currency.id,
+		})
 
 		if (error) throw error
 	} catch (error) {
@@ -1543,11 +964,13 @@ export async function setPrimaryCurrency({
 	}
 }
 
-type SetLocationProps = {
+type HandleUpdateLocationProps = {
 	city: City
 }
 
-export async function setLocation({ city }: SetLocationProps) {
+export async function handleUpdateLocation({
+	city,
+}: HandleUpdateLocationProps) {
 	const userId = useUser.getState().id
 
 	if (!userId) {
@@ -1573,10 +996,7 @@ export async function setLocation({ city }: SetLocationProps) {
 			throw new Error('The new city is the same as the current one.')
 		}
 
-		const { error } = await supabase
-			.from('profiles')
-			.update({ city: city.id })
-			.eq('id', userId)
+		const error = await updateCity({ userId: userId, cityId: city.id })
 
 		if (error) throw error
 	} catch (error) {
@@ -1616,21 +1036,19 @@ async function addCounterpart({
 	// if there are is no counterpart with this name in the database, create one
 	if (!existingMatchingCounterpart) {
 		try {
-			const { data: newCounterpart, error } = await supabase
-				.from('counterparts')
-				.insert({
-					user: userId,
-					name: name,
-					isIncome: isIncome,
-					isExpense: isExpense,
-				})
-				.select()
+			const { error, newCounterpart } = await insertCounterpart({
+				userId: userId,
+				name: name,
+				isIncome: isIncome,
+				isExpense: isExpense,
+			})
 
-			if (error) throw error
+			if (error || !newCounterpart)
+				throw new Error('Error adding counterpart to db')
 
-			setCounterparts([...existingCounterparts, newCounterpart[0]])
+			setCounterparts([...existingCounterparts, newCounterpart])
 
-			return newCounterpart[0]
+			return newCounterpart
 		} catch (error) {
 			console.error('Error adding counterpart to db:', error)
 			return null
@@ -1656,27 +1074,27 @@ async function addCounterpart({
 		}
 
 		try {
-			const { data: updatedCounterpart, error } = await supabase
-				.from('counterparts')
-				.update(data)
-				.eq('id', existingMatchingCounterpart.id)
-				.select()
+			const { error, updatedCounterpart } = await updateCounterpart({
+				counterpartId: existingMatchingCounterpart.id,
+				updateData: data,
+			})
 
-			if (error) throw error
+			if (error || !updatedCounterpart)
+				throw new Error('Error updating counterpart in db')
 
 			setCounterparts(
 				existingCounterparts.map((counterpart) =>
-					counterpart.id === updatedCounterpart[0].id
+					counterpart.id === updatedCounterpart.id
 						? {
 								...counterpart,
-								isIncome: updatedCounterpart[0].isIncome,
-								isExpense: updatedCounterpart[0].isExpense,
+								isIncome: updatedCounterpart.isIncome,
+								isExpense: updatedCounterpart.isExpense,
 						  }
 						: counterpart,
 				),
 			)
 
-			return updatedCounterpart[0]
+			return updatedCounterpart
 		} catch (error) {
 			console.error('Error updating counterpart in db:', error)
 			return null
@@ -1709,26 +1127,25 @@ async function addFoodAndDrinkTransaction({
 	}
 
 	try {
-		const { data: newFoodAndDrinkTransaction, error } = await supabase
-			.from('foodAndDrinkTransactions')
-			.insert({
-				transaction: parentTransactionId,
-				placeCategory: foodAndDrinkTransaction.placeCategoryId,
-				typeCategory: foodAndDrinkTransaction.typeCategoryId,
+		const { newFoodAndDrinkTransaction, error } =
+			await insertFoodAndDrinkTransaction({
+				parentTransactionId: parentTransactionId,
+				placeCategoryId: foodAndDrinkTransaction.placeCategoryId,
+				typeCategoryId: foodAndDrinkTransaction.typeCategoryId,
 				eatInTakeAway: foodAndDrinkTransaction.eatInTakeAway,
 				isLeftovers: foodAndDrinkTransaction.isLeftovers,
 				isDelivery: foodAndDrinkTransaction.isDelivery,
 				isWorked: foodAndDrinkTransaction.isWorked,
 			})
-			.select()
 
-		if (error) throw error
+		if (error || !newFoodAndDrinkTransaction)
+			throw new Error('Error adding food and drink transaction to db')
 
 		const placeCategory = getFoodAndDrinkPlaceCategoryFromId(
-			newFoodAndDrinkTransaction[0].placeCategory,
+			newFoodAndDrinkTransaction.placeCategory,
 		)
 		const typeCategory = getFoodAndDrinkTypeCategoryFromId(
-			newFoodAndDrinkTransaction[0].typeCategory,
+			newFoodAndDrinkTransaction.typeCategory,
 		)
 
 		if (!placeCategory || !typeCategory) {
@@ -1737,15 +1154,15 @@ async function addFoodAndDrinkTransaction({
 		}
 
 		const formattedFoodAndDrinkTransaction = {
-			id: newFoodAndDrinkTransaction[0].id,
+			id: newFoodAndDrinkTransaction.id,
 			placeCategory: placeCategory,
 			typeCategory: typeCategory,
-			eatInTakeAway: newFoodAndDrinkTransaction[0].eatInTakeAway,
-			isLeftovers: newFoodAndDrinkTransaction[0].isLeftovers,
-			isDelivery: newFoodAndDrinkTransaction[0].isDelivery,
-			isWorked: newFoodAndDrinkTransaction[0].isWorked,
-			createdAt: newFoodAndDrinkTransaction[0].createdAt,
-			updatedAt: newFoodAndDrinkTransaction[0].updatedAt,
+			eatInTakeAway: newFoodAndDrinkTransaction.eatInTakeAway,
+			isLeftovers: newFoodAndDrinkTransaction.isLeftovers,
+			isDelivery: newFoodAndDrinkTransaction.isDelivery,
+			isWorked: newFoodAndDrinkTransaction.isWorked,
+			createdAt: newFoodAndDrinkTransaction.createdAt,
+			updatedAt: newFoodAndDrinkTransaction.updatedAt,
 		}
 
 		return formattedFoodAndDrinkTransaction
@@ -1773,18 +1190,19 @@ async function addHealthAndWellnessTransaction({
 	}
 
 	try {
-		const { data: newHealthAndWellnessTransaction, error } = await supabase
-			.from('healthAndWellnessTransactions')
-			.insert({
-				transaction: parentTransactionId,
-				category: healthAndWellnessTransaction.categoryId,
+		const { newHealthAndWellnessTransaction, error } =
+			await insertHealthAndWellnessTransaction({
+				parentTransactionId: parentTransactionId,
+				categoryId: healthAndWellnessTransaction.categoryId,
 			})
-			.select()
 
-		if (error) throw error
+		if (error || !newHealthAndWellnessTransaction)
+			throw new Error(
+				'Error adding health and wellness transaction to db',
+			)
 
 		const category = getHealthAndWellnessCategoryFromId(
-			newHealthAndWellnessTransaction[0].category,
+			newHealthAndWellnessTransaction.category,
 		)
 
 		if (!category) {
@@ -1793,10 +1211,10 @@ async function addHealthAndWellnessTransaction({
 		}
 
 		const formattedHealthAndWellnessTransaction = {
-			id: newHealthAndWellnessTransaction[0].id,
+			id: newHealthAndWellnessTransaction.id,
 			category: category,
-			createdAt: newHealthAndWellnessTransaction[0].createdAt,
-			updatedAt: newHealthAndWellnessTransaction[0].updatedAt,
+			createdAt: newHealthAndWellnessTransaction.createdAt,
+			updatedAt: newHealthAndWellnessTransaction.updatedAt,
 		}
 
 		return formattedHealthAndWellnessTransaction
@@ -1810,7 +1228,6 @@ async function addHealthAndWellnessTransaction({
 }
 
 type AccommodationTransactionInput = {
-	type: AccommodationType
 	categoryId: number
 }
 
@@ -1828,18 +1245,17 @@ async function addAccommodationTransaction({
 	}
 
 	try {
-		const { data: newAccommodationTransaction, error } = await supabase
-			.from('accommodationTransactions')
-			.insert({
-				homeTransaction: parentHomeTransactionId,
-				category: accommodationTransaction.categoryId,
+		const { newAccommodationTransaction, error } =
+			await insertAccommodationTransaction({
+				parentHomeTransactionId: parentHomeTransactionId,
+				categoryId: accommodationTransaction.categoryId,
 			})
-			.select()
 
-		if (error) throw error
+		if (error || !newAccommodationTransaction)
+			throw new Error('Error adding accommodation transaction to db')
 
 		const category = getAccommodationCategoryFromId(
-			newAccommodationTransaction[0].category,
+			newAccommodationTransaction.category,
 		)
 
 		if (!category) {
@@ -1848,10 +1264,10 @@ async function addAccommodationTransaction({
 		}
 
 		const formattedAccommodationTransaction = {
-			id: newAccommodationTransaction[0].id,
+			id: newAccommodationTransaction.id,
 			category: category,
-			createdAt: newAccommodationTransaction[0].createdAt,
-			updatedAt: newAccommodationTransaction[0].updatedAt,
+			createdAt: newAccommodationTransaction.createdAt,
+			updatedAt: newAccommodationTransaction.updatedAt,
 		}
 
 		return formattedAccommodationTransaction
@@ -1880,17 +1296,15 @@ async function addHomeTransaction({
 	}
 
 	try {
-		const { data: newHomeTransaction, error } = await supabase
-			.from('homeTransactions')
-			.insert({
-				transaction: parentTransactionId,
-				category: homeTransaction.categoryId,
-			})
-			.select()
+		const { newHomeTransaction, error } = await insertHomeTransaction({
+			parentTransactionId: parentTransactionId,
+			categoryId: homeTransaction.categoryId,
+		})
 
-		if (error) throw error
+		if (error || !newHomeTransaction)
+			throw new Error('Error adding home transaction to db')
 
-		const category = getHomeCategoryFromId(newHomeTransaction[0].category)
+		const category = getHomeCategoryFromId(newHomeTransaction.category)
 
 		if (!category) {
 			console.error('Home transaction data is incomplete')
@@ -1898,16 +1312,16 @@ async function addHomeTransaction({
 		}
 
 		const newAccommodationTransaction = await addAccommodationTransaction({
-			parentHomeTransactionId: newHomeTransaction[0].id,
+			parentHomeTransactionId: newHomeTransaction.id,
 			accommodationTransaction: homeTransaction.accommodationTransaction,
 		})
 
 		const formattedHomeTransaction = {
-			id: newHomeTransaction[0].id,
+			id: newHomeTransaction.id,
 			category: category,
 			accommodationTransaction: newAccommodationTransaction,
-			createdAt: newHomeTransaction[0].createdAt,
-			updatedAt: newHomeTransaction[0].updatedAt,
+			createdAt: newHomeTransaction.createdAt,
+			updatedAt: newHomeTransaction.updatedAt,
 		}
 
 		return formattedHomeTransaction
@@ -1935,18 +1349,17 @@ async function addShoppingTransaction({
 	}
 
 	try {
-		const { data: newShoppingTransaction, error } = await supabase
-			.from('shoppingTransactions')
-			.insert({
-				transaction: parentTransactionId,
-				category: shoppingTransaction.categoryId,
+		const { newShoppingTransaction, error } =
+			await insertShoppingTransaction({
+				parentTransactionId: parentTransactionId,
+				categoryId: shoppingTransaction.categoryId,
 			})
-			.select()
 
-		if (error) throw error
+		if (error || !newShoppingTransaction)
+			throw new Error('Error adding shopping transaction to db')
 
 		const category = getShoppingCategoryFromId(
-			newShoppingTransaction[0].category,
+			newShoppingTransaction.category,
 		)
 
 		if (!category) {
@@ -1955,10 +1368,10 @@ async function addShoppingTransaction({
 		}
 
 		const formattedShoppingTransaction = {
-			id: newShoppingTransaction[0].id,
+			id: newShoppingTransaction.id,
 			category: category,
-			createdAt: newShoppingTransaction[0].createdAt,
-			updatedAt: newShoppingTransaction[0].updatedAt,
+			createdAt: newShoppingTransaction.createdAt,
+			updatedAt: newShoppingTransaction.updatedAt,
 		}
 
 		return formattedShoppingTransaction
@@ -1993,36 +1406,34 @@ async function addFlightTransactionSegments({
 	try {
 		const newFlightTransactionSegments = await Promise.all(
 			segments.map(async (segment) => {
-				const { data: newFlightTransactionSegment, error } =
-					await supabase
-						.from('flightTransactionSegments')
-						.insert({
-							flightTransaction: parentFlightTransactionId,
-							order: segment.order,
-							departureAirport: segment.departureAirportId,
-							arrivalAirport: segment.arrivalAirportId,
-							airline: segment.airlineId,
-							class: segment.classId,
-							seatCategory: segment.seatCategoryId,
-						})
-						.select()
+				const { newFlightTransactionSegment, error } =
+					await insertFlightTransactionSegment({
+						parentFlightTransactionId: parentFlightTransactionId,
+						order: segment.order,
+						departureAirportId: segment.departureAirportId,
+						arrivalAirportId: segment.arrivalAirportId,
+						airlineId: segment.airlineId,
+						classId: segment.classId,
+						seatCategoryId: segment.seatCategoryId,
+					})
 
-				if (error) throw error
+				if (error || !newFlightTransactionSegment)
+					throw new Error('Error adding flight segment to db')
 
 				const departureAirport = getAirportFromId(
-					newFlightTransactionSegment[0].departureAirport,
+					newFlightTransactionSegment.departureAirport,
 				)
 				const arrivalAirport = getAirportFromId(
-					newFlightTransactionSegment[0].arrivalAirport,
+					newFlightTransactionSegment.arrivalAirport,
 				)
 				const airline = getAirlineFromId(
-					newFlightTransactionSegment[0].airline,
+					newFlightTransactionSegment.airline,
 				)
 				const flightClass = getFlightClassFromId(
-					newFlightTransactionSegment[0].class,
+					newFlightTransactionSegment.class,
 				)
 				const seatCategory = getFlightSeatCategoryFromId(
-					newFlightTransactionSegment[0].seatCategory,
+					newFlightTransactionSegment.seatCategory,
 				)
 
 				if (
@@ -2037,15 +1448,15 @@ async function addFlightTransactionSegments({
 				}
 
 				return {
-					id: newFlightTransactionSegment[0].id,
-					order: newFlightTransactionSegment[0].order,
+					id: newFlightTransactionSegment.id,
+					order: newFlightTransactionSegment.order,
 					departureAirport: departureAirport,
 					arrivalAirport: arrivalAirport,
 					airline: airline,
 					class: flightClass,
 					seatCategory: seatCategory,
-					createdAt: newFlightTransactionSegment[0].createdAt,
-					updatedAt: newFlightTransactionSegment[0].updatedAt,
+					createdAt: newFlightTransactionSegment.createdAt,
+					updatedAt: newFlightTransactionSegment.updatedAt,
 				}
 			}),
 		)
@@ -2083,19 +1494,18 @@ async function addFlightTransaction({
 	}
 
 	try {
-		const { data: newFlightTransaction, error } = await supabase
-			.from('flightTransactions')
-			.insert({
-				transportationTransaction: parentTransportationTransactionId,
-				flyOutDate: dayjs(flightTransaction.flyOutDate).format(),
-				luggageCategory: flightTransaction.luggageCategoryId,
-			})
-			.select()
+		const { newFlightTransaction, error } = await insertFlightTransaction({
+			parentTransportationTransactionId:
+				parentTransportationTransactionId,
+			flyOutDate: dayjs(flightTransaction.flyOutDate).format(),
+			luggageCategoryId: flightTransaction.luggageCategoryId,
+		})
 
-		if (error) throw error
+		if (error || !newFlightTransaction)
+			throw new Error('Error adding flight transaction to db')
 
 		const luggageCategory = getFlightLuggageCategoryFromId(
-			newFlightTransaction[0].luggageCategory,
+			newFlightTransaction.luggageCategory,
 		)
 
 		if (!luggageCategory) {
@@ -2105,7 +1515,7 @@ async function addFlightTransaction({
 
 		const newFlightTransactionSegments = await addFlightTransactionSegments(
 			{
-				parentFlightTransactionId: newFlightTransaction[0].id,
+				parentFlightTransactionId: newFlightTransaction.id,
 				segments: flightTransaction.segments,
 			},
 		)
@@ -2116,12 +1526,12 @@ async function addFlightTransaction({
 		}
 
 		const formattedFlightTransaction = {
-			id: newFlightTransaction[0].id,
+			id: newFlightTransaction.id,
 			flyOutDate: flightTransaction.flyOutDate,
 			luggageCategory: luggageCategory,
 			segments: newFlightTransactionSegments,
-			createdAt: newFlightTransaction[0].createdAt,
-			updatedAt: newFlightTransaction[0].updatedAt,
+			createdAt: newFlightTransaction.createdAt,
+			updatedAt: newFlightTransaction.updatedAt,
 		}
 
 		return formattedFlightTransaction
@@ -2149,17 +1559,16 @@ async function addCarTransaction({
 	}
 
 	try {
-		const { data: newCarTransaction, error } = await supabase
-			.from('carTransactions')
-			.insert({
-				transportationTransaction: parentTransportationTransactionId,
-				category: carTransaction.categoryId,
-			})
-			.select()
+		const { newCarTransaction, error } = await insertCarTransaction({
+			parentTransportationTransactionId:
+				parentTransportationTransactionId,
+			categoryId: carTransaction.categoryId,
+		})
 
-		if (error) throw error
+		if (error || !newCarTransaction)
+			throw new Error('Error adding car transaction to db')
 
-		const category = getCarCategoryFromId(newCarTransaction[0].category)
+		const category = getCarCategoryFromId(newCarTransaction.category)
 
 		if (!category) {
 			console.error('Car transaction data is incomplete')
@@ -2167,10 +1576,10 @@ async function addCarTransaction({
 		}
 
 		const formattedCarTransaction = {
-			id: newCarTransaction[0].id,
+			id: newCarTransaction.id,
 			category: category,
-			createdAt: newCarTransaction[0].createdAt,
-			updatedAt: newCarTransaction[0].updatedAt,
+			createdAt: newCarTransaction.createdAt,
+			updatedAt: newCarTransaction.updatedAt,
 		}
 
 		return formattedCarTransaction
@@ -2200,18 +1609,17 @@ async function addTransportationTransaction({
 	}
 
 	try {
-		const { data: newTransportationTransaction, error } = await supabase
-			.from('transportationTransactions')
-			.insert({
-				transaction: parentTransactionId,
-				category: transportationTransaction.categoryId,
+		const { newTransportationTransaction, error } =
+			await insertTransportationTransaction({
+				parentTransactionId: parentTransactionId,
+				categoryId: transportationTransaction.categoryId,
 			})
-			.select()
 
-		if (error) throw error
+		if (error || !newTransportationTransaction)
+			throw new Error('Error adding transportation transaction to db')
 
 		const category = getTransportationCategoryFromId(
-			newTransportationTransaction[0].category,
+			newTransportationTransaction.category,
 		)
 
 		if (!category) {
@@ -2220,24 +1628,22 @@ async function addTransportationTransaction({
 		}
 
 		const newFlightTransaction = await addFlightTransaction({
-			parentTransportationTransactionId:
-				newTransportationTransaction[0].id,
+			parentTransportationTransactionId: newTransportationTransaction.id,
 			flightTransaction: transportationTransaction.flightTransaction,
 		})
 
 		const newCarTransaction = await addCarTransaction({
-			parentTransportationTransactionId:
-				newTransportationTransaction[0].id,
+			parentTransportationTransactionId: newTransportationTransaction.id,
 			carTransaction: transportationTransaction.carTransaction,
 		})
 
 		const formattedTransportationTransaction = {
-			id: newTransportationTransaction[0].id,
+			id: newTransportationTransaction.id,
 			category: category,
 			flightTransaction: newFlightTransaction,
 			carTransaction: newCarTransaction,
-			createdAt: newTransportationTransaction[0].createdAt,
-			updatedAt: newTransportationTransaction[0].updatedAt,
+			createdAt: newTransportationTransaction.createdAt,
+			updatedAt: newTransportationTransaction.updatedAt,
 		}
 
 		return formattedTransportationTransaction
@@ -2308,103 +1714,114 @@ export async function addTransaction({
 	}
 
 	try {
-		const { data: newTransaction, error } = await supabase
-			.from('transactions')
-			.insert({
-				user: userId,
+		// const { data: newTransaction, error } = await supabase
+		// 	.from('transactions')
+		// 	.insert({
+		// 		user: userId,
+		// 		item: item,
+		// 		amount: amount,
+		// 		tip: tip,
+		// 		city: cityId,
+		// 		currency: currencyId,
+		// 		transactionDate: dayjs(date).format('YYYY-MM-DD'),
+		// 		description: description,
+		// 		counterpart: counterpart.id,
+		// 		category: categoryId,
+		// 		paymentMethod: paymentMethodId,
+		// 	})
+		// 	.select()
+
+		const { newTransaction, error } = await insertTransaction({
+			userId: userId,
+			item: item,
+			amount: amount,
+			tip: tip,
+			cityId: cityId,
+			currencyId: currencyId,
+			transactionDate: dayjs(date).format(),
+			description: description,
+			counterpartId: counterpart.id,
+			categoryId: categoryId,
+			paymentMethodId: paymentMethodId,
+		})
+
+		if (error || !newTransaction)
+			throw new Error('Error adding transaction to db')
+
+		const setTransactions = useUser.getState().setTransactions
+
+		const existingTransactions = useUser.getState().transactions
+		const city = getCityFromId(cityId)
+		const country = getCountryFromCityId(cityId)
+		const currency = getCurrencyFromId(currencyId)
+		const paymentMethod = getPaymentMethodFromId(paymentMethodId)
+
+		if (!city || !country || !currency || !paymentMethod) {
+			console.error('Transaction data is incomplete')
+			return
+		}
+
+		const newFoodAndDrinkTransaction = await addFoodAndDrinkTransaction({
+			foodAndDrinkTransaction,
+			parentTransactionId: newTransaction.id,
+		})
+		const newHealthAndWellnessTransaction =
+			await addHealthAndWellnessTransaction({
+				healthAndWellnessTransaction,
+				parentTransactionId: newTransaction.id,
+			})
+		const newHomeTransaction = await addHomeTransaction({
+			homeTransaction,
+			parentTransactionId: newTransaction.id,
+		})
+		const newShoppingTransaction = await addShoppingTransaction({
+			shoppingTransaction,
+			parentTransactionId: newTransaction.id,
+		})
+		const newTransportationTransaction = await addTransportationTransaction(
+			{
+				transportationTransaction,
+				parentTransactionId: newTransaction.id,
+			},
+		)
+
+		setTransactions([
+			...existingTransactions,
+			{
+				id: newTransaction.id,
 				item: item,
+				description: description,
 				amount: amount,
 				tip: tip,
-				city: cityId,
-				currency: currencyId,
-				transactionDate: dayjs(date).format('YYYY-MM-DD'),
-				description: description,
-				counterpart: counterpart.id,
-				category: categoryId,
-				paymentMethod: paymentMethodId,
-			})
-			.select()
-
-		if (error) return error
-
-		if (newTransaction[0]) {
-			const setTransactions = useUser.getState().setTransactions
-
-			const existingTransactions = useUser.getState().transactions
-			const city = getCityFromId(cityId)
-			const country = getCountryFromCityId(cityId)
-			const currency = getCurrencyFromId(currencyId)
-			const paymentMethod = getPaymentMethodFromId(paymentMethodId)
-
-			if (!city || !country || !currency || !paymentMethod) {
-				console.error('Transaction data is incomplete')
-				return
-			}
-
-			const newFoodAndDrinkTransaction = await addFoodAndDrinkTransaction(
-				{
-					foodAndDrinkTransaction,
-					parentTransactionId: newTransaction[0].id,
-				},
-			)
-			const newHealthAndWellnessTransaction =
-				await addHealthAndWellnessTransaction({
-					healthAndWellnessTransaction,
-					parentTransactionId: newTransaction[0].id,
-				})
-			const newHomeTransaction = await addHomeTransaction({
-				homeTransaction,
-				parentTransactionId: newTransaction[0].id,
-			})
-			const newShoppingTransaction = await addShoppingTransaction({
-				shoppingTransaction,
-				parentTransactionId: newTransaction[0].id,
-			})
-			const newTransportationTransaction =
-				await addTransportationTransaction({
-					transportationTransaction,
-					parentTransactionId: newTransaction[0].id,
-				})
-
-			setTransactions([
-				...existingTransactions,
-				{
-					id: newTransaction[0].id,
-					item: item,
-					description: description,
-					amount: amount,
-					tip: tip,
-					isIncome: transactionCategory?.isIncome,
-					transactionDate: date,
-					counterpart: counterpart,
-					currency: currency,
-					city: city,
-					country: country,
-					category: transactionCategory,
-					paymentMethod: paymentMethod,
-					foodAndDrinkTransaction: newFoodAndDrinkTransaction,
-					healthAndWellnessTransaction:
-						newHealthAndWellnessTransaction,
-					homeTransaction: newHomeTransaction,
-					shoppingTransaction: newShoppingTransaction,
-					transportationTransaction: newTransportationTransaction,
-					createdAt: newTransaction[0].createdAt,
-					updatedAt: newTransaction[0].updatedAt,
-				},
-			])
-		}
+				isIncome: transactionCategory?.isIncome,
+				transactionDate: date,
+				counterpart: counterpart,
+				currency: currency,
+				city: city,
+				country: country,
+				category: transactionCategory,
+				paymentMethod: paymentMethod,
+				foodAndDrinkTransaction: newFoodAndDrinkTransaction,
+				healthAndWellnessTransaction: newHealthAndWellnessTransaction,
+				homeTransaction: newHomeTransaction,
+				shoppingTransaction: newShoppingTransaction,
+				transportationTransaction: newTransportationTransaction,
+				createdAt: newTransaction.createdAt,
+				updatedAt: newTransaction.updatedAt,
+			},
+		])
 	} catch (error) {
 		console.error('Error adding transaction to db:', error)
 	}
 }
 
-type DeleteTransactionProps = {
+type HandleDeleteTransactionProps = {
 	transactionId: string
 }
 
-export async function deleteTransaction({
+export async function handleDeleteTransaction({
 	transactionId,
-}: DeleteTransactionProps) {
+}: HandleDeleteTransactionProps) {
 	const setTransactions = useUser.getState().setTransactions
 
 	const existingTransactions = useUser.getState().transactions
@@ -2419,10 +1836,9 @@ export async function deleteTransaction({
 	}
 
 	try {
-		const { error } = await supabase
-			.from('transactions')
-			.delete()
-			.eq('id', transactionId)
+		const error = await deleteTransaction({
+			transactionId: transactionId,
+		})
 
 		if (error) throw error
 
