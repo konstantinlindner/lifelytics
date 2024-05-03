@@ -224,16 +224,21 @@ export async function InitializeStore() {
 	const setCounterparts = useUser.getState().setCounterparts
 	const setPaymentMethods = useUser.getState().setPaymentMethods
 
-	const session = await fetchSession()
-	if (!session) return
-	setEmail(session.user.email)
+	const { error, data } = await fetchSession()
+
+	if (error) {
+		console.error('Error fetching session:', error)
+		return
+	}
+
+	if (!data.session) return
+
+	setEmail(data.session.user.email)
 
 	const [
-		profile,
-		counterparts,
-		paymentMethods,
-		transactions,
-		foodAndDrinkTransactions,
+		{ profile },
+		{ transactions },
+		{ foodAndDrinkTransactions },
 		healthAndWellnessTransactions,
 		homeTransactions,
 		accommodationTransactions,
@@ -242,10 +247,10 @@ export async function InitializeStore() {
 		flightTransactions,
 		flightTransactionSegments,
 		carTransactions,
+		counterparts,
+		paymentMethods,
 	] = await Promise.all([
 		fetchProfile(),
-		fetchCounterparts(),
-		fetchPaymentMethods(),
 		fetchTransactions(),
 		fetchFoodAndDrinkTransactions(),
 		fetchHealthAndWellnessTransactions(),
@@ -256,6 +261,8 @@ export async function InitializeStore() {
 		fetchFlightTransactions(),
 		fetchFlightTransactionSegments(),
 		fetchCarTransactions(),
+		fetchCounterparts(),
+		fetchPaymentMethods(),
 	])
 
 	if (profile) {
