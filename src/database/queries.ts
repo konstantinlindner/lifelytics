@@ -34,78 +34,34 @@ export async function signOut() {
 
 // select
 export async function fetchSession() {
-	try {
-		const { data, error } = await supabase.auth.getSession()
+	const { data, error } = await supabase.auth.getSession()
 
-		if (error) throw error
-
-		if (!data) {
-			console.error('No data for session returned')
-			return
-		}
-
-		return data.session
-	} catch (error) {
-		console.error('Error fetching session:', error)
-	}
+	return { error, data }
 }
 
 export async function fetchProfile() {
-	try {
-		const { data: profile, error } = await supabase
-			.from('profiles')
-			.select()
-			.single()
+	const { data: profile, error } = await supabase
+		.from('profiles')
+		.select()
+		.single()
 
-		if (error) throw error
-
-		if (!profile) {
-			console.error('No profile found')
-			return
-		}
-
-		return profile
-	} catch (error) {
-		console.error('Error fetching profile:', error)
-	}
+	return { profile, error }
 }
 
 export async function fetchTransactions() {
-	try {
-		const { data: transactions, error } = await supabase
-			.from('transactions')
-			.select()
+	const { data: transactions, error } = await supabase
+		.from('transactions')
+		.select()
 
-		if (error) throw error
-
-		if (!transactions) {
-			console.error('No transactions found')
-			return
-		}
-
-		return transactions
-	} catch (error) {
-		console.error('Error fetching transactions:', error)
-	}
+	return { transactions, error }
 }
 
 export async function fetchFoodAndDrinkTransactions() {
-	try {
-		const { data: foodAndDrinkTransactions, error } = await supabase
-			.from('foodAndDrinkTransactions')
-			.select()
+	const { data: foodAndDrinkTransactions, error } = await supabase
+		.from('foodAndDrinkTransactions')
+		.select()
 
-		if (error) throw error
-
-		if (!foodAndDrinkTransactions) {
-			console.error('No food and drink transactions found')
-			return
-		}
-
-		return foodAndDrinkTransactions
-	} catch (error) {
-		console.error('Error fetching food and drink transactions:', error)
-	}
+	return { foodAndDrinkTransactions, error }
 }
 
 export async function fetchHealthAndWellnessTransactions() {
