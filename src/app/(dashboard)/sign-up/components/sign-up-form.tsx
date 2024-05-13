@@ -24,7 +24,7 @@ import { Input } from '@/components/ui/input'
 
 import LoadingIndicator from '@/components/loading-indicator'
 
-function SignUpForm() {
+export default function SignUpForm() {
 	const [isLoading, setIsLoading] = useState(false)
 
 	const router = useRouter()
@@ -193,5 +193,3 @@ function SignUpForm() {
 		</div>
 	)
 }
-
-export default SignUpForm
