@@ -75,7 +75,7 @@ export default function SignUpForm() {
 		})
 
 		if (error) {
-			console.error('Somethign went wrong signing up:', error)
+			console.error('Something went wrong signing up:', error)
 			toast(error.message)
 			setIsLoading(false)
 		}
